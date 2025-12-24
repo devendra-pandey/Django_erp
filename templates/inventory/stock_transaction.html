@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock Transaction - Manufacturing ERP{% endblock %}
+{% block page_title %}Stock Transaction{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'inventory:stock_list' %}">Stock</a></li>
+    <li class="breadcrumb-item active">Transaction</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">New Stock Transaction</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="id_product" class="form-label">Product*</label>
+                            {{ form.product }}
+                            {% if form.product.errors %}
+                                <div class="text-danger mt-1">{{ form.product.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_warehouse" class="form-label">Warehouse*</label>
+                            {{ form.warehouse }}
+                            {% if form.warehouse.errors %}
+                                <div class="text-danger mt-1">{{ form.warehouse.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="id_transaction_type" class="form-label">Transaction Type*</label>
+                            {{ form.transaction_type }}
+                            {% if form.transaction_type.errors %}
+                                <div class="text-danger mt-1">{{ form.transaction_type.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_quantity" class="form-label">Quantity*</label>
+                            {{ form.quantity }}
+                            {% if form.quantity.errors %}
+                                <div class="text-danger mt-1">{{ form.quantity.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Enter quantity for this transaction</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_reference_no" class="form-label">Reference Number (Optional)</label>
+                        {{ form.reference_no }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_remarks" class="form-label">Remarks</label>
+                        {{ form.remarks }}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'inventory:stock_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Process Transaction
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Recent Transactions -->
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Recent Transactions</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Product</th>
+                                    <th>Type</th>
+                                    <th>Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in recent_transactions %}
+                                <tr>
+                                    <td>{{ transaction.created_at|date:"m-d H:i" }}</td>
+                                    <td>{{ transaction.product.SKU|truncatechars:8 }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if transaction.transaction_type == 'IN' %}success{% elif transaction.transaction_type == 'OUT' %}danger{% else %}warning{% endif %}">
+                                            {{ transaction.get_transaction_type_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ transaction.quantity }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="#" class="btn btn-sm btn-info w-100 mt-2">
+                        <i class="fas fa-history me-1"></i> View All Transactions
+                    </a>
+                {% else %}
+                    <div class="text-center py-3">
+                        <i class="fas fa-exchange-alt fa-2x text-muted mb-3"></i>
+                        <p class="text-muted">No recent transactions</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Transaction Types Info -->
+        <div class="card shadow mt-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Transaction Types</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <span class="badge bg-success me-2">IN</span>
+                    <small>Stock In - Add stock to inventory</small>
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-danger me-2">OUT</span>
+                    <small>Stock Out - Remove stock from inventory</small>
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-warning me-2">ADJ</span>
+                    <small>Adjustment - Adjust stock to specific quantity</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Add form-control class to all inputs if not already present
+        $('input, select, textarea').each(function() {
+            if (!$(this).hasClass('form-control') && 
+                !$(this).hasClass('form-check-input') && 
+                this.type !== 'hidden') {
+                $(this).addClass('form-control');
+            }
+        });
+    });
+</script>
+{% endblock %}

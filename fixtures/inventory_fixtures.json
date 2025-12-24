@@ -1,0 +1,245 @@
+[
+{
+  "model": "inventory.category",
+  "pk": 1,
+  "fields": {
+    "name": "Electronic Components",
+    "parent": null,
+    "description": "All electronic parts and components"
+  }
+},
+{
+  "model": "inventory.category",
+  "pk": 2,
+  "fields": {
+    "name": "Mechanical Parts",
+    "parent": null,
+    "description": "Mechanical and hardware components"
+  }
+},
+{
+  "model": "inventory.category",
+  "pk": 3,
+  "fields": {
+    "name": "Packaging Materials",
+    "parent": null,
+    "description": "Packaging and shipping materials"
+  }
+},
+{
+  "model": "inventory.category",
+  "pk": 4,
+  "fields": {
+    "name": "Chemicals",
+    "parent": null,
+    "description": "Industrial chemicals and solvents"
+  }
+},
+{
+  "model": "inventory.category",
+  "pk": 5,
+  "fields": {
+    "name": "Finished Goods",
+    "parent": null,
+    "description": "Completed products ready for sale"
+  }
+},
+{
+  "model": "inventory.unitofmeasure",
+  "pk": 1,
+  "fields": {
+    "name": "Piece",
+    "symbol": "pc"
+  }
+},
+{
+  "model": "inventory.unitofmeasure",
+  "pk": 2,
+  "fields": {
+    "name": "Kilogram",
+    "symbol": "kg"
+  }
+},
+{
+  "model": "inventory.unitofmeasure",
+  "pk": 3,
+  "fields": {
+    "name": "Liter",
+    "symbol": "L"
+  }
+},
+{
+  "model": "inventory.unitofmeasure",
+  "pk": 4,
+  "fields": {
+    "name": "Meter",
+    "symbol": "m"
+  }
+},
+{
+  "model": "inventory.unitofmeasure",
+  "pk": 5,
+  "fields": {
+    "name": "Box",
+    "symbol": "box"
+  }
+},
+{
+  "model": "inventory.unitofmeasure",
+  "pk": 6,
+  "fields": {
+    "name": "Roll",
+    "symbol": "roll"
+  }
+},
+{
+  "model": "inventory.product",
+  "pk": 1,
+  "fields": {
+    "SKU": "RES-001",
+    "name": "1K Ohm Resistor",
+    "description": "Carbon film resistor 1K Ohm 1/4W",
+    "category": 1,
+    "unit_of_measure": 1,
+    "product_type": "raw",
+    "min_stock": "1000.00",
+    "max_stock": "10000.00",
+    "is_active": true,
+    "created_by": null,
+    "updated_by": null,
+    "created_at": "2024-01-15T09:00:00Z",
+    "updated_at": "2024-01-15T09:00:00Z"
+  }
+},
+{
+  "model": "inventory.product",
+  "pk": 2,
+  "fields": {
+    "SKU": "CAP-001",
+    "name": "100uF Capacitor",
+    "description": "Electrolytic capacitor 100uF 25V",
+    "category": 1,
+    "unit_of_measure": 1,
+    "product_type": "raw",
+    "min_stock": "500.00",
+    "max_stock": "5000.00",
+    "is_active": true,
+    "created_by": null,
+    "updated_by": null,
+    "created_at": "2024-01-15T09:00:00Z",
+    "updated_at": "2024-01-15T09:00:00Z"
+  }
+},
+{
+  "model": "inventory.product",
+  "pk": 3,
+  "fields": {
+    "SKU": "PCB-001",
+    "name": "Main Circuit Board",
+    "description": "Main PCB for electronic controller",
+    "category": 1,
+    "unit_of_measure": 1,
+    "product_type": "semi",
+    "min_stock": "100.00",
+    "max_stock": "1000.00",
+    "is_active": true,
+    "created_by": null,
+    "updated_by": null,
+    "created_at": "2024-01-15T09:00:00Z",
+    "updated_at": "2024-01-15T09:00:00Z"
+  }
+},
+{
+  "model": "inventory.product",
+  "pk": 4,
+  "fields": {
+    "SKU": "SCR-001",
+    "name": "M3 Screws",
+    "description": "Stainless steel M3 screws 10mm length",
+    "category": 2,
+    "unit_of_measure": 1,
+    "product_type": "raw",
+    "min_stock": "2000.00",
+    "max_stock": "20000.00",
+    "is_active": true,
+    "created_by": null,
+    "updated_by": null,
+    "created_at": "2024-01-15T09:00:00Z",
+    "updated_at": "2024-01-15T09:00:00Z"
+  }
+},
+{
+  "model": "inventory.product",
+  "pk": 5,
+  "fields": {
+    "SKU": "BOX-001",
+    "name": "Product Box",
+    "description": "Cardboard packaging box 20x15x10 cm",
+    "category": 3,
+    "unit_of_measure": 1,
+    "product_type": "consumable",
+    "min_stock": "500.00",
+    "max_stock": "5000.00",
+    "is_active": true,
+    "created_by": null,
+    "updated_by": null,
+    "created_at": "2024-01-15T09:00:00Z",
+    "updated_at": "2024-01-15T09:00:00Z"
+  }
+},
+{
+  "model": "inventory.warehouse",
+  "pk": 1,
+  "fields": {
+    "name": "Main Warehouse",
+    "code": "WH001",
+    "location": "Building A, Ground Floor",
+    "manager": null,
+    "is_active": true
+  }
+},
+{
+  "model": "inventory.warehouse",
+  "pk": 2,
+  "fields": {
+    "name": "Raw Material Storage",
+    "code": "WH002",
+    "location": "Building B, First Floor",
+    "manager": null,
+    "is_active": true
+  }
+},
+{
+  "model": "inventory.warehouse",
+  "pk": 3,
+  "fields": {
+    "name": "Finished Goods Warehouse",
+    "code": "WH003",
+    "location": "Building C, Ground Floor",
+    "manager": null,
+    "is_active": true
+  }
+},
+{
+  "model": "inventory.warehouse",
+  "pk": 4,
+  "fields": {
+    "name": "Chemical Storage",
+    "code": "WH004",
+    "location": "Separate Building, North Side",
+    "manager": null,
+    "is_active": true
+  }
+},
+{
+  "model": "inventory.warehouse",
+  "pk": 5,
+  "fields": {
+    "name": "Tool Room",
+    "code": "WH005",
+    "location": "Production Building, Mezzanine",
+    "manager": null,
+    "is_active": true
+  }
+}
+]

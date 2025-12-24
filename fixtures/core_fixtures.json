@@ -1,0 +1,104 @@
+[
+{
+  "model": "core.company",
+  "pk": 1,
+  "fields": {
+    "name": "TechCorp Solutions",
+    "address": "123 Tech Street, Silicon Valley, CA 94000",
+    "phone": "+1-555-123-4567",
+    "email": "info@techcorp.com",
+    "tax_id": "TECH123456789",
+    "logo": null
+  }
+},
+{
+  "model": "core.department",
+  "pk": 1,
+  "fields": {
+    "name": "Information Technology",
+    "code": "IT",
+    "description": "Handles all IT infrastructure and support"
+  }
+},
+{
+  "model": "core.department",
+  "pk": 2,
+  "fields": {
+    "name": "Human Resources",
+    "code": "HR",
+    "description": "Manages employee relations and recruitment"
+  }
+},
+{
+  "model": "core.department",
+  "pk": 3,
+  "fields": {
+    "name": "Finance",
+    "code": "FIN",
+    "description": "Financial planning and accounting department"
+  }
+},
+{
+  "model": "core.department",
+  "pk": 4,
+  "fields": {
+    "name": "Production",
+    "code": "PROD",
+    "description": "Manufacturing and production department"
+  }
+},
+{
+  "model": "core.department",
+  "pk": 5,
+  "fields": {
+    "name": "Quality Control",
+    "code": "QC",
+    "description": "Ensures product quality standards"
+  }
+},
+{
+  "model": "core.department",
+  "pk": 6,
+  "fields": {
+    "name": "Research & Development",
+    "code": "R&D",
+    "description": "Product research and innovation"
+  }
+},
+{
+  "model": "core.department",
+  "pk": 7,
+  "fields": {
+    "name": "Sales & Marketing",
+    "code": "SALES",
+    "description": "Sales operations and marketing campaigns"
+  }
+},
+{
+  "model": "core.department",
+  "pk": 8,
+  "fields": {
+    "name": "Logistics",
+    "code": "LOG",
+    "description": "Supply chain and distribution management"
+  }
+},
+{
+  "model": "core.department",
+  "pk": 9,
+  "fields": {
+    "name": "Customer Service",
+    "code": "CS",
+    "description": "Customer support and relationship management"
+  }
+},
+{
+  "model": "core.department",
+  "pk": 10,
+  "fields": {
+    "name": "Maintenance",
+    "code": "MAINT",
+    "description": "Equipment maintenance and facility management"
+  }
+}
+]

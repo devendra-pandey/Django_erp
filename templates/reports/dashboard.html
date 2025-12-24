@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports - Manufacturing ERP{% endblock %}
+{% block page_title %}Reports Dashboard{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active">Reports</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Report Categories</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Inventory Reports -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0"><i class="fas fa-boxes me-2"></i> Inventory Reports</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:inventory_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-chart-bar me-2 text-primary"></i> Inventory Summary
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:low_stock_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-exclamation-triangle me-2 text-warning"></i> Low Stock Alert
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:stock_movement_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-exchange-alt me-2 text-success"></i> Stock Movement
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'reports:abc_analysis_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-sort-amount-down me-2 text-danger"></i> ABC Analysis
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Production Reports -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0"><i class="fas fa-cogs me-2"></i> Production Reports</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:production_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-clipboard-list me-2 text-primary"></i> Production Summary
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:production_efficiency_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-tachometer-alt me-2 text-info"></i> Efficiency Report
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:downtime_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-clock me-2 text-warning"></i> Downtime Analysis
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'reports:rejection_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-times-circle me-2 text-danger"></i> Rejection Report
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quality Reports -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-warning text-white">
+                                <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i> Quality Reports</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:quality_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-chart-pie me-2 text-primary"></i> Quality Summary
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:defect_analysis' %}" class="text-decoration-none">
+                                            <i class="fas fa-bug me-2 text-danger"></i> Defect Analysis
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'reports:quality_trends' %}" class="text-decoration-none">
+                                            <i class="fas fa-chart-line me-2 text-success"></i> Quality Trends
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <!-- HR Reports -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-danger text-white">
+                                <h6 class="mb-0"><i class="fas fa-users me-2"></i> HR Reports</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:hr_attendance_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-calendar-check me-2 text-primary"></i> Attendance Report
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:hr_leave_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-calendar-alt me-2 text-info"></i> Leave Report
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'reports:hr_overtime_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-clock me-2 text-warning"></i> Overtime Report
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Financial Reports -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-secondary text-white">
+                                <h6 class="mb-0"><i class="fas fa-dollar-sign me-2"></i> Financial Reports</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:purchase_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-shopping-cart me-2 text-primary"></i> Purchase Report
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'reports:inventory_value_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-money-bill-wave me-2 text-success"></i> Inventory Value
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Custom Reports -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-dark text-white">
+                                <h6 class="mb-0"><i class="fas fa-tools me-2"></i> Custom Reports</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:create_custom_report' %}" class="text-decoration-none">
+                                            <i class="fas fa-plus-circle me-2 text-primary"></i> Create Custom Report
+                                        </a>
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="{% url 'reports:saved_reports' %}" class="text-decoration-none">
+                                            <i class="fas fa-save me-2 text-info"></i> Saved Reports
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

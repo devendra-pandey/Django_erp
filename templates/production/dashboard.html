@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Production Dashboard - Manufacturing ERP{% endblock %}
+{% block page_title %}Production Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Orders</h5>
+                <h2 class="display-6">{{ total_orders }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title">Active Orders</h5>
+                <h2 class="display-6">{{ active_orders }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Completed Today</h5>
+                <h2 class="display-6">{{ completed_today }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <h5 class="card-title">Pending QC</h5>
+                <h2 class="display-6">0</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Recent Production Orders</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th>Planned End</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in recent_orders %}
+                            <tr>
+                                <td>{{ order.order_number }}</td>
+                                <td>{{ order.product.name }}</td>
+                                <td>{{ order.quantity }}</td>
+                                <td>
+                                    <span class="badge bg-{% if order.status == 'completed' %}success
+                                                         {% elif order.status == 'in_progress' %}info
+                                                         {% elif order.status == 'released' %}primary
+                                                         {% else %}secondary{% endif %}">
+                                        {{ order.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>{{ order.planned_end|date:"Y-m-d" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No production orders found</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'production:order_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>New Production Order
+                    </a>
+                    <a href="{% url 'production:bom_create' %}" class="btn btn-success">
+                        <i class="fas fa-list-alt me-2"></i>Create BOM
+                    </a>
+                    <a href="{% url 'production:order_list' %}" class="btn btn-info">
+                        <i class="fas fa-clipboard-list me-2"></i>View All Orders
+                    </a>
+                    <a href="{% url 'production:bom_list' %}" class="btn btn-warning">
+                        <i class="fas fa-boxes me-2"></i>View BOMs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

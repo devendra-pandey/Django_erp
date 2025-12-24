@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Leave Applications - Manufacturing ERP{% endblock %}
+{% block page_title %}Leave Applications{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'hr:dashboard' %}">HR</a></li>
+    <li class="breadcrumb-item active">Leave Applications</li>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Leave Applications</h5>
+        <a href="{% url 'hr:leave_create' %}" class="btn btn-light btn-sm">
+            <i class="fas fa-plus me-1"></i> New Application
+        </a>
+    </div>
+    <div class="card-body">
+        <p class="lead">Leave management functionality coming soon!</p>
+        <div class="text-center">
+            <a href="{% url 'hr:leave_create' %}" class="btn btn-primary">
+                <i class="fas fa-calendar-plus me-2"></i>Apply for Leave
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}Notification Preferences - Manufacturing ERP{% endblock %}
+{% block page_title %}Notification Preferences{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'notifications:list' %}">Notifications</a></li>
+    <li class="breadcrumb-item active">Preferences</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Notification Settings</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <h6 class="border-bottom pb-2">Notification Channels</h6>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="email_notifications" 
+                                   name="email_notifications" {% if preferences.email_notifications %}checked{% endif %}>
+                            <label class="form-check-label" for="email_notifications">
+                                Email Notifications
+                            </label>
+                            <small class="form-text text-muted d-block">Receive notifications via email</small>
+                        </div>
+                        
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="push_notifications" 
+                                   name="push_notifications" {% if preferences.push_notifications %}checked{% endif %}>
+                            <label class="form-check-label" for="push_notifications">
+                                Push Notifications
+                            </label>
+                            <small class="form-text text-muted d-block">Receive browser push notifications</small>
+                        </div>
+                        
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="in_app_notifications" 
+                                   name="in_app_notifications" {% if preferences.in_app_notifications %}checked{% endif %}>
+                            <label class="form-check-label" for="in_app_notifications">
+                                In-App Notifications
+                            </label>
+                            <small class="form-text text-muted d-block">Show notifications within the application</small>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6 class="border-bottom pb-2">Alert Types</h6>
+                        
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="low_stock_alerts" 
+                                   name="low_stock_alerts" {% if preferences.low_stock_alerts %}checked{% endif %}>
+                            <label class="form-check-label" for="low_stock_alerts">
+                                Low Stock Alerts
+                            </label>
+                            <small class="form-text text-muted d-block">Get notified when stock levels are low</small>
+                        </div>
+                        
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="quality_alerts" 
+                                   name="quality_alerts" {% if preferences.quality_alerts %}checked{% endif %}>
+                            <label class="form-check-label" for="quality_alerts">
+                                Quality Control Alerts
+                            </label>
+                            <small class="form-text text-muted d-block">Receive quality check and defect alerts</small>
+                        </div>
+                        
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="production_alerts" 
+                                   name="production_alerts" {% if preferences.production_alerts %}checked{% endif %}>
+                            <label class="form-check-label" for="production_alerts">
+                                Production Alerts
+                            </label>
+                            <small class="form-text text-muted d-block">Get production order updates and alerts</small>
+                        </div>
+                        
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="purchase_order_alerts" 
+                                   name="purchase_order_alerts" {% if preferences.purchase_order_alerts %}checked{% endif %}>
+                            <label class="form-check-label" for="purchase_order_alerts">
+                                Purchase Order Alerts
+                            </label>
+                            <small class="form-text text-muted d-block">Receive purchase order updates</small>
+                        </div>
+                        
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" id="attendance_alerts" 
+                                   name="attendance_alerts" {% if preferences.attendance_alerts %}checked{% endif %}>
+                            <label class="form-check-label" for="attendance_alerts">
+                                Attendance Alerts
+                            </label>
+                            <small class="form-text text-muted d-block">Get attendance and leave updates</small>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'notifications:list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Back to Notifications
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i> Save Preferences
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'notifications:test_email' %}" class="btn btn-primary">
+                        <i class="fas fa-bell me-2"></i> Test Notification
+                    </a>
+                    <a href="{% url 'notifications:unread' %}" class="btn btn-warning">
+                        <i class="fas fa-envelope me-2"></i> View Unread
+                    </a>
+                    <a href="{% url 'notifications:mark_all_read' %}" class="btn btn-success">
+                        <i class="fas fa-check-double me-2"></i> Mark All Read
+                    </a>
+                    <a href="{% url 'notifications:list' %}" class="btn btn-info">
+                        <i class="fas fa-list me-2"></i> All Notifications
+                    </a>
+                </div>
+                
+                <div class="mt-4">
+                    <h6>Notification Statistics</h6>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Total Notifications
+                            <span class="badge bg-primary rounded-pill">{{ request.user.notifications.count }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Unread Notifications
+                            <span class="badge bg-danger rounded-pill">{{ request.user.notifications.filter(is_read=False).count }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Read Notifications
+                            <span class="badge bg-success rounded-pill">{{ request.user.notifications.filter(is_read=True).count }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

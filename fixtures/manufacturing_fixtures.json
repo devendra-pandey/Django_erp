@@ -1,0 +1,142 @@
+[
+{
+  "model": "manufacturing.workcenter",
+  "pk": 1,
+  "fields": {
+    "code": "WC001",
+    "name": "Assembly Line 1",
+    "description": "Main assembly line for electronic products",
+    "department": 4,
+    "supervisor": null,
+    "cost_per_hour": "50.00",
+    "capacity_per_hour": "100.00",
+    "is_active": true
+  }
+},
+{
+  "model": "manufacturing.workcenter",
+  "pk": 2,
+  "fields": {
+    "code": "WC002",
+    "name": "Welding Station",
+    "description": "Metal welding and fabrication",
+    "department": 4,
+    "supervisor": null,
+    "cost_per_hour": "75.00",
+    "capacity_per_hour": "50.00",
+    "is_active": true
+  }
+},
+{
+  "model": "manufacturing.workcenter",
+  "pk": 3,
+  "fields": {
+    "code": "WC003",
+    "name": "Painting Booth",
+    "description": "Surface treatment and painting",
+    "department": 4,
+    "supervisor": null,
+    "cost_per_hour": "60.00",
+    "capacity_per_hour": "80.00",
+    "is_active": true
+  }
+},
+{
+  "model": "manufacturing.workcenter",
+  "pk": 4,
+  "fields": {
+    "code": "WC004",
+    "name": "Packaging Line",
+    "description": "Final packaging and labeling",
+    "department": 4,
+    "supervisor": null,
+    "cost_per_hour": "40.00",
+    "capacity_per_hour": "150.00",
+    "is_active": true
+  }
+},
+{
+  "model": "manufacturing.workcenter",
+  "pk": 5,
+  "fields": {
+    "code": "WC005",
+    "name": "QC Testing Station",
+    "description": "Quality control and testing",
+    "department": 5,
+    "supervisor": null,
+    "cost_per_hour": "65.00",
+    "capacity_per_hour": "60.00",
+    "is_active": true
+  }
+},
+{
+  "model": "manufacturing.operation",
+  "pk": 1,
+  "fields": {
+    "code": "OP001",
+    "name": "PCB Assembly",
+    "description": "Printed Circuit Board assembly",
+    "work_center": 1,
+    "setup_time": "1.50",
+    "cycle_time": "0.25",
+    "cost_per_hour": "55.00",
+    "is_active": true
+  }
+},
+{
+  "model": "manufacturing.operation",
+  "pk": 2,
+  "fields": {
+    "code": "OP002",
+    "name": "Metal Welding",
+    "description": "Arc welding of metal components",
+    "work_center": 2,
+    "setup_time": "2.00",
+    "cycle_time": "0.50",
+    "cost_per_hour": "80.00",
+    "is_active": true
+  }
+},
+{
+  "model": "manufacturing.operation",
+  "pk": 3,
+  "fields": {
+    "code": "OP003",
+    "name": "Spray Painting",
+    "description": "Surface painting and coating",
+    "work_center": 3,
+    "setup_time": "1.00",
+    "cycle_time": "0.75",
+    "cost_per_hour": "65.00",
+    "is_active": true
+  }
+},
+{
+  "model": "manufacturing.operation",
+  "pk": 4,
+  "fields": {
+    "code": "OP004",
+    "name": "Final Assembly",
+    "description": "Final product assembly",
+    "work_center": 1,
+    "setup_time": "0.50",
+    "cycle_time": "0.30",
+    "cost_per_hour": "60.00",
+    "is_active": true
+  }
+},
+{
+  "model": "manufacturing.operation",
+  "pk": 5,
+  "fields": {
+    "code": "OP005",
+    "name": "Quality Testing",
+    "description": "Functional testing and quality check",
+    "work_center": 5,
+    "setup_time": "0.25",
+    "cycle_time": "1.00",
+    "cost_per_hour": "70.00",
+    "is_active": true
+  }
+}
+]

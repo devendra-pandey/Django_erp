@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}BOM List - Manufacturing ERP{% endblock %}
+{% block page_title %}Bill of Materials{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'production:dashboard' %}">Production</a></li>
+    <li class="breadcrumb-item active">BOM</li>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Bill of Materials</h5>
+        <a href="{% url 'production:bom_create' %}" class="btn btn-light btn-sm">
+            <i class="fas fa-plus me-1"></i> New BOM
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Finished Product</th>
+                        <th>Version</th>
+                        <th>Effective Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bom in boms %}
+                    <tr>
+                        <td><strong>{{ bom.code }}</strong></td>
+                        <td>{{ bom.finished_product.name }} ({{ bom.finished_product.SKU }})</td>
+                        <td>{{ bom.version }}</td>
+                        <td>{{ bom.effective_date|date:"Y-m-d" }}</td>
+                        <td>
+                            {% if bom.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'production:bom_detail' bom.id %}" class="btn btn-outline-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'production:bom_update' bom.id %}" class="btn btn-outline-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="fas fa-list-alt fa-2x mb-3"></i><br>
+                            No BOMs found. <a href="{% url 'production:bom_create' %}">Create your first BOM</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

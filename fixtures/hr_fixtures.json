@@ -1,0 +1,132 @@
+[
+{
+  "model": "hr.leavetype",
+  "pk": 1,
+  "fields": {
+    "name": "Annual Leave",
+    "code": "AL",
+    "days_per_year": 20,
+    "carry_forward": true,
+    "max_carry_forward": 10,
+    "requires_approval": true,
+    "is_active": true
+  }
+},
+{
+  "model": "hr.leavetype",
+  "pk": 2,
+  "fields": {
+    "name": "Sick Leave",
+    "code": "SL",
+    "days_per_year": 15,
+    "carry_forward": false,
+    "max_carry_forward": 0,
+    "requires_approval": false,
+    "is_active": true
+  }
+},
+{
+  "model": "hr.leavetype",
+  "pk": 3,
+  "fields": {
+    "name": "Casual Leave",
+    "code": "CL",
+    "days_per_year": 12,
+    "carry_forward": false,
+    "max_carry_forward": 0,
+    "requires_approval": true,
+    "is_active": true
+  }
+},
+{
+  "model": "hr.leavetype",
+  "pk": 4,
+  "fields": {
+    "name": "Maternity Leave",
+    "code": "ML",
+    "days_per_year": 180,
+    "carry_forward": false,
+    "max_carry_forward": 0,
+    "requires_approval": true,
+    "is_active": true
+  }
+},
+{
+  "model": "hr.leavetype",
+  "pk": 5,
+  "fields": {
+    "name": "Paternity Leave",
+    "code": "PL",
+    "days_per_year": 15,
+    "carry_forward": false,
+    "max_carry_forward": 0,
+    "requires_approval": true,
+    "is_active": true
+  }
+},
+{
+  "model": "hr.shift",
+  "pk": 1,
+  "fields": {
+    "name": "Morning Shift",
+    "code": "MS",
+    "start_time": "08:00:00",
+    "end_time": "16:00:00",
+    "break_start": "12:00:00",
+    "break_end": "13:00:00",
+    "is_active": true
+  }
+},
+{
+  "model": "hr.shift",
+  "pk": 2,
+  "fields": {
+    "name": "Evening Shift",
+    "code": "ES",
+    "start_time": "16:00:00",
+    "end_time": "00:00:00",
+    "break_start": "20:00:00",
+    "break_end": "21:00:00",
+    "is_active": true
+  }
+},
+{
+  "model": "hr.shift",
+  "pk": 3,
+  "fields": {
+    "name": "Night Shift",
+    "code": "NS",
+    "start_time": "00:00:00",
+    "end_time": "08:00:00",
+    "break_start": "04:00:00",
+    "break_end": "05:00:00",
+    "is_active": true
+  }
+},
+{
+  "model": "hr.shift",
+  "pk": 4,
+  "fields": {
+    "name": "General Shift",
+    "code": "GS",
+    "start_time": "09:00:00",
+    "end_time": "18:00:00",
+    "break_start": "13:00:00",
+    "break_end": "14:00:00",
+    "is_active": true
+  }
+},
+{
+  "model": "hr.shift",
+  "pk": 5,
+  "fields": {
+    "name": "Flexi Shift",
+    "code": "FS",
+    "start_time": "10:00:00",
+    "end_time": "19:00:00",
+    "break_start": "14:00:00",
+    "break_end": "15:00:00",
+    "is_active": true
+  }
+}
+]

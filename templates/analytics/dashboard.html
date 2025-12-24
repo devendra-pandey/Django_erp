@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics - Manufacturing ERP{% endblock %}
+{% block page_title %}Analytics Dashboard{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active">Analytics</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Analytics Dashboard</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Production Analytics -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="mb-0"><i class="fas fa-cogs me-2"></i> Production Analytics</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Monitor production efficiency, output, and performance metrics.</p>
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'analytics:production_dashboard' %}" class="btn btn-outline-success">
+                                        <i class="fas fa-chart-line me-2"></i> Production Dashboard
+                                    </a>
+                                    <a href="{% url 'analytics:production_trends' %}" class="btn btn-outline-info">
+                                        <i class="fas fa-trend-up me-2"></i> Production Trends
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Inventory Analytics -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0"><i class="fas fa-boxes me-2"></i> Inventory Analytics</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Track inventory levels, turnover rates, and stock optimization.</p>
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'analytics:inventory_dashboard' %}" class="btn btn-outline-info">
+                                        <i class="fas fa-chart-bar me-2"></i> Inventory Dashboard
+                                    </a>
+                                    <a href="{% url 'analytics:inventory_trends' %}" class="btn btn-outline-primary">
+                                        <i class="fas fa-wave-square me-2"></i> Inventory Trends
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quality Analytics -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-warning text-white">
+                                <h6 class="mb-0"><i class="fas fa-check-circle me-2"></i> Quality Analytics</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Analyze quality metrics, defect rates, and compliance trends.</p>
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'analytics:quality_dashboard' %}" class="btn btn-outline-warning">
+                                        <i class="fas fa-chart-pie me-2"></i> Quality Dashboard
+                                    </a>
+                                    <a href="{% url 'analytics:quality_trends' %}" class="btn btn-outline-danger">
+                                        <i class="fas fa-chart-area me-2"></i> Quality Trends
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <!-- Financial Analytics -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-danger text-white">
+                                <h6 class="mb-0"><i class="fas fa-dollar-sign me-2"></i> Financial Analytics</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Monitor costs, expenses, and financial performance metrics.</p>
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'analytics:financial_dashboard' %}" class="btn btn-outline-danger">
+                                        <i class="fas fa-money-bill-wave me-2"></i> Financial Dashboard
+                                    </a>
+                                    <a href="#" class="btn btn-outline-secondary">
+                                        <i class="fas fa-chart-scatter me-2"></i> Cost Analysis
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- HR Analytics -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-secondary text-white">
+                                <h6 class="mb-0"><i class="fas fa-users me-2"></i> HR Analytics</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Track workforce metrics, attendance, and productivity trends.</p>
+                                <div class="d-grid gap-2">
+                                    <a href="#" class="btn btn-outline-secondary">
+                                        <i class="fas fa-user-chart me-2"></i> Workforce Analytics
+                                    </a>
+                                    <a href="#" class="btn btn-outline-dark">
+                                        <i class="fas fa-chart-network me-2"></i> Productivity Trends
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Real-time Metrics -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-dark text-white">
+                                <h6 class="mb-0"><i class="fas fa-bolt me-2"></i> Real-time Metrics</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Live production data and real-time performance indicators.</p>
+                                <div class="d-grid gap-2">
+                                    <button id="refreshMetrics" class="btn btn-outline-dark">
+                                        <i class="fas fa-sync-alt me-2"></i> Refresh Metrics
+                                    </button>
+                                    <div id="realTimeMetrics" class="mt-2">
+                                        <small class="text-muted">Click refresh to load metrics...</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Real-time Metrics Display -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Live Metrics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row" id="metricsDisplay">
+                    <div class="col-md-3 text-center">
+                        <div class="metric-card">
+                            <h3 id="activeOrders" class="text-primary">-</h3>
+                            <p class="text-muted">Active Orders</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="metric-card">
+                            <h3 id="todayProduction" class="text-success">-</h3>
+                            <p class="text-muted">Today's Production</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="metric-card">
+                            <h3 id="lowStock" class="text-warning">-</h3>
+                            <p class="text-muted">Low Stock Items</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="metric-card">
+                            <h3 id="pendingQC" class="text-danger">-</h3>
+                            <p class="text-muted">Pending QC</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Function to load real-time metrics
+        function loadMetrics() {
+            $.ajax({
+                url: "{% url 'analytics:real_time_metrics' %}",
+                type: "GET",
+                success: function(data) {
+                    $('#activeOrders').text(data.active_orders);
+                    $('#todayProduction').text(data.today_production);
+                    $('#lowStock').text(data.low_stock_items);
+                    $('#pendingQC').text(data.pending_qc);
+                    
+                    // Update attendance if available
+                    if (data.attendance) {
+                        $('#attendancePresent').text(data.attendance.present || 0);
+                        $('#attendanceAbsent').text(data.attendance.absent || 0);
+                    }
+                    
+                    $('#realTimeMetrics').html(`
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Metrics updated at ${new Date().toLocaleTimeString()}
+                        </div>
+                    `);
+                },
+                error: function() {
+                    $('#realTimeMetrics').html(`
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Failed to load metrics
+                        </div>
+                    `);
+                }
+            });
+        }
+        
+        // Load metrics on page load
+        loadMetrics();
+        
+        // Refresh metrics on button click
+        $('#refreshMetrics').click(function() {
+            loadMetrics();
+        });
+        
+        // Auto-refresh every 60 seconds
+        setInterval(loadMetrics, 60000);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}HR Dashboard - Manufacturing ERP{% endblock %}
+{% block page_title %}HR Dashboard{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item active">HR</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5 class="card-title">Total Employees</h5>
+                <h2 class="display-6">{{ total_employees|default:0 }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5 class="card-title">Active Employees</h5>
+                <h2 class="display-6">{{ active_employees|default:0 }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <h5 class="card-title">On Leave</h5>
+                <h2 class="display-6">{{ on_leave|default:0 }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5 class="card-title">Pending Leaves</h5>
+                <h2 class="display-6">{{ pending_leaves|default:0 }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Today's Attendance Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <h3 class="text-success">{{ today_attendance.present|default:0 }}</h3>
+                            <p class="text-muted">Present</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <h3 class="text-danger">{{ today_attendance.absent|default:0 }}</h3>
+                            <p class="text-muted">Absent</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <h3 class="text-warning">{{ today_attendance.late|default:0 }}</h3>
+                            <p class="text-muted">Late</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="{% url 'hr:today_attendance' %}" class="btn btn-primary">
+                        <i class="fas fa-calendar-check me-2"></i>View Today's Attendance
+                    </a>
+                    <a href="{% url 'hr:mark_attendance' %}" class="btn btn-success">
+                        <i class="fas fa-user-check me-2"></i>Mark Attendance
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'hr:employee_create' %}" class="btn btn-primary">
+                        <i class="fas fa-user-plus me-2"></i>Add New Employee
+                    </a>
+                    <a href="{% url 'hr:leave_create' %}" class="btn btn-success">
+                        <i class="fas fa-calendar-plus me-2"></i>Apply for Leave
+                    </a>
+                    <a href="{% url 'hr:employee_list' %}" class="btn btn-info">
+                        <i class="fas fa-users me-2"></i>View All Employees
+                    </a>
+                    <a href="{% url 'hr:leave_list' %}" class="btn btn-warning">
+                        <i class="fas fa-clipboard-list me-2"></i>Leave Applications
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Recent Leave Applications</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Application #</th>
+                                <th>Employee</th>
+                                <th>Leave Type</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">
+                                    <i class="fas fa-clipboard-list fa-2x mb-3"></i><br>
+                                    No recent leave applications found
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

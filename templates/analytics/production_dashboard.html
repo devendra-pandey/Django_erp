@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+
+{% block title %}Production Analytics - Manufacturing ERP{% endblock %}
+{% block page_title %}Production Analytics Dashboard{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'analytics:dashboard' %}">Analytics</a></li>
+    <li class="breadcrumb-item active">Production</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Production Performance Metrics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="timePeriod">Time Period</label>
+                            <select class="form-control" id="timePeriod">
+                                <option value="7">Last 7 Days</option>
+                                <option value="30" selected>Last 30 Days</option>
+                                <option value="90">Last 90 Days</option>
+                                <option value="365">Last Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="d-flex justify-content-end align-items-end h-100">
+                            <button id="loadProductionData" class="btn btn-primary">
+                                <i class="fas fa-sync-alt me-2"></i>Load Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts Container -->
+                <div id="productionCharts">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Daily Production</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="dailyProductionChart" style="height: 300px;">
+                                        <div class="text-center text-muted p-5">
+                                            <i class="fas fa-chart-line fa-2x mb-3"></i><br>
+                                            Loading chart data...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Order Status Distribution</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="statusDistributionChart" style="height: 300px;">
+                                        <div class="text-center text-muted p-5">
+                                            <i class="fas fa-chart-pie fa-2x mb-3"></i><br>
+                                            Loading chart data...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Top Products by Production</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div id="productProductionChart" style="height: 400px;">
+                                        <div class="text-center text-muted p-5">
+                                            <i class="fas fa-chart-bar fa-2x mb-3"></i><br>
+                                            Loading chart data...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    $(document).ready(function() {
+        let dailyChart, statusChart, productChart;
+        
+        // Load production data
+        function loadProductionData() {
+            const days = $('#timePeriod').val();
+            
+            $.ajax({
+                url: "{% url 'analytics:production_metrics' %}",
+                type: "GET",
+                data: { days: days },
+                success: function(data) {
+                    updateCharts(data);
+                },
+                error: function() {
+                    alert('Failed to load production data');
+                }
+            });
+        }
+        
+        // Update charts with data
+        function updateCharts(data) {
+            // Daily Production Chart
+            const dailyCtx = document.createElement('canvas');
+            $('#dailyProductionChart').html(dailyCtx);
+            
+            if (dailyChart) {
+                dailyChart.destroy();
+            }
+            
+            dailyChart = new Chart(dailyCtx, {
+                type: 'line',
+                data: {
+                    labels: data.daily_data.map(item => item.actual_end__date),
+                    datasets: [{
+                        label: 'Daily Production Quantity',
+                        data: data.daily_data.map(item => item.total_quantity),
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+            
+            // Status Distribution Chart
+            const statusCtx = document.createElement('canvas');
+            $('#statusDistributionChart').html(statusCtx);
+            
+            if (statusChart) {
+                statusChart.destroy();
+            }
+            
+            statusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.status_distribution.map(item => item.status),
+                    datasets: [{
+                        data: data.status_distribution.map(item => item.count),
+                        backgroundColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(153, 102, 255)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+            
+            // Product Production Chart
+            const productCtx = document.createElement('canvas');
+            $('#productProductionChart').html(productCtx);
+            
+            if (productChart) {
+                productChart.destroy();
+            }
+            
+            productChart = new Chart(productCtx, {
+                type: 'bar',
+                data: {
+                    labels: data.product_data.map(item => item.product__name),
+                    datasets: [{
+                        label: 'Total Quantity',
+                        data: data.product_data.map(item => item.total_quantity),
+                        backgroundColor: 'rgb(54, 162, 235)'
+                    }, {
+                        label: 'Completed Quantity',
+                        data: data.product_data.map(item => item.completed_quantity),
+                        backgroundColor: 'rgb(75, 192, 192)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Load data on button click
+        $('#loadProductionData').click(function() {
+            loadProductionData();
+        });
+        
+        // Load data on page load
+        loadProductionData();
+    });
+</script>
+{% endblock %}

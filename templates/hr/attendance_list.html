@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance List - Manufacturing ERP{% endblock %}
+{% block page_title %}Attendance Records{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'hr:dashboard' %}">HR</a></li>
+    <li class="breadcrumb-item active">Attendance Records</li>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Attendance Records</h5>
+    </div>
+    <div class="card-body">
+        <p class="lead">Attendance list functionality coming soon!</p>
+        <a href="{% url 'hr:today_attendance' %}" class="btn btn-primary">
+            <i class="fas fa-calendar-check me-2"></i>View Today's Attendance
+        </a>
+    </div>
+</div>
+{% endblock %}

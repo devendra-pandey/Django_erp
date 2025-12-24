@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Manufacturing ERP{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    
+    <style>
+        .sidebar {
+            min-height: calc(100vh - 56px);
+            background-color: #2c3e50;
+        }
+        .sidebar .nav-link {
+            color: #ecf0f1;
+            padding: 12px 20px;
+            border-left: 4px solid transparent;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #34495e;
+            border-left: 4px solid #3498db;
+        }
+        .sidebar .nav-link.active {
+            background-color: #34495e;
+            border-left: 4px solid #3498db;
+        }
+        .content-header {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .stat-card {
+            border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'dashboard' %}">
+                <i class="fas fa-industry"></i> Manufacturing ERP
+            </a>
+            
+            <div class="d-flex align-items-center">
+                <!-- Notification Bell -->
+                <div class="dropdown me-3">
+                    <a href="#" class="text-light position-relative" id="notificationDropdown" 
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-bell fa-lg"></i>
+                        <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+                            style="display: none;">
+                            0
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown" style="width: 300px;">
+                        <li class="dropdown-header">
+                            <strong>Notifications</strong>
+                            <a href="{% url 'notifications:mark_all_read' %}" class="float-end small">Mark all read</a>
+                        </li>
+                        <li><div class="dropdown-divider"></div></li>
+                        <li id="notificationItems">
+                            <div class="px-3 py-2 text-center text-muted">
+                                <i class="fas fa-bell fa-2x mb-2"></i>
+                                <p class="mb-0">Loading notifications...</p>
+                            </div>
+                        </li>
+                        <li><div class="dropdown-divider"></div></li>
+                        <li class="text-center">
+                            <a href="{% url 'notifications:list' %}" class="dropdown-item">
+                                <i class="fas fa-list me-2"></i> View All Notifications
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <span class="text-light me-3">
+                    <i class="fas fa-user"></i> {{ user.username }}
+                </span>
+                <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 p-0 sidebar">
+                <nav class="nav flex-column mt-3">
+                    <a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}" 
+                       href="{% url 'dashboard' %}">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                    
+                    <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Inventory</h6>
+                    <a class="nav-link" href="{% url 'inventory:product_list' %}">
+                        <i class="fas fa-boxes me-2"></i> Products
+                    </a>
+                    <a class="nav-link" href="{% url 'inventory:stock_list' %}">
+                        <i class="fas fa-warehouse me-2"></i> Stock
+                    </a>
+                    
+                    <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Production</h6>
+                        <a class="nav-link" href="{% url 'production:dashboard' %}">
+                            <i class="fas fa-cogs me-2"></i> Production Dashboard
+                        </a>
+                        <a class="nav-link" href="{% url 'production:order_list' %}">
+                            <i class="fas fa-clipboard-list me-2"></i> Production Orders
+                        </a>
+                        <a class="nav-link" href="{% url 'production:bom_list' %}">
+                            <i class="fas fa-list-alt me-2"></i> BOM Management
+                        </a>
+
+                        <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Procurement</h6>
+                        <a class="nav-link" href="{% url 'procurement:dashboard' %}">
+                            <i class="fas fa-shopping-cart me-2"></i> Procurement Dashboard
+                        </a>
+                        <a class="nav-link" href="{% url 'procurement:purchase_order_list' %}">
+                            <i class="fas fa-file-invoice me-2"></i> Purchase Orders
+                        </a>
+                        <a class="nav-link" href="{% url 'procurement:supplier_list' %}">
+                            <i class="fas fa-truck me-2"></i> Suppliers
+                        </a>
+
+                        <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Quality</h6>
+                        <a class="nav-link" href="{% url 'quality:dashboard' %}">
+                            <i class="fas fa-check-circle me-2"></i> Quality Dashboard
+                        </a>
+                        <a class="nav-link" href="{% url 'quality:qc_list' %}">
+                            <i class="fas fa-clipboard-check me-2"></i> Quality Checks
+                        </a>
+
+                        <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">HR</h6>
+                        <a class="nav-link" href="{% url 'hr:dashboard' %}">
+                            <i class="fas fa-users me-2"></i> HR Dashboard
+                        </a>
+                        <a class="nav-link" href="{% url 'hr:employee_list' %}">
+                            <i class="fas fa-user-tie me-2"></i> Employees
+                        </a>
+                        <a class="nav-link" href="{% url 'hr:attendance_list' %}">
+                            <i class="fas fa-calendar-check me-2"></i> Attendance
+                        </a>
+
+                        <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Analytics</h6>
+                        <a class="nav-link" href="{% url 'analytics:dashboard' %}">
+                            <i class="fas fa-chart-line me-2"></i> Analytics Dashboard
+                        </a>
+                        <a class="nav-link" href="{% url 'reports:dashboard' %}">
+                            <i class="fas fa-chart-bar me-2"></i> Reports
+                        </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-0">
+                <div class="content-header">
+                    <h4>{% block page_title %}{% endblock %}</h4>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            {% block breadcrumbs %}{% endblock %}
+                        </ol>
+                    </nav>
+                </div>
+                
+                <div class="p-4">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('.data-table').DataTable({
+                pageLength: 25,
+                responsive: true
+            });
+        });
+
+        // Notification system
+$(document).ready(function() {
+    function updateNotificationCount() {
+        $.ajax({
+            url: "{% url 'notifications:unread_count' %}",
+            type: "GET",
+            success: function(data) {
+                const count = data.count;
+                const $badge = $('#notificationCount');
+                
+                if (count > 0) {
+                    $badge.text(count).show();
+                } else {
+                    $badge.hide();
+                }
+            }
+        });
+    }
+    
+    function loadNotificationDropdown() {
+        $.ajax({
+            url: "{% url 'notifications:unread' %}",
+            type: "GET",
+            success: function(html) {
+                // Extract notifications from the HTML response
+                const $temp = $('<div>').html(html);
+                const $notifications = $temp.find('.list-group-item');
+                
+                const $container = $('#notificationItems');
+                $container.empty();
+                
+                if ($notifications.length > 0) {
+                    $notifications.slice(0, 5).each(function() {
+                        const $notification = $(this);
+                        const $clone = $notification.clone();
+                        
+                        // Simplify for dropdown
+                        $clone.find('.btn-group').remove();
+                        $clone.addClass('dropdown-item');
+                        $clone.css({
+                            'white-space': 'normal',
+                            'border': 'none',
+                            'border-radius': '0'
+                        });
+                        
+                        $container.append($clone);
+                    });
+                    
+                    if ($notifications.length > 5) {
+                        $container.append(`
+                            <li class="dropdown-item text-center">
+                                <small class="text-muted">
+                                    +${$notifications.length - 5} more notifications
+                                </small>
+                            </li>
+                        `);
+                    }
+                } else {
+                    $container.html(`
+                        <div class="px-3 py-2 text-center text-muted">
+                            <i class="fas fa-check-circle fa-2x mb-2 text-success"></i>
+                            <p class="mb-0">No unread notifications</p>
+                        </div>
+                    `);
+                }
+            }
+        });
+    }
+    
+    // Load notifications on page load
+    updateNotificationCount();
+    
+    // Update when dropdown is shown
+    $('#notificationDropdown').on('show.bs.dropdown', function() {
+        loadNotificationDropdown();
+    });
+    
+    // Auto-refresh notification count every 30 seconds
+    setInterval(updateNotificationCount, 30000);
+});
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

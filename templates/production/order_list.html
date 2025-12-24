@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Production Orders - Manufacturing ERP{% endblock %}
+{% block page_title %}Production Orders{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'production:dashboard' %}">Production</a></li>
+    <li class="breadcrumb-item active">Orders</li>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Production Orders</h5>
+        <a href="{% url 'production:order_create' %}" class="btn btn-light btn-sm">
+            <i class="fas fa-plus me-1"></i> New Order
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Planned Start</th>
+                        <th>Planned End</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><strong>{{ order.order_number }}</strong></td>
+                        <td>{{ order.product.name }}</td>
+                        <td>{{ order.quantity }} {{ order.uom.symbol }}</td>
+                        <td>{{ order.planned_start|date:"Y-m-d H:i" }}</td>
+                        <td>{{ order.planned_end|date:"Y-m-d H:i" }}</td>
+                        <td>
+                            <span class="badge bg-{% if order.status == 'completed' %}success
+                                                 {% elif order.status == 'in_progress' %}info
+                                                 {% elif order.status == 'released' %}primary
+                                                 {% elif order.status == 'draft' %}secondary
+                                                 {% elif order.status == 'cancelled' %}danger
+                                                 {% else %}warning{% endif %}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'production:order_detail' order.id %}" class="btn btn-outline-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                {% if order.status == 'released' %}
+                                    <a href="{% url 'production:order_start' order.id %}" class="btn btn-outline-success">
+                                        <i class="fas fa-play"></i>
+                                    </a>
+                                {% elif order.status == 'in_progress' %}
+                                    <a href="{% url 'production:order_complete' order.id %}" class="btn btn-outline-success">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            <i class="fas fa-clipboard-list fa-2x mb-3"></i><br>
+                            No production orders found. <a href="{% url 'production:order_create' %}">Create your first order</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

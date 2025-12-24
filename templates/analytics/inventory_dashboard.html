@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Inventory Analytics - Manufacturing ERP{% endblock %}
+{% block page_title %}Inventory Analytics Dashboard{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'analytics:dashboard' %}">Analytics</a></li>
+    <li class="breadcrumb-item active">Inventory</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Inventory Analytics</h5>
+            </div>
+            <div class="card-body">
+                <p class="lead">Inventory analytics dashboard coming soon!</p>
+                <p>This dashboard will include:</p>
+                <ul>
+                    <li>Stock level trends</li>
+                    <li>Inventory turnover rates</li>
+                    <li>ABC analysis charts</li>
+                    <li>Low stock alerts visualization</li>
+                    <li>Inventory valuation trends</li>
+                </ul>
+                <a href="{% url 'reports:inventory_report' %}" class="btn btn-primary">
+                    <i class="fas fa-chart-bar me-2"></i>View Inventory Reports
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
