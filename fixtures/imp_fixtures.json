@@ -1,0 +1,3309 @@
+[
+{
+    "model": "auth.permission",
+    "pk": 1,
+    "fields": {
+        "name": "Can add user",
+        "content_type": 1,
+        "codename": "add_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 2,
+    "fields": {
+        "name": "Can change user",
+        "content_type": 1,
+        "codename": "change_user"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 3,
+    "fields": {
+        "name": "Can delete user",
+        "content_type": 1,
+        "codename": "delete_user"
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-15T10:30:00Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "Super",
+        "last_name": "Admin",
+        "email": "admin@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-01-01T09:00:00Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-14T11:00:00Z",
+        "is_superuser": false,
+        "username": "hr_manager",
+        "first_name": "Sarah",
+        "last_name": "Johnson",
+        "email": "sarah.hr@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-01-01T09:00:00Z",
+        "groups": [1],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-14T15:30:00Z",
+        "is_superuser": false,
+        "username": "production_head",
+        "first_name": "Michael",
+        "last_name": "Chen",
+        "email": "michael.prod@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-01-01T09:00:00Z",
+        "groups": [2],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-14T14:20:00Z",
+        "is_superuser": false,
+        "username": "inventory_manager",
+        "first_name": "Robert",
+        "last_name": "Wilson",
+        "email": "robert.inv@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-01-01T09:00:00Z",
+        "groups": [3],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-14T16:10:00Z",
+        "is_superuser": false,
+        "username": "procurement_head",
+        "first_name": "Lisa",
+        "last_name": "Patel",
+        "email": "lisa.proc@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-01-01T09:00:00Z",
+        "groups": [4],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-13T13:45:00Z",
+        "is_superuser": false,
+        "username": "security_officer",
+        "first_name": "David",
+        "last_name": "Brown",
+        "email": "david.security@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2024-01-01T09:00:00Z",
+        "groups": [5],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 7,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-14T12:30:00Z",
+        "is_superuser": false,
+        "username": "john_operator",
+        "first_name": "John",
+        "last_name": "Smith",
+        "email": "john.op@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-06-01T09:00:00Z",
+        "groups": [6],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 8,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-14T11:45:00Z",
+        "is_superuser": false,
+        "username": "mary_technician",
+        "first_name": "Mary",
+        "last_name": "Davis",
+        "email": "mary.tech@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-07-15T09:00:00Z",
+        "groups": [6],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 9,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-14T10:20:00Z",
+        "is_superuser": false,
+        "username": "tom_supervisor",
+        "first_name": "Thomas",
+        "last_name": "Anderson",
+        "email": "tom.sup@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-05-10T09:00:00Z",
+        "groups": [6],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 10,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-14T09:15:00Z",
+        "is_superuser": false,
+        "username": "jane_qc",
+        "first_name": "Jane",
+        "last_name": "Williams",
+        "email": "jane.qc@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-08-20T09:00:00Z",
+        "groups": [6],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 11,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-13T17:30:00Z",
+        "is_superuser": false,
+        "username": "peter_store",
+        "first_name": "Peter",
+        "last_name": "Roberts",
+        "email": "peter.store@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-09-05T09:00:00Z",
+        "groups": [6],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 12,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-12T16:45:00Z",
+        "is_superuser": false,
+        "username": "susan_admin",
+        "first_name": "Susan",
+        "last_name": "Miller",
+        "email": "susan.admin@example.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2023-10-01T09:00:00Z",
+        "groups": [7],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 13,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-11T15:20:00Z",
+        "is_superuser": false,
+        "username": "kevin_engineer",
+        "first_name": "Kevin",
+        "last_name": "Taylor",
+        "email": "kevin.eng@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-11-15T09:00:00Z",
+        "groups": [6],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 14,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-10T14:10:00Z",
+        "is_superuser": false,
+        "username": "emma_analyst",
+        "first_name": "Emma",
+        "last_name": "Clark",
+        "email": "emma.analyst@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-12-01T09:00:00Z",
+        "groups": [6],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 15,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$A53LQ2s7B2UK9GmWMCy2GN$dFO23vJwQTHANl4Cj5YHz9wE/S3I5et8/7DHSdqP6pk=",
+        "last_login": "2024-01-09T13:30:00Z",
+        "is_superuser": false,
+        "username": "alex_sales",
+        "first_name": "Alex",
+        "last_name": "Martinez",
+        "email": "alex.sales@example.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2024-01-02T09:00:00Z",
+        "groups": [6],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+        "name": "HR Manager",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 2,
+    "fields": {
+        "name": "Production Head",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 3,
+    "fields": {
+        "name": "Inventory Manager",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 4,
+    "fields": {
+        "name": "Procurement Head",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 5,
+    "fields": {
+        "name": "Security Officer",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 6,
+    "fields": {
+        "name": "Employee",
+        "permissions": []
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 7,
+    "fields": {
+        "name": "Administrator",
+        "permissions": []
+    }
+},
+{
+    "model": "core.company",
+    "pk": 1,
+    "fields": {
+        "name": "ABC Manufacturing Ltd.",
+        "address": "123 Industrial Estate, Sector 18, Gurugram, Haryana 122015",
+        "phone": "+91-124-4567890",
+        "email": "info@abcmanufacturing.com",
+        "tax_id": "GSTIN07AABC1234D1Z5",
+        "logo": "company/abc_logo.png"
+    }
+},
+{
+    "model": "core.department",
+    "pk": 1,
+    "fields": {
+        "name": "Human Resources",
+        "code": "HR",
+        "description": "Responsible for recruitment, training, and employee relations"
+    }
+},
+{
+    "model": "core.department",
+    "pk": 2,
+    "fields": {
+        "name": "Production",
+        "code": "PROD",
+        "description": "Manufacturing and production operations"
+    }
+},
+{
+    "model": "core.department",
+    "pk": 3,
+    "fields": {
+        "name": "Inventory & Stores",
+        "code": "INV",
+        "description": "Material management and storage"
+    }
+},
+{
+    "model": "core.department",
+    "pk": 4,
+    "fields": {
+        "name": "Procurement",
+        "code": "PROC",
+        "description": "Purchasing and vendor management"
+    }
+},
+{
+    "model": "core.department",
+    "pk": 5,
+    "fields": {
+        "name": "Quality Control",
+        "code": "QC",
+        "description": "Quality assurance and testing"
+    }
+},
+{
+    "model": "core.department",
+    "pk": 6,
+    "fields": {
+        "name": "Maintenance",
+        "code": "MNT",
+        "description": "Equipment maintenance and repairs"
+    }
+},
+{
+    "model": "core.department",
+    "pk": 7,
+    "fields": {
+        "name": "Security",
+        "code": "SEC",
+        "description": "Site security and access control"
+    }
+},
+{
+    "model": "core.department",
+    "pk": 8,
+    "fields": {
+        "name": "Administration",
+        "code": "ADMIN",
+        "description": "General administration and facilities"
+    }
+},
+{
+    "model": "core.department",
+    "pk": 9,
+    "fields": {
+        "name": "Research & Development",
+        "code": "R&D",
+        "description": "Product development and innovation"
+    }
+},
+{
+    "model": "core.department",
+    "pk": 10,
+    "fields": {
+        "name": "Sales & Marketing",
+        "code": "SALES",
+        "description": "Sales, marketing and customer relations"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 1,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 2,
+        "employee_id": "EMP-001",
+        "department": 1,
+        "designation": "HR Manager",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2020-03-15",
+        "date_of_birth": "1985-06-20",
+        "gender": "female",
+        "phone": "+91-9876543210",
+        "emergency_contact": "+91-9123456789",
+        "emergency_contact_name": "David Johnson",
+        "address": "45 Green Park, Delhi 110016",
+        "photo": "employees/sarah_johnson.jpg",
+        "bank_account": "123456789012",
+        "bank_name": "HDFC Bank",
+        "basic_salary": "85000.00"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 2,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 3,
+        "employee_id": "EMP-002",
+        "department": 2,
+        "designation": "Production Head",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2019-07-10",
+        "date_of_birth": "1982-11-30",
+        "gender": "male",
+        "phone": "+91-9876543211",
+        "emergency_contact": "+91-9123456790",
+        "emergency_contact_name": "Linda Chen",
+        "address": "78 Sector 56, Gurugram 122011",
+        "photo": "employees/michael_chen.jpg",
+        "bank_account": "234567890123",
+        "bank_name": "ICICI Bank",
+        "basic_salary": "95000.00"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 3,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 4,
+        "employee_id": "EMP-003",
+        "department": 3,
+        "designation": "Inventory Manager",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2021-01-20",
+        "date_of_birth": "1988-03-12",
+        "gender": "male",
+        "phone": "+91-9876543212",
+        "emergency_contact": "+91-9123456791",
+        "emergency_contact_name": "Emily Wilson",
+        "address": "23 Sector 14, Gurugram 122001",
+        "photo": "employees/robert_wilson.jpg",
+        "bank_account": "345678901234",
+        "bank_name": "Axis Bank",
+        "basic_salary": "75000.00"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 4,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 5,
+        "employee_id": "EMP-004",
+        "department": 4,
+        "designation": "Procurement Head",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2020-09-05",
+        "date_of_birth": "1986-08-25",
+        "gender": "female",
+        "phone": "+91-9876543213",
+        "emergency_contact": "+91-9123456792",
+        "emergency_contact_name": "Raj Patel",
+        "address": "67 Vasant Kunj, Delhi 110070",
+        "photo": "employees/lisa_patel.jpg",
+        "bank_account": "456789012345",
+        "bank_name": "Kotak Bank",
+        "basic_salary": "80000.00"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 5,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 6,
+        "employee_id": "EMP-005",
+        "department": 7,
+        "designation": "Security Officer",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2022-02-15",
+        "date_of_birth": "1990-12-05",
+        "gender": "male",
+        "phone": "+91-9876543214",
+        "emergency_contact": "+91-9123456793",
+        "emergency_contact_name": "Sarah Brown",
+        "address": "89 Sector 23, Gurugram 122002",
+        "photo": "employees/david_brown.jpg",
+        "bank_account": "567890123456",
+        "bank_name": "SBI",
+        "basic_salary": "45000.00"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 6,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 7,
+        "employee_id": "EMP-006",
+        "department": 2,
+        "designation": "Machine Operator",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2023-06-01",
+        "date_of_birth": "1995-02-14",
+        "gender": "male",
+        "phone": "+91-9876543215",
+        "emergency_contact": "+91-9123456794",
+        "emergency_contact_name": "Mary Smith",
+        "address": "34 Sector 45, Gurugram 122003",
+        "photo": "employees/john_smith.jpg",
+        "bank_account": "678901234567",
+        "bank_name": "PNB",
+        "basic_salary": "35000.00"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 7,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 8,
+        "employee_id": "EMP-007",
+        "department": 2,
+        "designation": "Production Technician",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2023-07-15",
+        "date_of_birth": "1994-07-22",
+        "gender": "female",
+        "phone": "+91-9876543216",
+        "emergency_contact": "+91-9123456795",
+        "emergency_contact_name": "Robert Davis",
+        "address": "56 Sector 38, Gurugram 122004",
+        "photo": "employees/mary_davis.jpg",
+        "bank_account": "789012345678",
+        "bank_name": "BOB",
+        "basic_salary": "38000.00"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 8,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 9,
+        "employee_id": "EMP-008",
+        "department": 2,
+        "designation": "Production Supervisor",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2023-05-10",
+        "date_of_birth": "1991-04-18",
+        "gender": "male",
+        "phone": "+91-9876543217",
+        "emergency_contact": "+91-9123456796",
+        "emergency_contact_name": "Jennifer Anderson",
+        "address": "78 Sector 52, Gurugram 122005",
+        "photo": "employees/thomas_anderson.jpg",
+        "bank_account": "890123456789",
+        "bank_name": "Canara Bank",
+        "basic_salary": "55000.00"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 9,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 10,
+        "employee_id": "EMP-009",
+        "department": 5,
+        "designation": "Quality Inspector",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2023-08-20",
+        "date_of_birth": "1993-09-30",
+        "gender": "female",
+        "phone": "+91-9876543218",
+        "emergency_contact": "+91-9123456797",
+        "emergency_contact_name": "John Williams",
+        "address": "12 Sector 21, Gurugram 122006",
+        "photo": "employees/jane_williams.jpg",
+        "bank_account": "901234567890",
+        "bank_name": "Union Bank",
+        "basic_salary": "42000.00"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 10,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 11,
+        "employee_id": "EMP-010",
+        "department": 3,
+        "designation": "Store Keeper",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2023-09-05",
+        "date_of_birth": "1992-11-08",
+        "gender": "male",
+        "phone": "+91-9876543219",
+        "emergency_contact": "+91-9123456798",
+        "emergency_contact_name": "Susan Roberts",
+        "address": "90 Sector 17, Gurugram 122007",
+        "photo": "employees/peter_roberts.jpg",
+        "bank_account": "012345678901",
+        "bank_name": "Indian Bank",
+        "basic_salary": "32000.00"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 11,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 12,
+        "employee_id": "EMP-011",
+        "department": 8,
+        "designation": "Administrative Officer",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2023-10-01",
+        "date_of_birth": "1989-01-25",
+        "gender": "female",
+        "phone": "+91-9876543220",
+        "emergency_contact": "+91-9123456799",
+        "emergency_contact_name": "James Miller",
+        "address": "45 Sector 44, Gurugram 122008",
+        "photo": "employees/susan_miller.jpg",
+        "bank_account": "123456789012",
+        "bank_name": "Yes Bank",
+        "basic_salary": "48000.00"
+    }
+},
+{
+    "model": "hr.employee",
+    "pk": 12,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 1,
+        "updated_by": 1,
+        "user": 13,
+        "employee_id": "EMP-012",
+        "department": 6,
+        "designation": "Maintenance Engineer",
+        "employee_type": "permanent",
+        "employment_status": "active",
+        "date_of_joining": "2023-11-15",
+        "date_of_birth": "1990-05-12",
+        "gender": "male",
+        "phone": "+91-9876543221",
+        "emergency_contact": "+91-9123456800",
+        "emergency_contact_name": "Lisa Taylor",
+        "address": "67 Sector 32, Gurugram 122009",
+        "photo": "employees/kevin_taylor.jpg",
+        "bank_account": "234567890123",
+        "bank_name": "IDBI Bank",
+        "basic_salary": "52000.00"
+    }
+},
+{
+    "model": "hr.leavetype",
+    "pk": 1,
+    "fields": {
+        "name": "Casual Leave",
+        "code": "CL",
+        "days_per_year": 12,
+        "carry_forward": true,
+        "max_carry_forward": 6,
+        "requires_approval": true,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.leavetype",
+    "pk": 2,
+    "fields": {
+        "name": "Sick Leave",
+        "code": "SL",
+        "days_per_year": 12,
+        "carry_forward": true,
+        "max_carry_forward": 15,
+        "requires_approval": false,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.leavetype",
+    "pk": 3,
+    "fields": {
+        "name": "Earned Leave",
+        "code": "EL",
+        "days_per_year": 15,
+        "carry_forward": true,
+        "max_carry_forward": 30,
+        "requires_approval": true,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.leavetype",
+    "pk": 4,
+    "fields": {
+        "name": "Maternity Leave",
+        "code": "ML",
+        "days_per_year": 180,
+        "carry_forward": false,
+        "max_carry_forward": 0,
+        "requires_approval": true,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.leavetype",
+    "pk": 5,
+    "fields": {
+        "name": "Paternity Leave",
+        "code": "PL",
+        "days_per_year": 15,
+        "carry_forward": false,
+        "max_carry_forward": 0,
+        "requires_approval": true,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.leavetype",
+    "pk": 6,
+    "fields": {
+        "name": "Compensatory Off",
+        "code": "CO",
+        "days_per_year": 0,
+        "carry_forward": true,
+        "max_carry_forward": 5,
+        "requires_approval": true,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.leavetype",
+    "pk": 7,
+    "fields": {
+        "name": "Marriage Leave",
+        "code": "MAR",
+        "days_per_year": 7,
+        "carry_forward": false,
+        "max_carry_forward": 0,
+        "requires_approval": true,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.leavetype",
+    "pk": 8,
+    "fields": {
+        "name": "Bereavement Leave",
+        "code": "BL",
+        "days_per_year": 5,
+        "carry_forward": false,
+        "max_carry_forward": 0,
+        "requires_approval": false,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.leavetype",
+    "pk": 9,
+    "fields": {
+        "name": "Study Leave",
+        "code": "STL",
+        "days_per_year": 10,
+        "carry_forward": false,
+        "max_carry_forward": 0,
+        "requires_approval": true,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.leavetype",
+    "pk": 10,
+    "fields": {
+        "name": "Optional Holiday",
+        "code": "OH",
+        "days_per_year": 3,
+        "carry_forward": false,
+        "max_carry_forward": 0,
+        "requires_approval": true,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.leaveapplication",
+    "pk": 1,
+    "fields": {
+        "created_at": "2024-01-05T09:00:00Z",
+        "updated_at": "2024-01-06T10:30:00Z",
+        "created_by": 7,
+        "updated_by": 2,
+        "application_number": "LEAVE-2024-00001",
+        "employee": 6,
+        "leave_type": 1,
+        "start_date": "2024-01-15",
+        "end_date": "2024-01-16",
+        "total_days": 2,
+        "reason": "Family function",
+        "status": "approved",
+        "approved_by": 2,
+        "approved_date": "2024-01-06T10:30:00Z",
+        "comments": "Approved. Please complete pending work before leaving."
+    }
+},
+{
+    "model": "hr.leaveapplication",
+    "pk": 2,
+    "fields": {
+        "created_at": "2024-01-07T10:00:00Z",
+        "updated_at": "2024-01-07T11:15:00Z",
+        "created_by": 8,
+        "updated_by": 2,
+        "application_number": "LEAVE-2024-00002",
+        "employee": 7,
+        "leave_type": 2,
+        "start_date": "2024-01-10",
+        "end_date": "2024-01-10",
+        "total_days": 1,
+        "reason": "Fever and cold",
+        "status": "approved",
+        "approved_by": 2,
+        "approved_date": "2024-01-07T11:15:00Z",
+        "comments": "Get well soon"
+    }
+},
+{
+    "model": "hr.leaveapplication",
+    "pk": 3,
+    "fields": {
+        "created_at": "2024-01-08T14:30:00Z",
+        "updated_at": "2024-01-08T14:30:00Z",
+        "created_by": 9,
+        "updated_by": 9,
+        "application_number": "LEAVE-2024-00003",
+        "employee": 8,
+        "leave_type": 3,
+        "start_date": "2024-01-20",
+        "end_date": "2024-01-25",
+        "total_days": 6,
+        "reason": "Vacation with family",
+        "status": "pending",
+        "approved_by": null,
+        "approved_date": null,
+        "comments": ""
+    }
+},
+{
+    "model": "hr.leaveapplication",
+    "pk": 4,
+    "fields": {
+        "created_at": "2024-01-10T09:15:00Z",
+        "updated_at": "2024-01-10T16:45:00Z",
+        "created_by": 10,
+        "updated_by": 2,
+        "application_number": "LEAVE-2024-00004",
+        "employee": 9,
+        "leave_type": 2,
+        "start_date": "2024-01-11",
+        "end_date": "2024-01-12",
+        "total_days": 2,
+        "reason": "Doctor appointment and recovery",
+        "status": "approved",
+        "approved_by": 2,
+        "approved_date": "2024-01-10T16:45:00Z",
+        "comments": "Approved. Submit medical certificate."
+    }
+},
+{
+    "model": "hr.leaveapplication",
+    "pk": 5,
+    "fields": {
+        "created_at": "2024-01-11T11:00:00Z",
+        "updated_at": "2024-01-12T09:30:00Z",
+        "created_by": 11,
+        "updated_by": 2,
+        "application_number": "LEAVE-2024-00005",
+        "employee": 10,
+        "leave_type": 1,
+        "start_date": "2024-01-18",
+        "end_date": "2024-01-18",
+        "total_days": 1,
+        "reason": "Personal work",
+        "status": "rejected",
+        "approved_by": 2,
+        "approved_date": "2024-01-12T09:30:00Z",
+        "comments": "Cannot approve due to inventory audit schedule"
+    }
+},
+{
+    "model": "hr.leaveapplication",
+    "pk": 6,
+    "fields": {
+        "created_at": "2024-01-12T13:20:00Z",
+        "updated_at": "2024-01-12T13:20:00Z",
+        "created_by": 12,
+        "updated_by": 12,
+        "application_number": "LEAVE-2024-00006",
+        "employee": 11,
+        "leave_type": 7,
+        "start_date": "2024-02-01",
+        "end_date": "2024-02-07",
+        "total_days": 7,
+        "reason": "Brother's marriage",
+        "status": "pending",
+        "approved_by": null,
+        "approved_date": null,
+        "comments": ""
+    }
+},
+{
+    "model": "hr.leaveapplication",
+    "pk": 7,
+    "fields": {
+        "created_at": "2024-01-13T10:45:00Z",
+        "updated_at": "2024-01-13T10:45:00Z",
+        "created_by": 13,
+        "updated_by": 13,
+        "application_number": "LEAVE-2024-00007",
+        "employee": 12,
+        "leave_type": 6,
+        "start_date": "2024-01-22",
+        "end_date": "2024-01-22",
+        "total_days": 1,
+        "reason": "Compensatory off for working on holiday",
+        "status": "pending",
+        "approved_by": null,
+        "approved_date": null,
+        "comments": ""
+    }
+},
+{
+    "model": "hr.leaveapplication",
+    "pk": 8,
+    "fields": {
+        "created_at": "2024-01-14T08:30:00Z",
+        "updated_at": "2024-01-15T11:00:00Z",
+        "created_by": 7,
+        "updated_by": 2,
+        "application_number": "LEAVE-2024-00008",
+        "employee": 6,
+        "leave_type": 1,
+        "start_date": "2024-01-25",
+        "end_date": "2024-01-25",
+        "total_days": 1,
+        "reason": "Medical checkup",
+        "status": "approved",
+        "approved_by": 2,
+        "approved_date": "2024-01-15T11:00:00Z",
+        "comments": "Approved"
+    }
+},
+{
+    "model": "hr.leaveapplication",
+    "pk": 9,
+    "fields": {
+        "created_at": "2024-01-15T09:15:00Z",
+        "updated_at": "2024-01-15T09:15:00Z",
+        "created_by": 8,
+        "updated_by": 8,
+        "application_number": "LEAVE-2024-00009",
+        "employee": 7,
+        "leave_type": 8,
+        "start_date": "2024-01-17",
+        "end_date": "2024-01-19",
+        "total_days": 3,
+        "reason": "Family bereavement",
+        "status": "pending",
+        "approved_by": null,
+        "approved_date": null,
+        "comments": ""
+    }
+},
+{
+    "model": "hr.leaveapplication",
+    "pk": 10,
+    "fields": {
+        "created_at": "2024-01-15T14:00:00Z",
+        "updated_at": "2024-01-15T14:00:00Z",
+        "created_by": 9,
+        "updated_by": 9,
+        "application_number": "LEAVE-2024-00010",
+        "employee": 8,
+        "leave_type": 9,
+        "start_date": "2024-02-10",
+        "end_date": "2024-02-14",
+        "total_days": 5,
+        "reason": "Exam preparation",
+        "status": "pending",
+        "approved_by": null,
+        "approved_date": null,
+        "comments": ""
+    }
+},
+{
+    "model": "hr.shift",
+    "pk": 1,
+    "fields": {
+        "name": "General Shift",
+        "code": "GS",
+        "start_time": "09:00:00",
+        "end_time": "18:00:00",
+        "break_start": "13:00:00",
+        "break_end": "14:00:00",
+        "is_active": true
+    }
+},
+{
+    "model": "hr.shift",
+    "pk": 2,
+    "fields": {
+        "name": "Morning Shift",
+        "code": "MS",
+        "start_time": "06:00:00",
+        "end_time": "14:00:00",
+        "break_start": "10:00:00",
+        "break_end": "10:30:00",
+        "is_active": true
+    }
+},
+{
+    "model": "hr.shift",
+    "pk": 3,
+    "fields": {
+        "name": "Evening Shift",
+        "code": "ES",
+        "start_time": "14:00:00",
+        "end_time": "22:00:00",
+        "break_start": "18:00:00",
+        "break_end": "19:00:00",
+        "is_active": true
+    }
+},
+{
+    "model": "hr.shift",
+    "pk": 4,
+    "fields": {
+        "name": "Night Shift",
+        "code": "NS",
+        "start_time": "22:00:00",
+        "end_time": "06:00:00",
+        "break_start": "02:00:00",
+        "break_end": "02:30:00",
+        "is_active": true
+    }
+},
+{
+    "model": "hr.shift",
+    "pk": 5,
+    "fields": {
+        "name": "Flexi Shift",
+        "code": "FS",
+        "start_time": "10:00:00",
+        "end_time": "19:00:00",
+        "break_start": "14:00:00",
+        "break_end": "15:00:00",
+        "is_active": true
+    }
+},
+{
+    "model": "hr.shift",
+    "pk": 6,
+    "fields": {
+        "name": "Administration Shift",
+        "code": "AS",
+        "start_time": "08:30:00",
+        "end_time": "17:30:00",
+        "break_start": "13:00:00",
+        "break_end": "14:00:00",
+        "is_active": true
+    }
+},
+{
+    "model": "hr.shift",
+    "pk": 7,
+    "fields": {
+        "name": "Production Shift A",
+        "code": "PSA",
+        "start_time": "07:00:00",
+        "end_time": "15:00:00",
+        "break_start": "11:00:00",
+        "break_end": "12:00:00",
+        "is_active": true
+    }
+},
+{
+    "model": "hr.shift",
+    "pk": 8,
+    "fields": {
+        "name": "Production Shift B",
+        "code": "PSB",
+        "start_time": "15:00:00",
+        "end_time": "23:00:00",
+        "break_start": "19:00:00",
+        "break_end": "20:00:00",
+        "is_active": true
+    }
+},
+{
+    "model": "hr.shift",
+    "pk": 9,
+    "fields": {
+        "name": "Production Shift C",
+        "code": "PSC",
+        "start_time": "23:00:00",
+        "end_time": "07:00:00",
+        "break_start": "03:00:00",
+        "break_end": "04:00:00",
+        "is_active": true
+    }
+},
+{
+    "model": "hr.shift",
+    "pk": 10,
+    "fields": {
+        "name": "Maintenance Shift",
+        "code": "MTS",
+        "start_time": "08:00:00",
+        "end_time": "20:00:00",
+        "break_start": "13:00:00",
+        "break_end": "14:00:00",
+        "is_active": true
+    }
+},
+{
+    "model": "hr.employeeshift",
+    "pk": 1,
+    "fields": {
+        "employee": 1,
+        "shift": 6,
+        "effective_from": "2024-01-01",
+        "effective_to": null,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.employeeshift",
+    "pk": 2,
+    "fields": {
+        "employee": 2,
+        "shift": 1,
+        "effective_from": "2024-01-01",
+        "effective_to": null,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.employeeshift",
+    "pk": 3,
+    "fields": {
+        "employee": 3,
+        "shift": 1,
+        "effective_from": "2024-01-01",
+        "effective_to": null,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.employeeshift",
+    "pk": 4,
+    "fields": {
+        "employee": 4,
+        "shift": 1,
+        "effective_from": "2024-01-01",
+        "effective_to": null,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.employeeshift",
+    "pk": 5,
+    "fields": {
+        "employee": 5,
+        "shift": 7,
+        "effective_from": "2024-01-01",
+        "effective_to": null,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.employeeshift",
+    "pk": 6,
+    "fields": {
+        "employee": 6,
+        "shift": 7,
+        "effective_from": "2024-01-01",
+        "effective_to": null,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.employeeshift",
+    "pk": 7,
+    "fields": {
+        "employee": 7,
+        "shift": 8,
+        "effective_from": "2024-01-01",
+        "effective_to": null,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.employeeshift",
+    "pk": 8,
+    "fields": {
+        "employee": 8,
+        "shift": 1,
+        "effective_from": "2024-01-01",
+        "effective_to": null,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.employeeshift",
+    "pk": 9,
+    "fields": {
+        "employee": 9,
+        "shift": 1,
+        "effective_from": "2024-01-01",
+        "effective_to": null,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.employeeshift",
+    "pk": 10,
+    "fields": {
+        "employee": 10,
+        "shift": 1,
+        "effective_from": "2024-01-01",
+        "effective_to": null,
+        "is_active": true
+    }
+},
+{
+    "model": "hr.attendance",
+    "pk": 1,
+    "fields": {
+        "employee": 6,
+        "date": "2024-01-15",
+        "check_in": "09:05:00",
+        "check_out": "18:10:00",
+        "status": "present",
+        "overtime_hours": "0.50",
+        "remarks": "Slight delay in check-in"
+    }
+},
+{
+    "model": "hr.attendance",
+    "pk": 2,
+    "fields": {
+        "employee": 7,
+        "date": "2024-01-15",
+        "check_in": "14:02:00",
+        "check_out": "22:05:00",
+        "status": "present",
+        "overtime_hours": "0.00",
+        "remarks": ""
+    }
+},
+{
+    "model": "hr.attendance",
+    "pk": 3,
+    "fields": {
+        "employee": 8,
+        "date": "2024-01-15",
+        "check_in": "08:55:00",
+        "check_out": "17:45:00",
+        "status": "present",
+        "overtime_hours": "0.00",
+        "remarks": ""
+    }
+},
+{
+    "model": "hr.attendance",
+    "pk": 4,
+    "fields": {
+        "employee": 9,
+        "date": "2024-01-15",
+        "check_in": "09:10:00",
+        "check_out": "18:00:00",
+        "status": "present",
+        "overtime_hours": "0.00",
+        "remarks": ""
+    }
+},
+{
+    "model": "hr.attendance",
+    "pk": 5,
+    "fields": {
+        "employee": 10,
+        "date": "2024-01-15",
+        "check_in": "09:00:00",
+        "check_out": "18:30:00",
+        "status": "present",
+        "overtime_hours": "0.50",
+        "remarks": "Stayed late for inventory count"
+    }
+},
+{
+    "model": "hr.attendance",
+    "pk": 6,
+    "fields": {
+        "employee": 6,
+        "date": "2024-01-16",
+        "check_in": "08:58:00",
+        "check_out": "18:05:00",
+        "status": "present",
+        "overtime_hours": "0.00",
+        "remarks": ""
+    }
+},
+{
+    "model": "hr.attendance",
+    "pk": 7,
+    "fields": {
+        "employee": 7,
+        "date": "2024-01-16",
+        "check_in": "13:59:00",
+        "check_out": "22:10:00",
+        "status": "present",
+        "overtime_hours": "0.25",
+        "remarks": ""
+    }
+},
+{
+    "model": "hr.attendance",
+    "pk": 8,
+    "fields": {
+        "employee": 8,
+        "date": "2024-01-16",
+        "check_in": "09:00:00",
+        "check_out": "18:00:00",
+        "status": "present",
+        "overtime_hours": "0.00",
+        "remarks": ""
+    }
+},
+{
+    "model": "hr.attendance",
+    "pk": 9,
+    "fields": {
+        "employee": 9,
+        "date": "2024-01-16",
+        "check_in": null,
+        "check_out": null,
+        "status": "absent",
+        "overtime_hours": "0.00",
+        "remarks": "On sick leave"
+    }
+},
+{
+    "model": "hr.attendance",
+    "pk": 10,
+    "fields": {
+        "employee": 10,
+        "date": "2024-01-16",
+        "check_in": "09:15:00",
+        "check_out": "18:15:00",
+        "status": "present",
+        "overtime_hours": "0.00",
+        "remarks": "Traffic delay"
+    }
+},
+{
+    "model": "inventory.category",
+    "pk": 1,
+    "fields": {
+        "name": "Raw Materials",
+        "parent": null,
+        "description": "Basic materials used in production"
+    }
+},
+{
+    "model": "inventory.category",
+    "pk": 2,
+    "fields": {
+        "name": "Finished Goods",
+        "parent": null,
+        "description": "Completed products ready for sale"
+    }
+},
+{
+    "model": "inventory.category",
+    "pk": 3,
+    "fields": {
+        "name": "Packaging Materials",
+        "parent": 1,
+        "description": "Materials used for product packaging"
+    }
+},
+{
+    "model": "inventory.category",
+    "pk": 4,
+    "fields": {
+        "name": "Electronic Components",
+        "parent": 1,
+        "description": "Electronic parts and components"
+    }
+},
+{
+    "model": "inventory.category",
+    "pk": 5,
+    "fields": {
+        "name": "Mechanical Parts",
+        "parent": 1,
+        "description": "Mechanical components and assemblies"
+    }
+},
+{
+    "model": "inventory.category",
+    "pk": 6,
+    "fields": {
+        "name": "Consumables",
+        "parent": null,
+        "description": "Office and maintenance supplies"
+    }
+},
+{
+    "model": "inventory.category",
+    "pk": 7,
+    "fields": {
+        "name": "Tools & Equipment",
+        "parent": null,
+        "description": "Tools and equipment for production"
+    }
+},
+{
+    "model": "inventory.category",
+    "pk": 8,
+    "fields": {
+        "name": "Semi-Finished Goods",
+        "parent": null,
+        "description": "Partially completed products"
+    }
+},
+{
+    "model": "inventory.category",
+    "pk": 9,
+    "fields": {
+        "name": "Electrical Components",
+        "parent": 4,
+        "description": "Wires, cables, connectors"
+    }
+},
+{
+    "model": "inventory.category",
+    "pk": 10,
+    "fields": {
+        "name": "Plastic Components",
+        "parent": 5,
+        "description": "Plastic molded parts"
+    }
+},
+{
+    "model": "inventory.unitofmeasure",
+    "pk": 1,
+    "fields": {
+        "name": "Piece",
+        "symbol": "PCS"
+    }
+},
+{
+    "model": "inventory.unitofmeasure",
+    "pk": 2,
+    "fields": {
+        "name": "Kilogram",
+        "symbol": "KG"
+    }
+},
+{
+    "model": "inventory.unitofmeasure",
+    "pk": 3,
+    "fields": {
+        "name": "Meter",
+        "symbol": "M"
+    }
+},
+{
+    "model": "inventory.unitofmeasure",
+    "pk": 4,
+    "fields": {
+        "name": "Liter",
+        "symbol": "L"
+    }
+},
+{
+    "model": "inventory.unitofmeasure",
+    "pk": 5,
+    "fields": {
+        "name": "Roll",
+        "symbol": "ROLL"
+    }
+},
+{
+    "model": "inventory.unitofmeasure",
+    "pk": 6,
+    "fields": {
+        "name": "Box",
+        "symbol": "BOX"
+    }
+},
+{
+    "model": "inventory.unitofmeasure",
+    "pk": 7,
+    "fields": {
+        "name": "Set",
+        "symbol": "SET"
+    }
+},
+{
+    "model": "inventory.unitofmeasure",
+    "pk": 8,
+    "fields": {
+        "name": "Pair",
+        "symbol": "PR"
+    }
+},
+{
+    "model": "inventory.unitofmeasure",
+    "pk": 9,
+    "fields": {
+        "name": "Carton",
+        "symbol": "CTN"
+    }
+},
+{
+    "model": "inventory.unitofmeasure",
+    "pk": 10,
+    "fields": {
+        "name": "Bottle",
+        "symbol": "BTL"
+    }
+},
+{
+    "model": "inventory.product",
+    "pk": 1,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 4,
+        "updated_by": 4,
+        "SKU": "RAW-001",
+        "name": "Steel Sheet 2mm",
+        "description": "Cold rolled steel sheet, 2mm thickness",
+        "category": 1,
+        "unit_of_measure": 2,
+        "product_type": "raw",
+        "min_stock": "500.00",
+        "max_stock": "5000.00",
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.product",
+    "pk": 2,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 4,
+        "updated_by": 4,
+        "SKU": "RAW-002",
+        "name": "ABS Plastic Granules",
+        "description": "ABS plastic raw material for molding",
+        "category": 1,
+        "unit_of_measure": 2,
+        "product_type": "raw",
+        "min_stock": "100.00",
+        "max_stock": "1000.00",
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.product",
+    "pk": 3,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 4,
+        "updated_by": 4,
+        "SKU": "FIN-001",
+        "name": "Industrial Fan Model X1",
+        "description": "Heavy-duty industrial fan, 48-inch blades",
+        "category": 2,
+        "unit_of_measure": 1,
+        "product_type": "finished",
+        "min_stock": "10.00",
+        "max_stock": "100.00",
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.product",
+    "pk": 4,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 4,
+        "updated_by": 4,
+        "SKU": "PKG-001",
+        "name": "Corrugated Box 12x12x12",
+        "description": "Brown corrugated cardboard box",
+        "category": 3,
+        "unit_of_measure": 1,
+        "product_type": "consumable",
+        "min_stock": "100.00",
+        "max_stock": "1000.00",
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.product",
+    "pk": 5,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 4,
+        "updated_by": 4,
+        "SKU": "ELC-001",
+        "name": "Electric Motor 1HP",
+        "description": "Single phase 1HP electric motor",
+        "category": 4,
+        "unit_of_measure": 1,
+        "product_type": "raw",
+        "min_stock": "20.00",
+        "max_stock": "200.00",
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.product",
+    "pk": 6,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 4,
+        "updated_by": 4,
+        "SKU": "MCH-001",
+        "name": "Fan Blade Assembly",
+        "description": "Complete fan blade assembly set",
+        "category": 5,
+        "unit_of_measure": 1,
+        "product_type": "semi",
+        "min_stock": "25.00",
+        "max_stock": "250.00",
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.product",
+    "pk": 7,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 4,
+        "updated_by": 4,
+        "SKU": "CON-001",
+        "name": "Industrial Lubricant",
+        "description": "Multi-purpose industrial lubricant oil",
+        "category": 6,
+        "unit_of_measure": 4,
+        "product_type": "consumable",
+        "min_stock": "50.00",
+        "max_stock": "500.00",
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.product",
+    "pk": 8,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 4,
+        "updated_by": 4,
+        "SKU": "TOOL-001",
+        "name": "Electric Drill",
+        "description": "Heavy-duty industrial electric drill",
+        "category": 7,
+        "unit_of_measure": 1,
+        "product_type": "consumable",
+        "min_stock": "5.00",
+        "max_stock": "50.00",
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.product",
+    "pk": 9,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 4,
+        "updated_by": 4,
+        "SKU": "ELC-002",
+        "name": "Electrical Wire 2.5sqmm",
+        "description": "Copper electrical wire, 2.5 square mm",
+        "category": 9,
+        "unit_of_measure": 3,
+        "product_type": "raw",
+        "min_stock": "100.00",
+        "max_stock": "1000.00",
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.product",
+    "pk": 10,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 4,
+        "updated_by": 4,
+        "SKU": "PLA-001",
+        "name": "Plastic Housing",
+        "description": "ABS plastic housing for fan motor",
+        "category": 10,
+        "unit_of_measure": 1,
+        "product_type": "raw",
+        "min_stock": "50.00",
+        "max_stock": "500.00",
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.warehouse",
+    "pk": 1,
+    "fields": {
+        "name": "Main Warehouse",
+        "code": "MW01",
+        "location": "Building A, Ground Floor, North Wing",
+        "manager": 4,
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.warehouse",
+    "pk": 2,
+    "fields": {
+        "name": "Raw Material Store",
+        "code": "RMS01",
+        "location": "Building B, First Floor",
+        "manager": 3,
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.warehouse",
+    "pk": 3,
+    "fields": {
+        "name": "Finished Goods Store",
+        "code": "FGS01",
+        "location": "Building C, Ground Floor",
+        "manager": 3,
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.warehouse",
+    "pk": 4,
+    "fields": {
+        "name": "Tool Room",
+        "code": "TR01",
+        "location": "Production Area, Mezzanine Floor",
+        "manager": 12,
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.warehouse",
+    "pk": 5,
+    "fields": {
+        "name": "Chemical Store",
+        "code": "CS01",
+        "location": "Separate Building, East Side",
+        "manager": 3,
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.warehouse",
+    "pk": 6,
+    "fields": {
+        "name": "Packaging Store",
+        "code": "PS01",
+        "location": "Building A, Second Floor",
+        "manager": 10,
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.warehouse",
+    "pk": 7,
+    "fields": {
+        "name": "Electrical Store",
+        "code": "ES01",
+        "location": "Building B, Ground Floor",
+        "manager": 3,
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.warehouse",
+    "pk": 8,
+    "fields": {
+        "name": "Spare Parts Store",
+        "code": "SPS01",
+        "location": "Building C, First Floor",
+        "manager": 10,
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.warehouse",
+    "pk": 9,
+    "fields": {
+        "name": "Receiving Area",
+        "code": "RA01",
+        "location": "Near Main Gate, Loading Dock",
+        "manager": 3,
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.warehouse",
+    "pk": 10,
+    "fields": {
+        "name": "Quarantine Store",
+        "code": "QS01",
+        "location": "Separate Area, Building D",
+        "manager": 9,
+        "is_active": true
+    }
+},
+{
+    "model": "inventory.stock",
+    "pk": 1,
+    "fields": {
+        "product": 1,
+        "warehouse": 2,
+        "quantity": "1250.500",
+        "reserved_quantity": "150.000",
+        "last_updated": "2024-01-15T10:00:00Z"
+    }
+},
+{
+    "model": "inventory.stock",
+    "pk": 2,
+    "fields": {
+        "product": 2,
+        "warehouse": 2,
+        "quantity": "350.250",
+        "reserved_quantity": "50.000",
+        "last_updated": "2024-01-15T10:00:00Z"
+    }
+},
+{
+    "model": "inventory.stock",
+    "pk": 3,
+    "fields": {
+        "product": 3,
+        "warehouse": 3,
+        "quantity": "45.000",
+        "reserved_quantity": "10.000",
+        "last_updated": "2024-01-15T10:00:00Z"
+    }
+},
+{
+    "model": "inventory.stock",
+    "pk": 4,
+    "fields": {
+        "product": 4,
+        "warehouse": 6,
+        "quantity": "320.000",
+        "reserved_quantity": "20.000",
+        "last_updated": "2024-01-15T10:00:00Z"
+    }
+},
+{
+    "model": "inventory.stock",
+    "pk": 5,
+    "fields": {
+        "product": 5,
+        "warehouse": 7,
+        "quantity": "65.000",
+        "reserved_quantity": "15.000",
+        "last_updated": "2024-01-15T10:00:00Z"
+    }
+},
+{
+    "model": "inventory.stock",
+    "pk": 6,
+    "fields": {
+        "product": 6,
+        "warehouse": 8,
+        "quantity": "80.000",
+        "reserved_quantity": "25.000",
+        "last_updated": "2024-01-15T10:00:00Z"
+    }
+},
+{
+    "model": "inventory.stock",
+    "pk": 7,
+    "fields": {
+        "product": 7,
+        "warehouse": 5,
+        "quantity": "125.500",
+        "reserved_quantity": "10.000",
+        "last_updated": "2024-01-15T10:00:00Z"
+    }
+},
+{
+    "model": "inventory.stock",
+    "pk": 8,
+    "fields": {
+        "product": 8,
+        "warehouse": 4,
+        "quantity": "12.000",
+        "reserved_quantity": "2.000",
+        "last_updated": "2024-01-15T10:00:00Z"
+    }
+},
+{
+    "model": "inventory.stock",
+    "pk": 9,
+    "fields": {
+        "product": 9,
+        "warehouse": 7,
+        "quantity": "450.000",
+        "reserved_quantity": "100.000",
+        "last_updated": "2024-01-15T10:00:00Z"
+    }
+},
+{
+    "model": "inventory.stock",
+    "pk": 10,
+    "fields": {
+        "product": 10,
+        "warehouse": 2,
+        "quantity": "180.000",
+        "reserved_quantity": "30.000",
+        "last_updated": "2024-01-15T10:00:00Z"
+    }
+},
+{
+    "model": "procurement.supplier",
+    "pk": 1,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "code": "SUP-001",
+        "name": "Steel Corporation India Ltd.",
+        "supplier_type": "material",
+        "contact_person": "Mr. Rajesh Kumar",
+        "email": "purchase@steelcorp.in",
+        "phone": "+91-11-23456789",
+        "address": "12 Industrial Area, Phase II, Delhi 110020",
+        "tax_id": "GSTIN07ABCD1234E1Z6",
+        "payment_terms": "Net 30 Days",
+        "credit_limit": "500000.00",
+        "current_balance": "125000.50",
+        "is_active": true
+    }
+},
+{
+    "model": "procurement.supplier",
+    "pk": 2,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "code": "SUP-002",
+        "name": "Plastico Industries",
+        "supplier_type": "material",
+        "contact_person": "Ms. Priya Sharma",
+        "email": "sales@plastico.in",
+        "phone": "+91-22-34567890",
+        "address": "45 MIDC, Andheri East, Mumbai 400093",
+        "tax_id": "GSTIN27ABCD1234E1Z7",
+        "payment_terms": "Net 45 Days",
+        "credit_limit": "300000.00",
+        "current_balance": "75000.00",
+        "is_active": true
+    }
+},
+{
+    "model": "procurement.supplier",
+    "pk": 3,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "code": "SUP-003",
+        "name": "Electro Power Motors",
+        "supplier_type": "material",
+        "contact_person": "Mr. Suresh Patel",
+        "email": "info@electropower.in",
+        "phone": "+91-79-45678901",
+        "address": "78 GIDC, Vatva, Ahmedabad 382445",
+        "tax_id": "GSTIN24ABCD1234E1Z8",
+        "payment_terms": "Net 15 Days",
+        "credit_limit": "250000.00",
+        "current_balance": "50000.25",
+        "is_active": true
+    }
+},
+{
+    "model": "procurement.supplier",
+    "pk": 4,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "code": "SUP-004",
+        "name": "Packaging Solutions Ltd.",
+        "supplier_type": "material",
+        "contact_person": "Mr. Amit Jain",
+        "email": "sales@packagingsolutions.in",
+        "phone": "+91-33-56789012",
+        "address": "23 Taratala Road, Kolkata 700088",
+        "tax_id": "GSTIN19ABCD1234E1Z9",
+        "payment_terms": "Net 30 Days",
+        "credit_limit": "150000.00",
+        "current_balance": "25000.00",
+        "is_active": true
+    }
+},
+{
+    "model": "procurement.supplier",
+    "pk": 5,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "code": "SUP-005",
+        "name": "Industrial Tools Corp.",
+        "supplier_type": "equipment",
+        "contact_person": "Mr. Vijay Singh",
+        "email": "tools@industrialcorp.in",
+        "phone": "+91-44-67890123",
+        "address": "56 Mount Road, Chennai 600002",
+        "tax_id": "GSTIN33ABCD1234E1Z0",
+        "payment_terms": "Net 30 Days",
+        "credit_limit": "100000.00",
+        "current_balance": "15000.75",
+        "is_active": true
+    }
+},
+{
+    "model": "procurement.supplier",
+    "pk": 6,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "code": "SUP-006",
+        "name": "Chemical Suppliers India",
+        "supplier_type": "material",
+        "contact_person": "Dr. Arvind Desai",
+        "email": "chemicals@chemsuppliers.in",
+        "phone": "+91-40-78901234",
+        "address": "89 Banjara Hills, Hyderabad 500034",
+        "tax_id": "GSTIN36ABCD1234E1Z1",
+        "payment_terms": "Net 30 Days",
+        "credit_limit": "200000.00",
+        "current_balance": "45000.00",
+        "is_active": true
+    }
+},
+{
+    "model": "procurement.supplier",
+    "pk": 7,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "code": "SUP-007",
+        "name": "Electrical Components Ltd.",
+        "supplier_type": "material",
+        "contact_person": "Ms. Neha Reddy",
+        "email": "sales@electricalcomp.in",
+        "phone": "+91-80-89012345",
+        "address": "34 Brigade Road, Bangalore 560001",
+        "tax_id": "GSTIN29ABCD1234E1Z2",
+        "payment_terms": "Net 60 Days",
+        "credit_limit": "350000.00",
+        "current_balance": "95000.50",
+        "is_active": true
+    }
+},
+{
+    "model": "procurement.supplier",
+    "pk": 8,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "code": "SUP-008",
+        "name": "Maintenance Services Pvt. Ltd.",
+        "supplier_type": "service",
+        "contact_person": "Mr. Sanjay Gupta",
+        "email": "service@maintenance.in",
+        "phone": "+91-124-90123456",
+        "address": "12 Sector 18, Gurugram 122015",
+        "tax_id": "GSTIN06ABCD1234E1Z3",
+        "payment_terms": "Net 30 Days",
+        "credit_limit": "50000.00",
+        "current_balance": "12500.00",
+        "is_active": true
+    }
+},
+{
+    "model": "procurement.supplier",
+    "pk": 9,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "code": "SUP-009",
+        "name": "Precision Machining Works",
+        "supplier_type": "service",
+        "contact_person": "Mr. Ravi Shankar",
+        "email": "precision@machiningworks.in",
+        "phone": "+91-141-01234567",
+        "address": "45 Sitapura, Jaipur 302022",
+        "tax_id": "GSTIN08ABCD1234E1Z4",
+        "payment_terms": "Net 15 Days",
+        "credit_limit": "75000.00",
+        "current_balance": "20000.00",
+        "is_active": true
+    }
+},
+{
+    "model": "procurement.supplier",
+    "pk": 10,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "code": "SUP-010",
+        "name": "Office Supplies Mart",
+        "supplier_type": "other",
+        "contact_person": "Mr. Deepak Verma",
+        "email": "office@suppliesmart.in",
+        "phone": "+91-11-12345678",
+        "address": "78 Connaught Place, Delhi 110001",
+        "tax_id": "GSTIN07ABCD1234E1Z5",
+        "payment_terms": "Net 30 Days",
+        "credit_limit": "50000.00",
+        "current_balance": "8500.00",
+        "is_active": true
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 1,
+    "fields": {
+        "created_at": "2024-01-02T10:00:00Z",
+        "updated_at": "2024-01-10T15:30:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "po_number": "PO-2024-00001",
+        "supplier": 1,
+        "order_date": "2024-01-02",
+        "expected_delivery": "2024-01-15",
+        "status": "partial",
+        "delivery_address": "Main Warehouse, Building A, Ground Floor, North Wing",
+        "terms_conditions": "Goods must be in perfect condition. Payment within 30 days of delivery.",
+        "total_amount": "250000.00",
+        "tax_amount": "45000.00",
+        "grand_total": "295000.00",
+        "notes": "Urgent requirement for production"
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 2,
+    "fields": {
+        "created_at": "2024-01-03T11:30:00Z",
+        "updated_at": "2024-01-15T09:45:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "po_number": "PO-2024-00002",
+        "supplier": 2,
+        "order_date": "2024-01-03",
+        "expected_delivery": "2024-01-20",
+        "status": "confirmed",
+        "delivery_address": "Raw Material Store, Building B, First Floor",
+        "terms_conditions": "Material must meet ISO standards",
+        "total_amount": "125000.00",
+        "tax_amount": "22500.00",
+        "grand_total": "147500.00",
+        "notes": "For upcoming production batch"
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 3,
+    "fields": {
+        "created_at": "2024-01-05T14:20:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "po_number": "PO-2024-00003",
+        "supplier": 3,
+        "order_date": "2024-01-05",
+        "expected_delivery": "2024-01-25",
+        "status": "sent",
+        "delivery_address": "Electrical Store, Building B, Ground Floor",
+        "terms_conditions": "Motors must be tested before dispatch",
+        "total_amount": "180000.00",
+        "tax_amount": "32400.00",
+        "grand_total": "212400.00",
+        "notes": "Required for fan assembly line"
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 4,
+    "fields": {
+        "created_at": "2024-01-08T09:15:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "po_number": "PO-2024-00004",
+        "supplier": 4,
+        "order_date": "2024-01-08",
+        "expected_delivery": "2024-01-30",
+        "status": "draft",
+        "delivery_address": "Packaging Store, Building A, Second Floor",
+        "terms_conditions": "Boxes must be of specified dimensions",
+        "total_amount": "50000.00",
+        "tax_amount": "9000.00",
+        "grand_total": "59000.00",
+        "notes": "Standard packaging order"
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 5,
+    "fields": {
+        "created_at": "2024-01-10T10:45:00Z",
+        "updated_at": "2024-01-12T16:20:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "po_number": "PO-2024-00005",
+        "supplier": 5,
+        "order_date": "2024-01-10",
+        "expected_delivery": "2024-01-18",
+        "status": "received",
+        "delivery_address": "Tool Room, Production Area, Mezzanine Floor",
+        "terms_conditions": "Tools must be of industrial grade",
+        "total_amount": "75000.00",
+        "tax_amount": "13500.00",
+        "grand_total": "88500.00",
+        "notes": "For maintenance department"
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 6,
+    "fields": {
+        "created_at": "2024-01-12T13:30:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "po_number": "PO-2024-00006",
+        "supplier": 6,
+        "order_date": "2024-01-12",
+        "expected_delivery": "2024-01-22",
+        "status": "confirmed",
+        "delivery_address": "Chemical Store, Separate Building, East Side",
+        "terms_conditions": "MSDS must be provided",
+        "total_amount": "45000.00",
+        "tax_amount": "8100.00",
+        "grand_total": "53100.00",
+        "notes": "Regular maintenance chemicals"
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 7,
+    "fields": {
+        "created_at": "2024-01-13T15:00:00Z",
+        "updated_at": "2024-01-13T15:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "po_number": "PO-2024-00007",
+        "supplier": 7,
+        "order_date": "2024-01-13",
+        "expected_delivery": "2024-01-28",
+        "status": "draft",
+        "delivery_address": "Electrical Store, Building B, Ground Floor",
+        "terms_conditions": "All wires must be copper only",
+        "total_amount": "95000.00",
+        "tax_amount": "17100.00",
+        "grand_total": "112100.00",
+        "notes": "For production of electrical panels"
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 8,
+    "fields": {
+        "created_at": "2024-01-14T11:20:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "po_number": "PO-2024-00008",
+        "supplier": 8,
+        "order_date": "2024-01-14",
+        "expected_delivery": "2024-01-31",
+        "status": "sent",
+        "delivery_address": "Main Warehouse, Building A, Ground Floor",
+        "terms_conditions": "Service to be completed within 7 days",
+        "total_amount": "30000.00",
+        "tax_amount": "5400.00",
+        "grand_total": "35400.00",
+        "notes": "Annual maintenance contract"
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 9,
+    "fields": {
+        "created_at": "2024-01-15T09:00:00Z",
+        "updated_at": "2024-01-15T09:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "po_number": "PO-2024-00009",
+        "supplier": 9,
+        "order_date": "2024-01-15",
+        "expected_delivery": "2024-02-05",
+        "status": "draft",
+        "delivery_address": "Main Warehouse, Building A, Ground Floor",
+        "terms_conditions": "Precision machining as per drawings",
+        "total_amount": "65000.00",
+        "tax_amount": "11700.00",
+        "grand_total": "76700.00",
+        "notes": "Custom parts for new product"
+    }
+},
+{
+    "model": "procurement.purchaseorder",
+    "pk": 10,
+    "fields": {
+        "created_at": "2024-01-15T14:30:00Z",
+        "updated_at": "2024-01-15T14:30:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "po_number": "PO-2024-00010",
+        "supplier": 10,
+        "order_date": "2024-01-15",
+        "expected_delivery": "2024-01-22",
+        "status": "draft",
+        "delivery_address": "Administration Building, Ground Floor",
+        "terms_conditions": "Standard office supplies",
+        "total_amount": "25000.00",
+        "tax_amount": "4500.00",
+        "grand_total": "29500.00",
+        "notes": "Monthly office supplies order"
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 1,
+    "fields": {
+        "purchase_order": 1,
+        "product": 1,
+        "quantity": "1000.000",
+        "unit_price": "250.00",
+        "tax_rate": "18.00",
+        "received_quantity": "750.000",
+        "warehouse": 2
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 2,
+    "fields": {
+        "purchase_order": 2,
+        "product": 2,
+        "quantity": "500.000",
+        "unit_price": "250.00",
+        "tax_rate": "18.00",
+        "received_quantity": "0.000",
+        "warehouse": 2
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 3,
+    "fields": {
+        "purchase_order": 3,
+        "product": 5,
+        "quantity": "50.000",
+        "unit_price": "3600.00",
+        "tax_rate": "18.00",
+        "received_quantity": "0.000",
+        "warehouse": 7
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 4,
+    "fields": {
+        "purchase_order": 4,
+        "product": 4,
+        "quantity": "200.000",
+        "unit_price": "250.00",
+        "tax_rate": "18.00",
+        "received_quantity": "0.000",
+        "warehouse": 6
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 5,
+    "fields": {
+        "purchase_order": 5,
+        "product": 8,
+        "quantity": "10.000",
+        "unit_price": "7500.00",
+        "tax_rate": "18.00",
+        "received_quantity": "10.000",
+        "warehouse": 4
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 6,
+    "fields": {
+        "purchase_order": 6,
+        "product": 7,
+        "quantity": "100.000",
+        "unit_price": "450.00",
+        "tax_rate": "18.00",
+        "received_quantity": "0.000",
+        "warehouse": 5
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 7,
+    "fields": {
+        "purchase_order": 7,
+        "product": 9,
+        "quantity": "200.000",
+        "unit_price": "475.00",
+        "tax_rate": "18.00",
+        "received_quantity": "0.000",
+        "warehouse": 7
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 8,
+    "fields": {
+        "purchase_order": 8,
+        "product": 8,
+        "quantity": "2.000",
+        "unit_price": "15000.00",
+        "tax_rate": "18.00",
+        "received_quantity": "0.000",
+        "warehouse": 4
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 9,
+    "fields": {
+        "purchase_order": 9,
+        "product": 6,
+        "quantity": "25.000",
+        "unit_price": "2600.00",
+        "tax_rate": "18.00",
+        "received_quantity": "0.000",
+        "warehouse": 8
+    }
+},
+{
+    "model": "procurement.purchaseorderitem",
+    "pk": 10,
+    "fields": {
+        "purchase_order": 10,
+        "product": 4,
+        "quantity": "50.000",
+        "unit_price": "500.00",
+        "tax_rate": "18.00",
+        "received_quantity": "0.000",
+        "warehouse": 6
+    }
+},
+{
+    "model": "procurement.goodsreceipt",
+    "pk": 1,
+    "fields": {
+        "created_at": "2024-01-10T14:30:00Z",
+        "updated_at": "2024-01-10T14:30:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "gr_number": "GR-2024-00001",
+        "purchase_order": 1,
+        "receipt_date": "2024-01-10",
+        "received_by": 11,
+        "warehouse": 2,
+        "notes": "Partial delivery received"
+    }
+},
+{
+    "model": "procurement.goodsreceipt",
+    "pk": 2,
+    "fields": {
+        "created_at": "2024-01-12T11:00:00Z",
+        "updated_at": "2024-01-12T11:00:00Z",
+        "created_by": 5,
+        "updated_by": 5,
+        "gr_number": "GR-2024-00002",
+        "purchase_order": 5,
+        "receipt_date": "2024-01-12",
+        "received_by": 11,
+        "warehouse": 4,
+        "notes": "Full delivery received, all tools checked"
+    }
+},
+{
+    "model": "production.workcenter",
+    "pk": 1,
+    "fields": {
+        "code": "WC-001",
+        "name": "Cutting Section",
+        "description": "Metal cutting and shaping operations",
+        "department": 2,
+        "supervisor": 8,
+        "cost_per_hour": "1500.00",
+        "capacity_per_hour": "50.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.workcenter",
+    "pk": 2,
+    "fields": {
+        "code": "WC-002",
+        "name": "Molding Section",
+        "description": "Plastic injection molding machines",
+        "department": 2,
+        "supervisor": 8,
+        "cost_per_hour": "2000.00",
+        "capacity_per_hour": "30.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.workcenter",
+    "pk": 3,
+    "fields": {
+        "code": "WC-003",
+        "name": "Assembly Line 1",
+        "description": "Main assembly line for fan production",
+        "department": 2,
+        "supervisor": 8,
+        "cost_per_hour": "1200.00",
+        "capacity_per_hour": "20.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.workcenter",
+    "pk": 4,
+    "fields": {
+        "code": "WC-004",
+        "name": "Painting Booth",
+        "description": "Spray painting and finishing",
+        "department": 2,
+        "supervisor": 8,
+        "cost_per_hour": "1800.00",
+        "capacity_per_hour": "25.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.workcenter",
+    "pk": 5,
+    "fields": {
+        "code": "WC-005",
+        "name": "Quality Testing",
+        "description": "Quality control and testing area",
+        "department": 5,
+        "supervisor": 9,
+        "cost_per_hour": "1000.00",
+        "capacity_per_hour": "40.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.workcenter",
+    "pk": 6,
+    "fields": {
+        "code": "WC-006",
+        "name": "Packaging Section",
+        "description": "Final packaging and labeling",
+        "department": 2,
+        "supervisor": 8,
+        "cost_per_hour": "800.00",
+        "capacity_per_hour": "60.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.workcenter",
+    "pk": 7,
+    "fields": {
+        "code": "WC-007",
+        "name": "Maintenance Workshop",
+        "description": "Equipment maintenance and repair",
+        "department": 6,
+        "supervisor": 12,
+        "cost_per_hour": "2500.00",
+        "capacity_per_hour": "10.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.workcenter",
+    "pk": 8,
+    "fields": {
+        "code": "WC-008",
+        "name": "Electrical Assembly",
+        "description": "Electrical wiring and component assembly",
+        "department": 2,
+        "supervisor": 8,
+        "cost_per_hour": "1600.00",
+        "capacity_per_hour": "35.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.workcenter",
+    "pk": 9,
+    "fields": {
+        "code": "WC-009",
+        "name": "Tool Room",
+        "description": "Tool making and maintenance",
+        "department": 2,
+        "supervisor": 8,
+        "cost_per_hour": "2200.00",
+        "capacity_per_hour": "15.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.workcenter",
+    "pk": 10,
+    "fields": {
+        "code": "WC-010",
+        "name": "R&D Lab",
+        "description": "Research and development laboratory",
+        "department": 9,
+        "supervisor": 2,
+        "cost_per_hour": "3000.00",
+        "capacity_per_hour": "5.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.billofmaterials",
+    "pk": 1,
+    "fields": {
+        "created_at": "2024-01-01T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 3,
+        "updated_by": 3,
+        "code": "BOM-001",
+        "finished_product": 3,
+        "version": "1.0",
+        "is_active": true,
+        "effective_date": "2024-01-01",
+        "production_time": "2.50",
+        "scrap_rate": "2.00",
+        "notes": "Standard bill for Industrial Fan Model X1"
+    }
+},
+{
+    "model": "production.operation",
+    "pk": 1,
+    "fields": {
+        "code": "OP-001",
+        "name": "Metal Cutting",
+        "description": "Cut steel sheets to required dimensions",
+        "work_center": 1,
+        "setup_time": "0.50",
+        "cycle_time": "0.10",
+        "cost_per_hour": "1500.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.operation",
+    "pk": 2,
+    "fields": {
+        "code": "OP-002",
+        "name": "Plastic Molding",
+        "description": "Injection mold plastic components",
+        "work_center": 2,
+        "setup_time": "1.00",
+        "cycle_time": "0.25",
+        "cost_per_hour": "2000.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.operation",
+    "pk": 3,
+    "fields": {
+        "code": "OP-003",
+        "name": "Electrical Assembly",
+        "description": "Assemble electrical components and wiring",
+        "work_center": 8,
+        "setup_time": "0.75",
+        "cycle_time": "0.30",
+        "cost_per_hour": "1600.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.operation",
+    "pk": 4,
+    "fields": {
+        "code": "OP-004",
+        "name": "Mechanical Assembly",
+        "description": "Assemble mechanical components",
+        "work_center": 3,
+        "setup_time": "0.50",
+        "cycle_time": "0.40",
+        "cost_per_hour": "1200.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.operation",
+    "pk": 5,
+    "fields": {
+        "code": "OP-005",
+        "name": "Painting",
+        "description": "Spray paint finished assemblies",
+        "work_center": 4,
+        "setup_time": "1.00",
+        "cycle_time": "0.20",
+        "cost_per_hour": "1800.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.operation",
+    "pk": 6,
+    "fields": {
+        "code": "OP-006",
+        "name": "Quality Testing",
+        "description": "Test finished products for quality",
+        "work_center": 5,
+        "setup_time": "0.25",
+        "cycle_time": "0.15",
+        "cost_per_hour": "1000.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.operation",
+    "pk": 7,
+    "fields": {
+        "code": "OP-007",
+        "name": "Packaging",
+        "description": "Pack finished products for shipment",
+        "work_center": 6,
+        "setup_time": "0.25",
+        "cycle_time": "0.10",
+        "cost_per_hour": "800.00",
+        "is_active": true
+    }
+},
+{
+    "model": "production.bomline",
+    "pk": 1,
+    "fields": {
+        "bom": 1,
+        "component": 1,
+        "quantity": "5.500",
+        "unit_of_measure": 2,
+        "scrap_percentage": "2.00",
+        "operation": 1
+    }
+},
+{
+    "model": "production.bomline",
+    "pk": 2,
+    "fields": {
+        "bom": 1,
+        "component": 2,
+        "quantity": "1.200",
+        "unit_of_measure": 2,
+        "scrap_percentage": "3.00",
+        "operation": 2
+    }
+},
+{
+    "model": "production.bomline",
+    "pk": 3,
+    "fields": {
+        "bom": 1,
+        "component": 5,
+        "quantity": "1.000",
+        "unit_of_measure": 1,
+        "scrap_percentage": "1.00",
+        "operation": 3
+    }
+},
+{
+    "model": "production.bomline",
+    "pk": 4,
+    "fields": {
+        "bom": 1,
+        "component": 6,
+        "quantity": "1.000",
+        "unit_of_measure": 1,
+        "scrap_percentage": "2.00",
+        "operation": 4
+    }
+},
+{
+    "model": "production.bomline",
+    "pk": 5,
+    "fields": {
+        "bom": 1,
+        "component": 10,
+        "quantity": "1.000",
+        "unit_of_measure": 1,
+        "scrap_percentage": "4.00",
+        "operation": 2
+    }
+},
+{
+    "model": "production.productionorder",
+    "pk": 1,
+    "fields": {
+        "created_at": "2024-01-10T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 3,
+        "updated_by": 3,
+        "order_number": "PROD-2024-00001",
+        "bom": 1,
+        "product": 3,
+        "quantity": "50.00",
+        "uom": 1,
+        "planned_start": "2024-01-15T08:00:00Z",
+        "planned_end": "2024-01-20T18:00:00Z",
+        "actual_start": "2024-01-15T08:15:00Z",
+        "actual_end": null,
+        "status": "in_progress",
+        "priority": 3,
+        "work_center": 3,
+        "supervisor": 8,
+        "completed_quantity": "15.00",
+        "rejected_quantity": "1.00",
+        "production_cost": "12500.00",
+        "material_cost": "75000.00",
+        "notes": "Urgent order for key customer"
+    }
+},
+{
+    "model": "production.productionorder",
+    "pk": 2,
+    "fields": {
+        "created_at": "2024-01-12T11:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 3,
+        "updated_by": 3,
+        "order_number": "PROD-2024-00002",
+        "bom": 1,
+        "product": 3,
+        "quantity": "100.00",
+        "uom": 1,
+        "planned_start": "2024-01-22T08:00:00Z",
+        "planned_end": "2024-01-29T18:00:00Z",
+        "actual_start": null,
+        "actual_end": null,
+        "status": "planned",
+        "priority": 5,
+        "work_center": 3,
+        "supervisor": 8,
+        "completed_quantity": "0.00",
+        "rejected_quantity": "0.00",
+        "production_cost": "0.00",
+        "material_cost": "0.00",
+        "notes": "Regular production batch"
+    }
+},
+{
+    "model": "production.productionorder",
+    "pk": 3,
+    "fields": {
+        "created_at": "2024-01-13T14:30:00Z",
+        "updated_at": "2024-01-14T17:00:00Z",
+        "created_by": 3,
+        "updated_by": 3,
+        "order_number": "PROD-2024-00003",
+        "bom": 1,
+        "product": 3,
+        "quantity": "25.00",
+        "uom": 1,
+        "planned_start": "2024-01-10T08:00:00Z",
+        "planned_end": "2024-01-12T18:00:00Z",
+        "actual_start": "2024-01-10T08:30:00Z",
+        "actual_end": "2024-01-12T17:45:00Z",
+        "status": "completed",
+        "priority": 2,
+        "work_center": 3,
+        "supervisor": 8,
+        "completed_quantity": "24.00",
+        "rejected_quantity": "1.00",
+        "production_cost": "6250.00",
+        "material_cost": "37500.00",
+        "notes": "Completed successfully, 1 unit rejected due to paint defect"
+    }
+},
+{
+    "model": "production.productionorder",
+    "pk": 4,
+    "fields": {
+        "created_at": "2024-01-14T10:15:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 3,
+        "updated_by": 3,
+        "order_number": "PROD-2024-00004",
+        "bom": 1,
+        "product": 3,
+        "quantity": "30.00",
+        "uom": 1,
+        "planned_start": "2024-01-18T08:00:00Z",
+        "planned_end": "2024-01-20T18:00:00Z",
+        "actual_start": null,
+        "actual_end": null,
+        "status": "released",
+        "priority": 4,
+        "work_center": 3,
+        "supervisor": 8,
+        "completed_quantity": "0.00",
+        "rejected_quantity": "0.00",
+        "production_cost": "0.00",
+        "material_cost": "0.00",
+        "notes": "Materials allocated, ready for production"
+    }
+},
+{
+    "model": "production.productionorder",
+    "pk": 5,
+    "fields": {
+        "created_at": "2024-01-15T09:00:00Z",
+        "updated_at": "2024-01-15T09:00:00Z",
+        "created_by": 3,
+        "updated_by": 3,
+        "order_number": "PROD-2024-00005",
+        "bom": 1,
+        "product": 3,
+        "quantity": "75.00",
+        "uom": 1,
+        "planned_start": "2024-01-25T08:00:00Z",
+        "planned_end": "2024-01-31T18:00:00Z",
+        "actual_start": null,
+        "actual_end": null,
+        "status": "draft",
+        "priority": 6,
+        "work_center": 3,
+        "supervisor": 8,
+        "completed_quantity": "0.00",
+        "rejected_quantity": "0.00",
+        "production_cost": "0.00",
+        "material_cost": "0.00",
+        "notes": "Planning stage"
+    }
+},
+{
+    "model": "security.gatepass",
+    "pk": 1,
+    "fields": {
+        "created_at": "2024-01-15T08:30:00Z",
+        "updated_at": "2024-01-15T10:30:00Z",
+        "created_by": 8,
+        "updated_by": 5,
+        "pass_number": "GP-2024-00001",
+        "pass_type": "material_in",
+        "status": "completed",
+        "person_name": "Rajesh Kumar",
+        "company_name": "Steel Corporation India Ltd.",
+        "contact_number": "+91-9876543001",
+        "email": "driver@steelcorp.in",
+        "vehicle_number": "DL-01-AB-1234",
+        "driver_name": "Mohan Singh",
+        "purpose": "Delivery of steel sheets as per PO-2024-00001",
+        "expected_in_date": "2024-01-15T08:00:00Z",
+        "expected_out_date": "2024-01-15T09:00:00Z",
+        "actual_in_date": "2024-01-15T08:15:00Z",
+        "actual_out_date": "2024-01-15T09:30:00Z",
+        "department": 4,
+        "requesting_employee": 4,
+        "approved_by": 2,
+        "approved_date": "2024-01-15T08:45:00Z",
+        "security_in_charge": 6,
+        "security_remarks": "Vehicle checked, documents verified",
+        "from_location": "Steel Corporation Factory, Delhi",
+        "to_location": "Raw Material Store, Building B",
+        "warehouse": 2,
+        "is_returnable": false,
+        "expected_return_date": null,
+        "is_hazardous": false,
+        "reference_document": "PO-2024-00001",
+        "attachment": "gate_passes/delivery_challan_001.pdf"
+    }
+},
+{
+    "model": "security.gatepass",
+    "pk": 2,
+    "fields": {
+        "created_at": "2024-01-15T09:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 3,
+        "updated_by": 3,
+        "pass_number": "GP-2024-00002",
+        "pass_type": "material_out",
+        "status": "in_progress",
+        "person_name": "Peter Roberts",
+        "company_name": "",
+        "contact_number": "+91-9876543219",
+        "email": "",
+        "vehicle_number": "",
+        "driver_name": "",
+        "purpose": "Transfer of raw materials to production line",
+        "expected_in_date": null,
+        "expected_out_date": "2024-01-15T09:30:00Z",
+        "actual_in_date": null,
+        "actual_out_date": "2024-01-15T09:15:00Z",
+        "department": 3,
+        "requesting_employee": 10,
+        "approved_by": 3,
+        "approved_date": "2024-01-15T09:05:00Z",
+        "security_in_charge": 6,
+        "security_remarks": "Materials verified against requisition",
+        "from_location": "Raw Material Store",
+        "to_location": "Production Floor",
+        "warehouse": 2,
+        "is_returnable": true,
+        "expected_return_date": "2024-01-20",
+        "is_hazardous": false,
+        "reference_document": "PROD-2024-00001",
+        "attachment": ""
+    }
+},
+{
+    "model": "security.gatepass",
+    "pk": 3,
+    "fields": {
+        "created_at": "2024-01-15T10:00:00Z",
+        "updated_at": "2024-01-15T10:00:00Z",
+        "created_by": 12,
+        "updated_by": 12,
+        "pass_number": "GP-2024-00003",
+        "pass_type": "visitor",
+        "status": "approved",
+        "person_name": "Dr. Anil Sharma",
+        "company_name": "Quality Consultants Inc.",
+        "contact_number": "+91-9876543002",
+        "email": "anil.sharma@qualityconsult.in",
+        "vehicle_number": "HR-26-AC-5678",
+        "driver_name": "Dr. Anil Sharma",
+        "purpose": "Quality audit and consultation",
+        "expected_in_date": "2024-01-15T10:30:00Z",
+        "expected_out_date": "2024-01-15T17:00:00Z",
+        "actual_in_date": null,
+        "actual_out_date": null,
+        "department": 5,
+        "requesting_employee": 11,
+        "approved_by": 1,
+        "approved_date": "2024-01-15T10:15:00Z",
+        "security_in_charge": null,
+        "security_remarks": "",
+        "from_location": "",
+        "to_location": "Quality Department",
+        "warehouse": null,
+        "is_returnable": false,
+        "expected_return_date": null,
+        "is_hazardous": false,
+        "reference_document": "AUDIT-2024-Q1",
+        "attachment": "gate_passes/visitor_id_001.jpg"
+    }
+},
+{
+    "model": "security.gatepass",
+    "pk": 4,
+    "fields": {
+        "created_at": "2024-01-14T14:00:00Z",
+        "updated_at": "2024-01-14T17:30:00Z",
+        "created_by": 12,
+        "updated_by": 5,
+        "pass_number": "GP-2024-00004",
+        "pass_type": "contractor",
+        "status": "completed",
+        "person_name": "Sanjay Gupta",
+        "company_name": "Maintenance Services Pvt. Ltd.",
+        "contact_number": "+91-9876543003",
+        "email": "sanjay@maintenance.in",
+        "vehicle_number": "DL-02-CD-9012",
+        "driver_name": "Ramesh Kumar",
+        "purpose": "Annual maintenance of HVAC systems",
+        "expected_in_date": "2024-01-14T14:30:00Z",
+        "expected_out_date": "2024-01-14T17:00:00Z",
+        "actual_in_date": "2024-01-14T14:45:00Z",
+        "actual_out_date": "2024-01-14T17:15:00Z",
+        "department": 8,
+        "requesting_employee": 11,
+        "approved_by": 1,
+        "approved_date": "2024-01-14T14:20:00Z",
+        "security_in_charge": 6,
+        "security_remarks": "Tools checked and logged",
+        "from_location": "",
+        "to_location": "Administration Building",
+        "warehouse": null,
+        "is_returnable": true,
+        "expected_return_date": "2024-01-15",
+        "is_hazardous": false,
+        "reference_document": "AMC-2024",
+        "attachment": ""
+    }
+},
+{
+    "model": "security.gatepass",
+    "pk": 5,
+    "fields": {
+        "created_at": "2024-01-13T11:00:00Z",
+        "updated_at": "2024-01-13T11:00:00Z",
+        "created_by": 2,
+        "updated_by": 2,
+        "pass_number": "GP-2024-00005",
+        "pass_type": "personnel_out",
+        "status": "pending",
+        "person_name": "John Smith",
+        "company_name": "",
+        "contact_number": "+91-9876543215",
+        "email": "",
+        "vehicle_number": "",
+        "driver_name": "",
+        "purpose": "Bank work and document submission",
+        "expected_in_date": null,
+        "expected_out_date": "2024-01-13T11:30:00Z",
+        "actual_in_date": null,
+        "actual_out_date": null,
+        "department": 2,
+        "requesting_employee": 6,
+        "approved_by": null,
+        "approved_date": null,
+        "security_in_charge": null,
+        "security_remarks": "",
+        "from_location": "",
+        "to_location": "Bank",
+        "warehouse": null,
+        "is_returnable": true,
+        "expected_return_date": "2024-01-13",
+        "is_hazardous": false,
+        "reference_document": "",
+        "attachment": ""
+    }
+}
+]
