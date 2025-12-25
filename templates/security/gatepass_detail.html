@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+
+{% block title %}Gate Pass - {{ gate_pass.pass_number }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0">
+                        <i class="fas fa-door-open text-primary"></i> Gate Pass Details
+                    </h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'security_dashboard' %}">Security</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'gatepass_list' %}">Gate Passes</a></li>
+                            <li class="breadcrumb-item active">{{ gate_pass.pass_number }}</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="btn-group">
+                    <a href="{% url 'gatepass_print' gate_pass.pk %}" class="btn btn-primary" target="_blank">
+                        <i class="fas fa-print"></i> Print
+                    </a>
+                    <a href="{% url 'gatepass_edit' gate_pass.pk %}" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="{% url 'gatepass_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Banner -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h3 class="mb-0">{{ gate_pass.pass_number }}</h3>
+                            <p class="text-muted mb-0">
+                                {{ gate_pass.get_pass_type_display }}
+                                • Created: {{ gate_pass.created_at|date:"d/m/Y H:i" }}
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <h2>
+                                {% if gate_pass.status == 'pending' %}
+                                    <span class="badge badge-warning p-3">PENDING APPROVAL</span>
+                                {% elif gate_pass.status == 'approved' %}
+                                    <span class="badge badge-info p-3">APPROVED</span>
+                                {% elif gate_pass.status == 'in_progress' %}
+                                    <span class="badge badge-primary p-3">IN PROGRESS</span>
+                                {% elif gate_pass.status == 'completed' %}
+                                    <span class="badge badge-success p-3">COMPLETED</span>
+                                {% elif gate_pass.status == 'cancelled' %}
+                                    <span class="badge badge-danger p-3">CANCELLED</span>
+                                {% endif %}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column - Basic Information -->
+        <div class="col-lg-8">
+            <!-- Basic Details Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-info-circle"></i> Basic Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th width="40%">Pass Type:</th>
+                                    <td>{{ gate_pass.get_pass_type_display }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Department:</th>
+                                    <td>{{ gate_pass.department.name|default:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Requested By:</th>
+                                    <td>{{ gate_pass.requesting_employee.user.get_full_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Approved By:</th>
+                                    <td>
+                                        {% if gate_pass.approved_by %}
+                                            {{ gate_pass.approved_by.user.get_full_name }}
+                                            <small class="text-muted d-block">
+                                                {{ gate_pass.approved_date|date:"d/m/Y H:i" }}
+                                            </small>
+                                        {% else %}
+                                            <span class="text-warning">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th width="40%">Person Name:</th>
+                                    <td>{{ gate_pass.person_name|default:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Company:</th>
+                                    <td>{{ gate_pass.company_name|default:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Contact:</th>
+                                    <td>{{ gate_pass.contact_number|default:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Vehicle No:</th>
+                                    <td>{{ gate_pass.vehicle_number|default:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Driver Name:</th>
+                                    <td>{{ gate_pass.driver_name|default:"-" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Purpose -->
+                    <div class="mt-3">
+                        <h6 class="font-weight-bold">Purpose</h6>
+                        <div class="card">
+                            <div class="card-body">
+                                {{ gate_pass.purpose|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Items Card -->
+            {% if items %}
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-boxes"></i> Items Details ({{ items|length }} items)
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Item Description</th>
+                                    <th>Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Serial/Batch</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>
+                                        {% if item.product %}
+                                            <strong>{{ item.product.name }}</strong><br>
+                                            <small>{{ item.product.SKU }}</small>
+                                        {% else %}
+                                            {{ item.item_description }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.unit_of_measure }}</td>
+                                    <td>
+                                        {% if item.serial_number %}{{ item.serial_number }}<br>{% endif %}
+                                        {% if item.batch_number %}{{ item.batch_number }}{% endif %}
+                                    </td>
+                                    <td>${{ item.value|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Column - Actions & Timelines -->
+        <div class="col-lg-4">
+            <!-- Actions Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-cogs"></i> Security Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% if gate_pass.status == 'pending' or gate_pass.status == 'approved' %}
+                    <form method="post" action="{% url 'gatepass_checkin' gate_pass.pk %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Security Remarks</label>
+                            <textarea name="security_remarks" class="form-control" rows="3" 
+                                      placeholder="Enter any remarks...">{{ gate_pass.security_remarks }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success btn-block">
+                            <i class="fas fa-sign-in-alt"></i> Check-in
+                        </button>
+                    </form>
+                    {% elif gate_pass.status == 'in_progress' %}
+                    <form method="post" action="{% url 'gatepass_checkout' gate_pass.pk %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Security Remarks</label>
+                            <textarea name="security_remarks" class="form-control" rows="3" 
+                                      placeholder="Enter any remarks...">{{ gate_pass.security_remarks }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-warning btn-block">
+                            <i class="fas fa-sign-out-alt"></i> Check-out
+                        </button>
+                    </form>
+                    {% elif gate_pass.status == 'completed' %}
+                    <div class="alert alert-success">
+                        <h5><i class="fas fa-check-circle"></i> Completed</h5>
+                        <p class="mb-0">This gate pass has been completed.</p>
+                    </div>
+                    {% endif %}
+
+                    <hr>
+
+                    <!-- Quick Status Update -->
+                    <div class="btn-group d-flex" role="group">
+                        {% if gate_pass.status != 'cancelled' %}
+                        <button type="button" class="btn btn-outline-danger" 
+                                onclick="updateStatus('cancelled')">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        {% endif %}
+                        {% if gate_pass.status != 'completed' and gate_pass.status != 'cancelled' %}
+                        <button type="button" class="btn btn-outline-info" 
+                                onclick="updateStatus('approved')">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Card -->
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-history"></i> Timeline
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-primary"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Created</h6>
+                                <small class="text-muted">{{ gate_pass.created_at|date:"d/m/Y H:i" }}</small>
+                                <p class="mb-0">By: {{ gate_pass.created_by.get_full_name|default:"System" }}</p>
+                            </div>
+                        </div>
+
+                        {% if gate_pass.expected_in_date %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-info"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Expected In</h6>
+                                <small class="text-muted">{{ gate_pass.expected_in_date|date:"d/m/Y H:i" }}</small>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if gate_pass.actual_in_date %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Checked In</h6>
+                                <small class="text-muted">{{ gate_pass.actual_in_date|date:"d/m/Y H:i" }}</small>
+                                {% if gate_pass.security_in_charge %}
+                                <p class="mb-0">By: {{ gate_pass.security_in_charge.get_full_name }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if gate_pass.actual_out_date %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-warning"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Checked Out</h6>
+                                <small class="text-muted">{{ gate_pass.actual_out_date|date:"d/m/Y H:i" }}</small>
+                                {% if gate_pass.security_in_charge %}
+                                <p class="mb-0">By: {{ gate_pass.security_in_charge.get_full_name }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if gate_pass.updated_at %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-secondary"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Last Updated</h6>
+                                <small class="text-muted">{{ gate_pass.updated_at|date:"d/m/Y H:i" }}</small>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+.timeline-marker {
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.timeline-content {
+    padding-left: 10px;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateStatus(status) {
+    if (confirm('Are you sure you want to update the status?')) {
+        fetch('{% url "gatepass_status_api" gate_pass.pk %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                status: status,
+                remarks: 'Status updated manually'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Status updated successfully!');
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error updating status');
+        });
+    }
+}
+</script>
+{% endblock %}

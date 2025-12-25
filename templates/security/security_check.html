@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if object.actual_in_date and not object.actual_out_date %}
+        Check-out - {{ object.pass_number }}
+    {% else %}
+        Check-in - {{ object.pass_number }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-{% if object.actual_in_date and not object.actual_out_date %}sign-out-alt{% else %}sign-in-alt{% endif %}"></i>
+                        {% if object.actual_in_date and not object.actual_out_date %}
+                            Check-out: {{ object.pass_number }}
+                        {% else %}
+                            Check-in: {{ object.pass_number }}
+                        {% endif %}
+                    </h4>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Gate Pass Summary -->
+                    <div class="alert alert-info">
+                        <h5><i class="fas fa-info-circle"></i> Gate Pass Summary</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Type:</strong> {{ object.get_pass_type_display }}</p>
+                                <p class="mb-1"><strong>Person:</strong> {{ object.person_name|default:"-" }}</p>
+                                <p class="mb-1"><strong>Vehicle:</strong> {{ object.vehicle_number|default:"-" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Purpose:</strong> {{ object.purpose|truncatechars:50 }}</p>
+                                <p class="mb-1"><strong>Department:</strong> {{ object.department.name|default:"-" }}</p>
+                                <p class="mb-1"><strong>Status:</strong> 
+                                    <span class="badge badge-{% if object.status == 'pending' %}warning{% elif object.status == 'approved' %}info{% elif object.status == 'in_progress' %}primary{% elif object.status == 'completed' %}success{% else %}danger{% endif %}">
+                                        {{ object.get_status_display }}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Items List -->
+                    {% if object.items.exists %}
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Items to {{ object.actual_in_date|yesno:"Check-out,Check-in" }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Item</th>
+                                            <th>Quantity</th>
+                                            <th>Serial/Batch</th>
+                                            <th>Verify</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in object.items.all %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>
+                                                {% if item.product %}
+                                                    {{ item.product.name }}
+                                                {% else %}
+                                                    {{ item.item_description }}
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ item.quantity }} {{ item.unit_of_measure }}</td>
+                                            <td>
+                                                {% if item.serial_number %}{{ item.serial_number }}<br>{% endif %}
+                                                {% if item.batch_number %}{{ item.batch_number }}{% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input item-verify" 
+                                                           id="item-{{ forloop.counter }}" data-item-id="{{ item.id }}">
+                                                    <label class="custom-control-label" for="item-{{ forloop.counter }}">
+                                                        Verified
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Check-in/Check-out Form -->
+                    <form method="post" id="security-check-form">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                <h5><i class="fas fa-exclamation-triangle"></i> Please correct the errors below:</h5>
+                                {{ form.errors }}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.security_in_charge.id_for_label }}" class="font-weight-bold">
+                                        Security Officer <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.security_in_charge }}
+                                    <small class="form-text text-muted">Your name will be recorded as security officer</small>
+                                    {% if form.security_in_charge.errors %}
+                                        <div class="alert alert-danger mt-2">{{ form.security_in_charge.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            {% if not object.actual_in_date %}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.actual_in_date.id_for_label }}" class="font-weight-bold">
+                                        Check-in Time <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.actual_in_date }}
+                                    <small class="form-text text-muted">Actual time of entry</small>
+                                    {% if form.actual_in_date.errors %}
+                                        <div class="alert alert-danger mt-2">{{ form.actual_in_date.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if object.actual_in_date and not object.actual_out_date %}
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ form.actual_out_date.id_for_label }}" class="font-weight-bold">
+                                        Check-out Time <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.actual_out_date }}
+                                    <small class="form-text text-muted">Actual time of exit</small>
+                                    {% if form.actual_out_date.errors %}
+                                        <div class="alert alert-danger mt-2">{{ form.actual_out_date.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.security_remarks.id_for_label }}" class="font-weight-bold">
+                                Remarks <span class="text-danger">*</span>
+                            </label>
+                            {{ form.security_remarks }}
+                            <small class="form-text text-muted">Enter any observations, damages, or special instructions</small>
+                            {% if form.security_remarks.errors %}
+                                <div class="alert alert-danger mt-2">{{ form.security_remarks.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Verification -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Verification</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" 
+                                               id="id_items_verified" name="items_verified" required>
+                                        <label class="custom-control-label font-weight-bold" for="id_items_verified">
+                                            All items have been verified
+                                        </label>
+                                        <small class="form-text text-muted">
+                                            I confirm that I have physically verified all items listed above
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" 
+                                               id="id_condition_verified" name="condition_verified" required>
+                                        <label class="custom-control-label font-weight-bold" for="id_condition_verified">
+                                            Vehicle/Person condition verified
+                                        </label>
+                                        <small class="form-text text-muted">
+                                            I confirm that the vehicle/person is in proper condition
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" 
+                                               id="id_documents_verified" name="documents_verified" required>
+                                        <label class="custom-control-label font-weight-bold" for="id_documents_verified">
+                                            Documents verified
+                                        </label>
+                                        <small class="form-text text-muted">
+                                            I confirm that all required documents are in order
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="form-group">
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-{% if object.actual_in_date and not object.actual_out_date %}sign-out-alt{% else %}sign-in-alt{% endif %}"></i>
+                                    {% if object.actual_in_date and not object.actual_out_date %}
+                                        Confirm Check-out
+                                    {% else %}
+                                        Confirm Check-in
+                                    {% endif %}
+                                </button>
+                                <a href="{% url 'gatepass_detail' object.pk %}" class="btn btn-secondary btn-lg">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Set current time for check-in/check-out
+    const now = new Date();
+    const nowStr = now.toISOString().slice(0, 16);
+    
+    if (!$('#id_actual_in_date').val() && !$('#id_actual_out_date').val()) {
+        $('#id_actual_in_date').val(nowStr);
+    } else if (!$('#id_actual_out_date').val()) {
+        $('#id_actual_out_date').val(nowStr);
+    }
+    
+    // Auto-fill security officer
+    $('#id_security_in_charge').val('{{ user.id }}');
+    
+    // Item verification tracking
+    let allItemsVerified = false;
+    
+    $('.item-verify').change(function() {
+        const checkedItems = $('.item-verify:checked').length;
+        const totalItems = $('.item-verify').length;
+        
+        if (checkedItems === totalItems) {
+            $('#id_items_verified').prop('checked', true);
+        } else {
+            $('#id_items_verified').prop('checked', false);
+        }
+    });
+    
+    // Form validation
+    $('#security-check-form').submit(function(e) {
+        const checkedItems = $('.item-verify:checked').length;
+        const totalItems = $('.item-verify').length;
+        
+        if (checkedItems !== totalItems) {
+            e.preventDefault();
+            alert('Please verify all items before proceeding.');
+            return false;
+        }
+        
+        if (!$('#id_items_verified').is(':checked') || 
+            !$('#id_condition_verified').is(':checked') || 
+            !$('#id_documents_verified').is(':checked')) {
+            e.preventDefault();
+            alert('Please check all verification boxes.');
+            return false;
+        }
+        
+        return true;
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+
+{% block title %}Visitor Log{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-users text-primary"></i> Visitor Log
+                </h1>
+                <div>
+                    <a href="{% url 'security_dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="{% url 'visitor_checkin' %}" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> New Visitor
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-filter"></i> Filter Visitors
+            </h6>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Date</label>
+                    <input type="date" name="date" class="form-control" 
+                           value="{{ request.GET.date }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Visitor Name</label>
+                    <input type="text" name="name" class="form-control" 
+                           value="{{ request.GET.name }}" placeholder="Search by name...">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-control">
+                        <option value="">All Status</option>
+                        <option value="in" {% if request.GET.status == 'in' %}selected{% endif %}>
+                            In Premises
+                        </option>
+                        <option value="out" {% if request.GET.status == 'out' %}selected{% endif %}>
+                            Checked Out
+                        </option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <a href="{% url 'visitor_log' %}" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Visitor Log Table -->
+    <div class="card shadow">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Visitor Records ({{ visitors.paginator.count }} total)
+            </h6>
+            <div>
+                <span class="badge badge-success mr-2">
+                    <i class="fas fa-user-clock"></i> {{ checked_in_count }} In Premises
+                </span>
+                <span class="badge badge-info">
+                    <i class="fas fa-user-check"></i> {{ checked_out_count }} Checked Out
+                </span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Visitor</th>
+                            <th>Company</th>
+                            <th>Contact</th>
+                            <th>Meeting With</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Visitor Card</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for visitor in visitors %}
+                        <tr>
+                            <td>
+                                <strong>{{ visitor.visitor_name }}</strong>
+                            </td>
+                            <td>{{ visitor.visitor_company|default:"-" }}</td>
+                            <td>{{ visitor.contact_number }}</td>
+                            <td>
+                                {% if visitor.visiting_person %}
+                                    {{ visitor.visiting_person.user.get_full_name }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ visitor.check_in_time|date:"d/m/Y" }}<br>
+                                <small>{{ visitor.check_in_time|date:"H:i" }}</small>
+                            </td>
+                            <td>
+                                {% if visitor.check_out_time %}
+                                    {{ visitor.check_out_time|date:"d/m/Y" }}<br>
+                                    <small>{{ visitor.check_out_time|date:"H:i" }}</small>
+                                {% else %}
+                                    <span class="text-warning">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge badge-secondary">{{ visitor.visitor_card_issued }}</span><br>
+                                <small>
+                                    {% if visitor.visitor_card_returned %}
+                                        <span class="text-success">Returned</span>
+                                    {% else %}
+                                        <span class="text-warning">Not Returned</span>
+                                    {% endif %}
+                                </small>
+                            </td>
+                            <td>
+                                {% if visitor.check_out_time %}
+                                    <span class="badge badge-success">Checked Out</span>
+                                {% else %}
+                                    <span class="badge badge-warning">In Premises</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-info" 
+                                            onclick="showVisitorDetails({{ visitor.id }})"
+                                            title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    
+                                    {% if not visitor.check_out_time %}
+                                    <a href="{% url 'visitor_checkout' visitor.pk %}" 
+                                       class="btn btn-warning" title="Check Out">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </a>
+                                    {% endif %}
+                                    
+                                    {% if not visitor.visitor_card_returned and visitor.check_out_time %}
+                                    <button type="button" class="btn btn-success" 
+                                            onclick="markCardReturned({{ visitor.id }})"
+                                            title="Mark Card Returned">
+                                        <i class="fas fa-id-card"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center py-4">
+                                <i class="fas fa-users fa-3x text-gray-300 mb-3"></i>
+                                <h5 class="text-gray-500">No visitor records found</h5>
+                                <a href="{% url 'visitor_checkin' %}" class="btn btn-primary mt-2">
+                                    <i class="fas fa-user-plus"></i> Add First Visitor
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if visitors.paginator.num_pages > 1 %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if visitors.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            First
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ visitors.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            Previous
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in visitors.paginator.page_range %}
+                        {% if visitors.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > visitors.number|add:'-3' and num < visitors.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                                {{ num }}
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if visitors.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ visitors.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            Next
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ visitors.paginator.num_pages }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            Last
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Visitor Details Modal -->
+<div class="modal fade" id="visitorDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Visitor Details</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="visitorDetailsContent">
+                <!-- Details will be loaded here via AJAX -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showVisitorDetails(visitorId) {
+    $.ajax({
+        url: '/security/api/visitor/' + visitorId + '/details/',
+        method: 'GET',
+        success: function(data) {
+            $('#visitorDetailsContent').html(data.html);
+            $('#visitorDetailsModal').modal('show');
+        },
+        error: function() {
+            alert('Error loading visitor details');
+        }
+    });
+}
+
+function markCardReturned(visitorId) {
+    if (confirm('Mark visitor card as returned?')) {
+        $.ajax({
+            url: '/security/api/visitor/' + visitorId + '/return-card/',
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            success: function(data) {
+                if (data.success) {
+                    alert('Visitor card marked as returned');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            },
+            error: function() {
+                alert('Error updating card status');
+            }
+        });
+    }
+}
+</script>
+{% endblock %}

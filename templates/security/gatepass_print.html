@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gate Pass - {{ gate_pass.pass_number }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .pass-title {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+        .pass-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .details-table th,
+        .details-table td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        .details-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .items-table th,
+        .items-table td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: left;
+        }
+        .items-table th {
+            background-color: #f8f9fa;
+        }
+        .signature-area {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #000;
+        }
+        .signature-box {
+            display: inline-block;
+            width: 30%;
+            text-align: center;
+            margin: 0 10px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 10px;
+            color: #666;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+            .page-break {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print" style="text-align: center; margin-bottom: 20px;">
+        <button onclick="window.print()" class="btn btn-primary">Print</button>
+        <button onclick="window.history.back()" class="btn btn-secondary">Back</button>
+    </div>
+    
+    <div class="header">
+        <div class="company-name">TECHCORP SOLUTIONS</div>
+        <div>123 Tech Street, Silicon Valley, CA 94000</div>
+        <div>Phone: +1-555-123-4567 | Email: info@techcorp.com</div>
+        <div class="pass-title">GATE PASS</div>
+        <div class="pass-number">PASS NO: {{ gate_pass.pass_number }}</div>
+    </div>
+    
+    <table class="details-table">
+        <tr>
+            <th width="25%">Pass Type:</th>
+            <td width="25%">{{ gate_pass.get_pass_type_display }}</td>
+            <th width="25%">Status:</th>
+            <td width="25%">{{ gate_pass.get_status_display }}</td>
+        </tr>
+        <tr>
+            <th>Date Created:</th>
+            <td>{{ gate_pass.created_at|date:"d/m/Y H:i" }}</td>
+            <th>Department:</th>
+            <td>{{ gate_pass.department.name|default:"-" }}</td>
+        </tr>
+        {% if gate_pass.person_name %}
+        <tr>
+            <th>Person Name:</th>
+            <td>{{ gate_pass.person_name }}</td>
+            <th>Company:</th>
+            <td>{{ gate_pass.company_name|default:"-" }}</td>
+        </tr>
+        {% endif %}
+        {% if gate_pass.vehicle_number %}
+        <tr>
+            <th>Vehicle Number:</th>
+            <td>{{ gate_pass.vehicle_number }}</td>
+            <th>Driver Name:</th>
+            <td>{{ gate_pass.driver_name|default:"-" }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Purpose:</th>
+            <td colspan="3">{{ gate_pass.purpose }}</td>
+        </tr>
+        <tr>
+            <th>From:</th>
+            <td>{{ gate_pass.from_location|default:"-" }}</td>
+            <th>To:</th>
+            <td>{{ gate_pass.to_location|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Expected In:</th>
+            <td>{{ gate_pass.expected_in_date|date:"d/m/Y H:i"|default:"-" }}</td>
+            <th>Expected Out:</th>
+            <td>{{ gate_pass.expected_out_date|date:"d/m/Y H:i"|default:"-" }}</td>
+        </tr>
+        {% if gate_pass.actual_in_date %}
+        <tr>
+            <th>Actual In:</th>
+            <td>{{ gate_pass.actual_in_date|date:"d/m/Y H:i" }}</td>
+            <th>Actual Out:</th>
+            <td>{{ gate_pass.actual_out_date|date:"d/m/Y H:i"|default:"-" }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <th>Requested By:</th>
+            <td>{{ gate_pass.requesting_employee.user.get_full_name }}</td>
+            <th>Approved By:</th>
+            <td>{{ gate_pass.approved_by.user.get_full_name|default:"-" }}</td>
+        </tr>
+    </table>
+    
+    {% if gate_pass.items.exists %}
+    <h4>Items Details:</h4>
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Serial/Batch</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in gate_pass.items.all %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.item_description }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.unit_of_measure }}</td>
+                <td>
+                    {% if item.serial_number %}{{ item.serial_number }}{% endif %}
+                    {% if item.batch_number %}{{ item.batch_number }}{% endif %}
+                </td>
+                <td>${{ item.value|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    
+    {% if gate_pass.security_remarks %}
+    <div style="margin-top: 20px;">
+        <strong>Security Remarks:</strong>
+        <p>{{ gate_pass.security_remarks }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="signature-area">
+        <div class="signature-box">
+            <div style="border-bottom: 1px solid #000; height: 50px;"></div>
+            <div>Requested By</div>
+            <div>{{ gate_pass.requesting_employee.user.get_full_name }}</div>
+            <div>{{ gate_pass.created_at|date:"d/m/Y" }}</div>
+        </div>
+        
+        <div class="signature-box">
+            <div style="border-bottom: 1px solid #000; height: 50px;"></div>
+            <div>Approved By</div>
+            {% if gate_pass.approved_by %}
+            <div>{{ gate_pass.approved_by.user.get_full_name }}</div>
+            <div>{{ gate_pass.approved_date|date:"d/m/Y"|default:"" }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="signature-box">
+            <div style="border-bottom: 1px solid #000; height: 50px;"></div>
+            <div>Security Officer</div>
+            {% if gate_pass.security_in_charge %}
+            <div>{{ gate_pass.security_in_charge.get_full_name }}</div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>** This is an official document. Please keep it safe. **</p>
+        <p>Issued by: {{ gate_pass.created_by.get_full_name|default:"System" }}</p>
+    </div>
+</body>
+</html>

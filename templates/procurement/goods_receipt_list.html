@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Goods Receipts{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-clipboard-check text-primary"></i> Goods Receipts
+                </h1>
+                <div>
+                    <a href="{% url 'procurement:dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="{% url 'procurement:goods_receipt_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> New Goods Receipt
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Goods Receipts Table -->
+    <div class="card shadow">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Goods Receipt List ({{ goods_receipts|length }} total)
+            </h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>GR Number</th>
+                            <th>Purchase Order</th>
+                            <th>Supplier</th>
+                            <th>Receipt Date</th>
+                            <th>Warehouse</th>
+                            <th>Received By</th>
+                            <th>Items Received</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for receipt in goods_receipts %}
+                        <tr>
+                            <td>
+                                <strong>{{ receipt.gr_number }}</strong>
+                            </td>
+                            <td>
+                                <a href="{% url 'procurement:purchase_order_detail' receipt.purchase_order.pk %}">
+                                    {{ receipt.purchase_order.po_number }}
+                                </a>
+                            </td>
+                            <td>{{ receipt.purchase_order.supplier.name }}</td>
+                            <td>{{ receipt.receipt_date|date:"d/m/Y" }}</td>
+                            <td>{{ receipt.warehouse.name }}</td>
+                            <td>{{ receipt.received_by.get_full_name }}</td>
+                            <td class="text-center">
+                                <span class="badge badge-info">{{ receipt.items.count }}</span>
+                            </td>
+                            <td>
+                                {{ receipt.created_at|date:"d/m/Y" }}<br>
+                                <small>{{ receipt.created_at|date:"H:i" }}</small>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{% url 'procurement:goods_receipt_detail' receipt.pk %}" 
+                                       class="btn btn-info" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-secondary" title="Print">
+                                        <i class="fas fa-print"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center py-4">
+                                <i class="fas fa-clipboard-check fa-3x text-gray-300 mb-3"></i>
+                                <h5 class="text-gray-500">No goods receipts found</h5>
+                                <a href="{% url 'procurement:goods_receipt_create' %}" class="btn btn-primary mt-2">
+                                    <i class="fas fa-plus-circle"></i> Create First Goods Receipt
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

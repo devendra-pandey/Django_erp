@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="h3 mb-4">
+                <i class="fas fa-shield-alt text-primary"></i> Security Dashboard
+            </h1>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Today's Gate Passes
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ today_passes }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-door-open fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Pending Approval
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pending_passes }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                In Progress
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ in_progress_passes }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-truck-loading fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Today's Visitors
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ visitors_today|length }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'gatepass_create' %}" class="btn btn-primary btn-block">
+                                <i class="fas fa-plus-circle"></i> New Gate Pass
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'visitor_checkin' %}" class="btn btn-success btn-block">
+                                <i class="fas fa-user-plus"></i> Visitor Check-in
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'gatepass_list' %}?status=pending" class="btn btn-warning btn-block">
+                                <i class="fas fa-clipboard-list"></i> View Pending
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'visitor_log' %}" class="btn btn-info btn-block">
+                                <i class="fas fa-history"></i> Visitor Log
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="row">
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Gate Passes</h6>
+                    <a href="{% url 'gatepass_list' %}" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" width="100%">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Pass No</th>
+                                    <th>Type</th>
+                                    <th>Person/Vehicle</th>
+                                    <th>Status</th>
+                                    <th>Time</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pass in recent_passes %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ pass.pass_number }}</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-info">{{ pass.get_pass_type_display }}</span>
+                                    </td>
+                                    <td>
+                                        {% if pass.person_name %}
+                                            {{ pass.person_name }}
+                                        {% elif pass.vehicle_number %}
+                                            {{ pass.vehicle_number }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if pass.status == 'pending' %}
+                                            <span class="badge badge-warning">Pending</span>
+                                        {% elif pass.status == 'approved' %}
+                                            <span class="badge badge-info">Approved</span>
+                                        {% elif pass.status == 'in_progress' %}
+                                            <span class="badge badge-primary">In Progress</span>
+                                        {% elif pass.status == 'completed' %}
+                                            <span class="badge badge-success">Completed</span>
+                                        {% elif pass.status == 'cancelled' %}
+                                            <span class="badge badge-danger">Cancelled</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ pass.created_at|date:"H:i" }}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'gatepass_detail' pass.pk %}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if pass.status == 'pending' %}
+                                        <a href="{% url 'gatepass_checkin' pass.pk %}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-sign-in-alt"></i>
+                                        </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center">No gate passes found</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visitors Today -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Visitors Today</h6>
+                    <span class="badge badge-primary">{{ visitors_today|length }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for visitor in visitors_today %}
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ visitor.visitor_name }}</h6>
+                                <small>
+                                    {% if visitor.check_out_time %}
+                                        <span class="badge badge-success">Checked Out</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">In Premises</span>
+                                    {% endif %}
+                                </small>
+                            </div>
+                            <p class="mb-1">
+                                <small>Meeting: {{ visitor.visiting_person.user.get_full_name }}</small><br>
+                                <small>Card: {{ visitor.visitor_card_issued }}</small>
+                            </p>
+                            <small>Check-in: {{ visitor.check_in_time|date:"H:i" }}</small>
+                            {% if not visitor.check_out_time %}
+                            <div class="mt-2">
+                                <a href="{% url 'visitor_checkout' visitor.pk %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-sign-out-alt"></i> Check Out
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% empty %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-users fa-3x text-gray-300 mb-3"></i>
+                            <p class="text-muted">No visitors today</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Auto-refresh dashboard every 60 seconds
+    setInterval(function() {
+        window.location.reload();
+    }, 60000);
+});
+</script>
+{% endblock %}

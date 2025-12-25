@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Purchase Order - {{ object.po_number }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Confirm Delete
+                    </h4>
+                </div>
+                
+                <div class="card-body">
+                    <div class="alert alert-danger">
+                        <h5><i class="fas fa-exclamation-circle"></i> Warning!</h5>
+                        <p class="mb-0">
+                            You are about to delete the purchase order <strong>"{{ object.po_number }}"</strong>. 
+                            This action cannot be undone.
+                        </p>
+                    </div>
+                    
+                    <!-- PO Details -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">Purchase Order Details</h6>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tr>
+                                    <th width="40%">PO Number:</th>
+                                    <td>{{ object.po_number }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Supplier:</th>
+                                    <td>{{ object.supplier.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Order Date:</th>
+                                    <td>{{ object.order_date|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status:</th>
+                                    <td>
+                                        {% if object.status == 'draft' %}
+                                            <span class="badge badge-secondary">Draft</span>
+                                        {% elif object.status == 'sent' %}
+                                            <span class="badge badge-info">Sent</span>
+                                        {% elif object.status == 'confirmed' %}
+                                            <span class="badge badge-primary">Confirmed</span>
+                                        {% elif object.status == 'partial' %}
+                                            <span class="badge badge-warning">Partial</span>
+                                        {% elif object.status == 'received' %}
+                                            <span class="badge badge-success">Received</span>
+                                        {% elif object.status == 'cancelled' %}
+                                            <span class="badge badge-danger">Cancelled</span>
+                                        {% elif object.status == 'closed' %}
+                                            <span class="badge badge-dark">Closed</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Total Amount:</th>
+                                    <td class="font-weight-bold">${{ object.grand_total|floatformat:2 }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Check for related goods receipts -->
+                    {% if object.goodsreceipt_set.exists %}
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-exclamation-triangle"></i> Associated Records Found</h6>
+                        <p class="mb-0">
+                            This purchase order has <strong>{{ object.goodsreceipt_set.count }}</strong> 
+                            goods receipt(s) associated with it. Deleting this PO may affect 
+                            these records.
+                        </p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if object.status != 'draft' %}
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-exclamation-triangle"></i> Non-Draft Status</h6>
+                        <p class="mb-0">
+                            This purchase order is in <strong>{{ object.get_status_display }}</strong> status.
+                            Only draft purchase orders should be deleted.
+                        </p>
+                    </div>
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Confirmation -->
+                        <div class="form-group mb-4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" 
+                                       id="confirm_delete" name="confirm_delete" required>
+                                <label class="form-check-label text-danger font-weight-bold" for="confirm_delete">
+                                    I understand that this action cannot be undone
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="form-group">
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i> Yes, Delete Purchase Order
+                                </button>
+                                <a href="{% url 'procurement:purchase_order_detail' object.pk %}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> No, Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

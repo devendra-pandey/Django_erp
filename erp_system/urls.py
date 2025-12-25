@@ -20,6 +20,7 @@ urlpatterns = [
     path('reports/', include('reports.urls')),
     path('analytics/', include('analytics.urls')),
     path('notifications/', include('notifications.urls')),
+    path('gatepass/', include('security.urls')),
 ]
 
 if settings.DEBUG:

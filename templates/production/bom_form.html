@@ -1,0 +1,433 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if object %}
+        Edit Bill of Materials - {{ object.code }}
+    {% else %}
+        Create New Bill of Materials
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'production:dashboard' %}">Production</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'production:bom_list' %}">Bill of Materials</a></li>
+                    <li class="breadcrumb-item active">
+                        {% if object %}Edit{% else %}Create{% endif %} BOM
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-{% if object %}edit{% else %}plus-circle{% endif %}"></i>
+                        {% if object %}
+                            Edit Bill of Materials: {{ object.code }}
+                        {% else %}
+                            Create New Bill of Materials
+                        {% endif %}
+                    </h4>
+                </div>
+                
+                <div class="card-body">
+                    <form method="post" id="bom-form">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                <h5><i class="fas fa-exclamation-triangle"></i> Please correct the errors below:</h5>
+                                {{ form.errors }}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="row">
+                            <!-- Left Column - Basic Information -->
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Basic Information</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label for="{{ form.code.id_for_label }}" class="font-weight-bold">
+                                                BOM Code <span class="text-danger">*</span>
+                                            </label>
+                                            {{ form.code }}
+                                            <small class="form-text text-muted">Unique code for this BOM</small>
+                                            {% if form.code.errors %}
+                                                <div class="alert alert-danger mt-2">{{ form.code.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="{{ form.finished_product.id_for_label }}" class="font-weight-bold">
+                                                Finished Product <span class="text-danger">*</span>
+                                            </label>
+                                            {{ form.finished_product }}
+                                            {% if form.finished_product.errors %}
+                                                <div class="alert alert-danger mt-2">{{ form.finished_product.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="{{ form.version.id_for_label }}" class="font-weight-bold">
+                                                        Version <span class="text-danger">*</span>
+                                                    </label>
+                                                    {{ form.version }}
+                                                    {% if form.version.errors %}
+                                                        <div class="alert alert-danger mt-2">{{ form.version.errors }}</div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="{{ form.effective_date.id_for_label }}" class="font-weight-bold">
+                                                        Effective Date <span class="text-danger">*</span>
+                                                    </label>
+                                                    {{ form.effective_date }}
+                                                    {% if form.effective_date.errors %}
+                                                        <div class="alert alert-danger mt-2">{{ form.effective_date.errors }}</div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Right Column - Production Details -->
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Production Details</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="{{ form.production_time.id_for_label }}" class="font-weight-bold">
+                                                        Production Time (hours/unit) <span class="text-danger">*</span>
+                                                    </label>
+                                                    {{ form.production_time }}
+                                                    <small class="form-text text-muted">Hours required to produce one unit</small>
+                                                    {% if form.production_time.errors %}
+                                                        <div class="alert alert-danger mt-2">{{ form.production_time.errors }}</div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="{{ form.scrap_rate.id_for_label }}" class="font-weight-bold">
+                                                        Scrap Rate (%)
+                                                    </label>
+                                                    {{ form.scrap_rate }}
+                                                    <small class="form-text text-muted">Percentage of waste/scrap</small>
+                                                    {% if form.scrap_rate.errors %}
+                                                        <div class="alert alert-danger mt-2">{{ form.scrap_rate.errors }}</div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="{{ form.notes.id_for_label }}" class="font-weight-bold">
+                                                Notes
+                                            </label>
+                                            {{ form.notes }}
+                                            {% if form.notes.errors %}
+                                                <div class="alert alert-danger mt-2">{{ form.notes.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox">
+                                                {{ form.is_active }}
+                                                <label class="custom-control-label font-weight-bold" for="{{ form.is_active.id_for_label }}">
+                                                    Active BOM
+                                                </label>
+                                            </div>
+                                            <small class="form-text text-muted">Only active BOMs can be used in production orders</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- BOM Lines Section -->
+                        <div class="card mb-3">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Components / Raw Materials</h5>
+                                <button type="button" class="btn btn-sm btn-success" id="add-component">
+                                    <i class="fas fa-plus"></i> Add Component
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="bom-lines">
+                                    {% if bom_lines_formset %}
+                                        {{ bom_lines_formset.management_form }}
+                                        {% for form in bom_lines_formset %}
+                                            <div class="bom-line-form card mb-2">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label>Component</label>
+                                                                {{ form.component }}
+                                                                {% if form.component.errors %}
+                                                                    <div class="alert alert-danger mt-2">{{ form.component.errors }}</div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>Quantity</label>
+                                                                {{ form.quantity }}
+                                                                {% if form.quantity.errors %}
+                                                                    <div class="alert alert-danger mt-2">{{ form.quantity.errors }}</div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>UoM</label>
+                                                                {{ form.unit_of_measure }}
+                                                                {% if form.unit_of_measure.errors %}
+                                                                    <div class="alert alert-danger mt-2">{{ form.unit_of_measure.errors }}</div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>Scrap %</label>
+                                                                {{ form.scrap_percentage }}
+                                                                {% if form.scrap_percentage.errors %}
+                                                                    <div class="alert alert-danger mt-2">{{ form.scrap_percentage.errors }}</div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>Operation</label>
+                                                                {{ form.operation }}
+                                                                {% if form.operation.errors %}
+                                                                    <div class="alert alert-danger mt-2">{{ form.operation.errors }}</div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% if form.DELETE %}
+                                                        <div class="form-check">
+                                                            {{ form.DELETE }}
+                                                            <label class="form-check-label text-danger" for="{{ form.DELETE.id_for_label }}">
+                                                                Remove this component
+                                                            </label>
+                                                        </div>
+                                                    {% endif %}
+                                                    {{ form.id }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="alert alert-info">
+                                            No components added yet. Click "Add Component" to add materials.
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="form-group">
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    {% if object %}
+                                        Update BOM
+                                    {% else %}
+                                        Create BOM
+                                    {% endif %}
+                                </button>
+                                <a href="{% url 'production:bom_list' %}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                                {% if object %}
+                                <a href="{% url 'production:bom_detail' object.pk %}" class="btn btn-info">
+                                    <i class="fas fa-eye"></i> View Details
+                                </a>
+                                <a href="{% url 'production:bom_copy' object.pk %}" class="btn btn-warning">
+                                    <i class="fas fa-copy"></i> Copy BOM
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .bom-line-form {
+        border-left: 4px solid #007bff;
+    }
+    .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+    .card-header {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Date picker for effective date
+    $('#id_effective_date').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        todayHighlight: true
+    });
+    
+    // Add component functionality
+    let componentCount = {{ bom_lines_formset.total_form_count|default:0 }};
+    
+    $('#add-component').click(function() {
+        const formIdx = $('#id_bomlines-TOTAL_FORMS').val();
+        const template = $('#empty-form-template').html().replace(/__prefix__/g, formIdx);
+        $('#bom-lines').append(template);
+        $('#id_bomlines-TOTAL_FORMS').val(parseInt(formIdx) + 1);
+        componentCount++;
+    });
+    
+    // Auto-calculate total quantity with scrap
+    $(document).on('change', '.quantity-field, .scrap-field', function() {
+        const row = $(this).closest('.bom-line-form');
+        const quantity = parseFloat(row.find('.quantity-field').val()) || 0;
+        const scrap = parseFloat(row.find('.scrap-field').val()) || 0;
+        const total = quantity * (1 + scrap / 100);
+        row.find('.total-quantity').text(total.toFixed(3));
+    });
+    
+    // Product selection change
+    $(document).on('change', '.product-select', function() {
+        const productId = $(this).val();
+        const row = $(this).closest('.bom-line-form');
+        
+        if (productId) {
+            // You can add AJAX call here to get product details like UoM
+            // For now, we'll just show a loading state
+            row.find('.uom-field').val('Loading...');
+            
+            $.ajax({
+                url: '/api/product/' + productId + '/details/',
+                method: 'GET',
+                success: function(data) {
+                    row.find('.uom-field').val(data.uom);
+                },
+                error: function() {
+                    row.find('.uom-field').val('');
+                }
+            });
+        }
+    });
+});
+
+// Form validation
+document.getElementById('bom-form').addEventListener('submit', function(e) {
+    const finishedProduct = document.getElementById('id_finished_product').value;
+    const productionTime = document.getElementById('id_production_time').value;
+    
+    if (!finishedProduct) {
+        e.preventDefault();
+        alert('Please select a finished product');
+        return false;
+    }
+    
+    if (!productionTime || parseFloat(productionTime) <= 0) {
+        e.preventDefault();
+        alert('Please enter a valid production time (greater than 0)');
+        return false;
+    }
+    
+    // Check if at least one component is added
+    const componentCount = {{ bom_lines_formset.total_form_count|default:0 }};
+    if (componentCount === 0) {
+        e.preventDefault();
+        alert('Please add at least one component to the BOM');
+        return false;
+    }
+    
+    return true;
+});
+</script>
+
+<!-- Empty form template for adding new components -->
+<script type="text/template" id="empty-form-template">
+<div class="bom-line-form card mb-2">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Component</label>
+                    <select name="bomlines-__prefix__-component" class="form-control product-select" id="id_bomlines-__prefix__-component">
+                        <option value="">---------</option>
+                        {% for product in raw_materials %}
+                        <option value="{{ product.id }}">{{ product.SKU }} - {{ product.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" name="bomlines-__prefix__-quantity" step="0.001" class="form-control quantity-field" id="id_bomlines-__prefix__-quantity">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>UoM</label>
+                    <input type="text" name="bomlines-__prefix__-unit_of_measure" class="form-control uom-field" id="id_bomlines-__prefix__-unit_of_measure" readonly>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Scrap %</label>
+                    <input type="number" name="bomlines-__prefix__-scrap_percentage" step="0.01" class="form-control scrap-field" id="id_bomlines-__prefix__-scrap_percentage" value="0">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Operation</label>
+                    <select name="bomlines-__prefix__-operation" class="form-control" id="id_bomlines-__prefix__-operation">
+                        <option value="">---------</option>
+                        {% for operation in operations %}
+                        <option value="{{ operation.id }}">{{ operation.code }} - {{ operation.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-check">
+            <input type="checkbox" name="bomlines-__prefix__-DELETE" class="form-check-input" id="id_bomlines-__prefix__-DELETE">
+            <label class="form-check-label text-danger" for="id_bomlines-__prefix__-DELETE">
+                Remove this component
+            </label>
+        </div>
+        <input type="hidden" name="bomlines-__prefix__-id" id="id_bomlines-__prefix__-id">
+    </div>
+</div>
+</script>
+{% endblock %}

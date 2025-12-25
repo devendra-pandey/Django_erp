@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Visitor Check-out - {{ visitor.visitor_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-sign-out-alt"></i> Visitor Check-out
+                    </h4>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Visitor Summary -->
+                    <div class="alert alert-info">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-user"></i> {{ visitor.visitor_name }}</h5>
+                                <p class="mb-1"><strong>Company:</strong> {{ visitor.visitor_company|default:"-" }}</p>
+                                <p class="mb-1"><strong>Contact:</strong> {{ visitor.contact_number }}</p>
+                                <p class="mb-1"><strong>Visitor Card:</strong> {{ visitor.visitor_card_issued }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-clock"></i> Visit Details</h5>
+                                <p class="mb-1"><strong>Check-in:</strong> {{ visitor.check_in_time|date:"d/m/Y H:i" }}</p>
+                                <p class="mb-1"><strong>Duration:</strong> 
+                                    <span id="visit-duration">Calculating...</span>
+                                </p>
+                                <p class="mb-1"><strong>Meeting With:</strong> 
+                                    {{ visitor.visiting_person.user.get_full_name }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <strong>Purpose:</strong> {{ visitor.purpose }}
+                        </div>
+                    </div>
+
+                    <form method="post" id="visitor-checkout-form">
+                        {% csrf_token %}
+                        
+                        <!-- Check-out Time -->
+                        <div class="form-group">
+                            <label class="font-weight-bold">Check-out Time</label>
+                            <input type="datetime-local" class="form-control" name="check_out_time" 
+                                   id="check_out_time" required>
+                            <small class="form-text text-muted">Actual time of departure</small>
+                        </div>
+                        
+                        <!-- Visitor Card Return -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Visitor Card Return</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" 
+                                               id="id_card_returned" name="card_returned" required>
+                                        <label class="custom-control-label font-weight-bold" for="id_card_returned">
+                                            Visitor card returned <span class="text-danger">*</span>
+                                        </label>
+                                        <small class="form-text text-muted">
+                                            I confirm that the visitor has returned their visitor card
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Card Condition</label>
+                                    <select class="form-control" name="card_condition">
+                                        <option value="good">Good Condition</option>
+                                        <option value="damaged">Damaged</option>
+                                        <option value="lost">Lost/Not Returned</option>
+                                    </select>
+                                    <small class="form-text text-muted">Select the condition of the returned card</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Feedback & Remarks -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Visit Feedback & Remarks</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Security Officer Remarks</label>
+                                    <textarea class="form-control" name="security_remarks" rows="3" 
+                                              placeholder="Enter any observations, issues, or special remarks..."></textarea>
+                                    <small class="form-text text-muted">
+                                        Note any unusual behavior, issues, or important observations
+                                    </small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Visit Feedback (Optional)</label>
+                                    <textarea class="form-control" name="visit_feedback" rows="2" 
+                                              placeholder="Visitor feedback about the visit..."></textarea>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold">Visit Rating</label>
+                                            <select class="form-control" name="visit_rating">
+                                                <option value="">Select Rating</option>
+                                                <option value="5">Excellent</option>
+                                                <option value="4">Good</option>
+                                                <option value="3">Average</option>
+                                                <option value="2">Poor</option>
+                                                <option value="1">Very Poor</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="font-weight-bold">Next Visit Recommended</label>
+                                            <select class="form-control" name="next_visit">
+                                                <option value="">Select Option</option>
+                                                <option value="yes">Yes</option>
+                                                <option value="no">No</option>
+                                                <option value="conditional">With Conditions</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Items Check -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">Items Check</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" 
+                                               id="id_no_company_items" name="no_company_items" required>
+                                        <label class="custom-control-label font-weight-bold" for="id_no_company_items">
+                                            No company items with visitor <span class="text-danger">*</span>
+                                        </label>
+                                        <small class="form-text text-muted">
+                                            I confirm that the visitor is not carrying any company property
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" 
+                                               id="id_vehicle_checked" name="vehicle_checked" 
+                                               {% if visitor.vehicle_number %}required{% endif %}>
+                                        <label class="custom-control-label font-weight-bold" for="id_vehicle_checked">
+                                            Vehicle checked {% if visitor.vehicle_number %}<span class="text-danger">*</span>{% endif %}
+                                        </label>
+                                        <small class="form-text text-muted">
+                                            I have checked the visitor's vehicle (if applicable)
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" 
+                                               id="id_no_suspicious_items" name="no_suspicious_items" required>
+                                        <label class="custom-control-label font-weight-bold" for="id_no_suspicious_items">
+                                            No suspicious items <span class="text-danger">*</span>
+                                        </label>
+                                        <small class="form-text text-muted">
+                                            I confirm there are no suspicious items with the visitor
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="form-group">
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-warning btn-lg">
+                                    <i class="fas fa-sign-out-alt"></i> Confirm Check-out
+                                </button>
+                                <a href="{% url 'visitor_log' %}" class="btn btn-secondary btn-lg">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Set current time for check-out
+    const now = new Date();
+    const nowStr = now.toISOString().slice(0, 16);
+    $('#check_out_time').val(nowStr);
+    
+    // Calculate visit duration
+    function calculateDuration() {
+        const checkIn = new Date('{{ visitor.check_in_time|date:"c" }}');
+        const checkOut = new Date($('#check_out_time').val() || now);
+        
+        const diffMs = checkOut - checkIn;
+        const diffHrs = Math.floor(diffMs / 3600000);
+        const diffMins = Math.floor((diffMs % 3600000) / 60000);
+        
+        $('#visit-duration').text(`${diffHrs}h ${diffMins}m`);
+    }
+    
+    // Initial calculation
+    calculateDuration();
+    
+    // Update duration when check-out time changes
+    $('#check_out_time').change(calculateDuration);
+    
+    // Form validation
+    $('#visitor-checkout-form').submit(function(e) {
+        if (!$('#id_card_returned').is(':checked') || 
+            !$('#id_no_company_items').is(':checked') || 
+            !$('#id_no_suspicious_items').is(':checked')) {
+            e.preventDefault();
+            alert('Please check all required verification boxes');
+            return false;
+        }
+        
+        // Validate check-out time
+        const checkOutTime = new Date($('#check_out_time').val());
+        const checkInTime = new Date('{{ visitor.check_in_time|date:"c" }}');
+        
+        if (checkOutTime <= checkInTime) {
+            e.preventDefault();
+            alert('Check-out time must be after check-in time');
+            return false;
+        }
+        
+        return true;
+    });
+});
+</script>
+{% endblock %}

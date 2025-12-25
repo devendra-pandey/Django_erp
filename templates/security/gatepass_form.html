@@ -1,0 +1,645 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if object %}
+        Edit Gate Pass - {{ object.pass_number }}
+    {% else %}
+        Create New Gate Pass
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-door-open"></i>
+                        {% if object %}
+                            Edit Gate Pass: {{ object.pass_number }}
+                        {% else %}
+                            Create New Gate Pass
+                        {% endif %}
+                    </h4>
+                </div>
+                
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data" id="gatepass-form">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>Please correct the errors below:</strong>
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Basic Information Section -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Basic Information</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Pass Type -->
+                                        <div class="mb-3">
+                                            <label for="{{ form.pass_type.id_for_label }}" class="form-label">
+                                                Pass Type <span class="text-danger">*</span>
+                                            </label>
+                                            {{ form.pass_type }}
+                                        </div>
+                                        
+                                        <!-- Person/Vehicle Information -->
+                                        <div class="mb-3">
+                                            <label for="{{ form.person_name.id_for_label }}" class="form-label">
+                                                Person Name
+                                            </label>
+                                            {{ form.person_name }}
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="{{ form.company_name.id_for_label }}" class="form-label">
+                                                    Company Name
+                                                </label>
+                                                {{ form.company_name }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="{{ form.contact_number.id_for_label }}" class="form-label">
+                                                    Contact Number
+                                                </label>
+                                                {{ form.contact_number }}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="{{ form.vehicle_number.id_for_label }}" class="form-label">
+                                                    Vehicle Number
+                                                </label>
+                                                {{ form.vehicle_number }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="{{ form.driver_name.id_for_label }}" class="form-label">
+                                                    Driver Name
+                                                </label>
+                                                {{ form.driver_name }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Department & Timing</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Department and Employee -->
+                                        <div class="mb-3">
+                                            <label for="{{ form.department.id_for_label }}" class="form-label">
+                                                Department
+                                            </label>
+                                            {{ form.department }}
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="{{ form.requesting_employee.id_for_label }}" class="form-label">
+                                                Requesting Employee <span class="text-danger">*</span>
+                                            </label>
+                                            {{ form.requesting_employee }}
+                                        </div>
+                                        
+                                        <!-- Timing Information -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="{{ form.expected_in_date.id_for_label }}" class="form-label">
+                                                    Expected In <span class="text-danger">*</span>
+                                                </label>
+                                                {{ form.expected_in_date }}
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="{{ form.expected_out_date.id_for_label }}" class="form-label">
+                                                    Expected Out <span class="text-danger">*</span>
+                                                </label>
+                                                {{ form.expected_out_date }}
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Returnable Information -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <div class="form-check mt-4">
+                                                    {{ form.is_returnable }}
+                                                    <label class="form-check-label" for="{{ form.is_returnable.id_for_label }}">
+                                                        Is Returnable?
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="{{ form.expected_return_date.id_for_label }}" class="form-label">
+                                                    Expected Return Date
+                                                </label>
+                                                {{ form.expected_return_date }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Purpose and Location Section -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Purpose & Location</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Purpose -->
+                                        <div class="mb-3">
+                                            <label for="{{ form.purpose.id_for_label }}" class="form-label">
+                                                Purpose <span class="text-danger">*</span>
+                                            </label>
+                                            {{ form.purpose }}
+                                            <div class="form-text">Please describe the purpose of visit/movement</div>
+                                        </div>
+                                        
+                                        <!-- Location Information -->
+                                        <div class="mb-3">
+                                            <label for="{{ form.from_location.id_for_label }}" class="form-label">
+                                                From Location
+                                            </label>
+                                            {{ form.from_location }}
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="{{ form.to_location.id_for_label }}" class="form-label">
+                                                To Location
+                                            </label>
+                                            {{ form.to_location }}
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="{{ form.warehouse.id_for_label }}" class="form-label">
+                                                Warehouse
+                                            </label>
+                                            {{ form.warehouse }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Additional Information</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Reference and Hazardous -->
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="{{ form.reference_document.id_for_label }}" class="form-label">
+                                                    Reference Document
+                                                </label>
+                                                {{ form.reference_document }}
+                                                <div class="form-text">e.g., PO No, GR No</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-check mt-4">
+                                                    {{ form.is_hazardous }}
+                                                    <label class="form-check-label" for="{{ form.is_hazardous.id_for_label }}">
+                                                        Contains Hazardous Material?
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Attachment -->
+                                        <div class="mb-3">
+                                            <label for="{{ form.attachment.id_for_label }}" class="form-label">
+                                                Attachment
+                                            </label>
+                                            {{ form.attachment }}
+                                            <div class="form-text">Upload supporting documents if any</div>
+                                        </div>
+                                        
+                                        <!-- Email -->
+                                        <div class="mb-3">
+                                            <label for="{{ form.email.id_for_label }}" class="form-label">
+                                                Email
+                                            </label>
+                                            {{ form.email }}
+                                        </div>
+                                        
+                                        <!-- Email field might not exist in your form, remove if not needed -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Items Section -->
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Items</h5>
+                                <button type="button" class="btn btn-sm btn-success" id="add-item-btn">
+                                    <i class="fas fa-plus"></i> Add Item
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                {{ item_formset.management_form }}
+                                <div id="items-container">
+                                    {% for item_form in item_formset %}
+                                    <div class="item-row card mb-2">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Product</label>
+                                                        {{ item_form.product }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Description</label>
+                                                        {{ item_form.item_description }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Quantity</label>
+                                                        {{ item_form.quantity }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Unit</label>
+                                                        {{ item_form.unit_of_measure }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Serial Number</label>
+                                                        {{ item_form.serial_number }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Batch Number</label>
+                                                        {{ item_form.batch_number }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Value ($)</label>
+                                                        {{ item_form.value }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-11">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Remarks</label>
+                                                        {{ item_form.remarks }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1 d-flex align-items-end">
+                                                    {% if item_form.DELETE %}
+                                                    <div class="form-check">
+                                                        {{ item_form.DELETE }}
+                                                        <label class="form-check-label text-danger" for="{{ item_form.DELETE.id_for_label }}">
+                                                            Delete
+                                                        </label>
+                                                    </div>
+                                                    {% endif %}
+                                                    {{ item_form.id }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                
+                                <!-- Empty form template for JavaScript -->
+                                <div id="empty-form" style="display: none;">
+                                    <div class="item-row card mb-2">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Product</label>
+                                                        <select name="items-__prefix__-product" class="form-select">
+                                                            <option value="">---------</option>
+                                                            {% for product in products %}
+                                                            <option value="{{ product.id }}">{{ product.SKU }} - {{ product.name }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Description</label>
+                                                        <input type="text" name="items-__prefix__-item_description" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Quantity</label>
+                                                        <input type="number" name="items-__prefix__-quantity" class="form-control" step="0.001">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Unit</label>
+                                                        <input type="text" name="items-__prefix__-unit_of_measure" class="form-control" value="PCS">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Serial Number</label>
+                                                        <input type="text" name="items-__prefix__-serial_number" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Batch Number</label>
+                                                        <input type="text" name="items-__prefix__-batch_number" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Value ($)</label>
+                                                        <input type="number" name="items-__prefix__-value" class="form-control" step="0.01" value="0">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-11">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Remarks</label>
+                                                        <input type="text" name="items-__prefix__-remarks" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1 d-flex align-items-end">
+                                                    <div class="form-check">
+                                                        <input type="checkbox" name="items-__prefix__-DELETE" class="form-check-input">
+                                                        <label class="form-check-label text-danger">Delete</label>
+                                                    </div>
+                                                    <input type="hidden" name="items-__prefix__-id">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                {% if object %}
+                                    Update Gate Pass
+                                {% else %}
+                                    Create Gate Pass
+                                {% endif %}
+                            </button>
+                            <a href="{% url 'gatepass_list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control, .form-select {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+textarea.form-control {
+    min-height: 80px;
+}
+
+.form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0.2em;
+}
+
+.item-row {
+    border-left: 4px solid #4e73df;
+}
+
+.form-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Apply Bootstrap classes to all form fields
+    const applyBootstrapClasses = () => {
+        // Style all selects
+        document.querySelectorAll('select').forEach(select => {
+            select.classList.add('form-select');
+        });
+        
+        // Style all inputs (except checkboxes and radios)
+        document.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]), textarea').forEach(input => {
+            input.classList.add('form-control');
+        });
+        
+        // Style checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.classList.add('form-check-input');
+        });
+        
+        // Style checkbox labels
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            const label = document.querySelector(`label[for="${checkbox.id}"]`);
+            if (label) {
+                label.classList.add('form-check-label');
+            }
+        });
+    };
+    
+    // Initial application
+    applyBootstrapClasses();
+    
+    // Set default dates
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    
+    // Format for datetime-local inputs
+    const nowLocal = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    const tomorrowLocal = new Date(tomorrow.getTime() - tomorrow.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    
+    // Set default date values
+    const expectedInDate = document.getElementById('id_expected_in_date');
+    const expectedOutDate = document.getElementById('id_expected_out_date');
+    const expectedReturnDate = document.getElementById('id_expected_return_date');
+    
+    if (expectedInDate && !expectedInDate.value) {
+        if (expectedInDate.type === 'datetime-local') {
+            expectedInDate.value = nowLocal;
+        } else if (expectedInDate.type === 'date') {
+            expectedInDate.value = today;
+        }
+    }
+    
+    if (expectedOutDate && !expectedOutDate.value) {
+        if (expectedOutDate.type === 'datetime-local') {
+            expectedOutDate.value = tomorrowLocal;
+        } else if (expectedOutDate.type === 'date') {
+            expectedOutDate.value = tomorrowStr;
+        }
+    }
+    
+    if (expectedReturnDate && !expectedReturnDate.value) {
+        expectedReturnDate.value = tomorrowStr;
+    }
+    
+    // Handle returnable checkbox
+    const isReturnable = document.getElementById('id_is_returnable');
+    const expectedReturnDateField = document.getElementById('id_expected_return_date');
+    
+    if (isReturnable && expectedReturnDateField) {
+        const toggleReturnDate = () => {
+            expectedReturnDateField.disabled = !isReturnable.checked;
+            if (!isReturnable.checked) {
+                expectedReturnDateField.value = '';
+            } else if (!expectedReturnDateField.value) {
+                expectedReturnDateField.value = tomorrowStr;
+            }
+        };
+        
+        isReturnable.addEventListener('change', toggleReturnDate);
+        toggleReturnDate(); // Initial state
+    }
+    
+    // Handle formset for items
+    const addItemBtn = document.getElementById('add-item-btn');
+    const itemsContainer = document.getElementById('items-container');
+    const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+    const emptyForm = document.getElementById('empty-form').innerHTML;
+    
+    if (addItemBtn && itemsContainer && totalForms) {
+        addItemBtn.addEventListener('click', function() {
+            const formNum = parseInt(totalForms.value);
+            const newForm = emptyForm.replace(/__prefix__/g, formNum);
+            
+            const newRow = document.createElement('div');
+            newRow.innerHTML = newForm;
+            itemsContainer.appendChild(newRow.firstElementChild);
+            
+            totalForms.value = formNum + 1;
+            
+            // Apply Bootstrap classes to new form
+            applyBootstrapClasses();
+        });
+    }
+    
+    // Auto-calculate value based on product selection and quantity
+    document.addEventListener('change', function(e) {
+        if (e.target && e.target.name && e.target.name.includes('-product')) {
+            const row = e.target.closest('.item-row');
+            const quantityInput = row.querySelector('input[name*="-quantity"]');
+            const valueInput = row.querySelector('input[name*="-value"]');
+            
+            // Here you would typically fetch product price from server
+            // For now, we'll use a default value
+            if (quantityInput && valueInput && quantityInput.value && !valueInput.value) {
+                const quantity = parseFloat(quantityInput.value) || 0;
+                valueInput.value = (quantity * 100).toFixed(2); // Default $100 per unit
+            }
+        }
+    });
+    
+    // Form validation
+    const form = document.getElementById('gatepass-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            const requiredFields = form.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('is-invalid');
+                    
+                    // Add error message if not exists
+                    if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('invalid-feedback')) {
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'invalid-feedback';
+                        errorDiv.textContent = 'This field is required.';
+                        field.parentNode.appendChild(errorDiv);
+                    }
+                } else {
+                    field.classList.remove('is-invalid');
+                    const errorDiv = field.nextElementSibling;
+                    if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
+                        errorDiv.remove();
+                    }
+                }
+            });
+            
+            // Validate email format if email field exists
+            const emailField = document.getElementById('id_email');
+            if (emailField && emailField.value) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailField.value)) {
+                    isValid = false;
+                    emailField.classList.add('is-invalid');
+                    if (!emailField.nextElementSibling || !emailField.nextElementSibling.classList.contains('invalid-feedback')) {
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'invalid-feedback';
+                        errorDiv.textContent = 'Please enter a valid email address.';
+                        emailField.parentNode.appendChild(errorDiv);
+                    }
+                }
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill all required fields correctly.');
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

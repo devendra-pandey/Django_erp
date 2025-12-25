@@ -30,71 +30,80 @@ class BOMListView(LoginRequiredMixin, ListView):
             queryset = queryset.filter(is_active=False)
         return queryset.order_by('-created_at')
 
-class BOMCreateView(LoginRequiredMixin, CreateView):
+class BOMCreateView(CreateView):
     model = BillOfMaterials
     form_class = BOMForm
     template_name = 'production/bom_form.html'
-    success_url = reverse_lazy('production:bom_list')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.POST:
-            context['formset'] = BOMLineFormSet(self.request.POST, instance=self.object)
+            context['bom_lines_formset'] = BOMLineFormSet(self.request.POST)
         else:
-            context['formset'] = BOMLineFormSet(instance=self.object)
+            context['bom_lines_formset'] = BOMLineFormSet()
+        
+        # Add additional context
+        from inventory.models import Product
+        from production.models import Operation
+        
+        context['raw_materials'] = Product.objects.filter(product_type='raw', is_active=True)
+        context['operations'] = Operation.objects.filter(is_active=True)
+        
         return context
     
     def form_valid(self, form):
         context = self.get_context_data()
-        formset = context['formset']
+        bom_lines_formset = context['bom_lines_formset']
         
-        if formset.is_valid():
-            self.object = form.save(commit=False)
-            self.object.created_by = self.request.user
-            self.object.save()
+        if bom_lines_formset.is_valid():
+            # Save the BOM first
+            self.object = form.save()
+            # Save the formset with the BOM instance
+            bom_lines_formset.instance = self.object
+            bom_lines_formset.save()
             
-            formset.instance = self.object
-            formset.save()
-            
-            messages.success(self.request, 'BOM created successfully!')
-            return redirect('production:bom_detail', pk=self.object.pk)
+            return redirect('bom_detail', pk=self.object.pk)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
+class BOMUpdateView(UpdateView):
+    model = BillOfMaterials
+    form_class = BOMForm
+    template_name = 'production/bom_form.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['bom_lines_formset'] = BOMLineFormSet(self.request.POST, instance=self.object)
+        else:
+            context['bom_lines_formset'] = BOMLineFormSet(instance=self.object)
         
-        return self.form_invalid(form)
+        # Add additional context
+        from inventory.models import Product
+        from production.models import Operation
+        
+        context['raw_materials'] = Product.objects.filter(product_type='raw', is_active=True)
+        context['operations'] = Operation.objects.filter(is_active=True)
+        
+        return context
+    
+    def form_valid(self, form):
+        context = self.get_context_data()
+        bom_lines_formset = context['bom_lines_formset']
+        
+        if bom_lines_formset.is_valid():
+            self.object = form.save()
+            bom_lines_formset.instance = self.object
+            bom_lines_formset.save()
+            return redirect('bom_detail', pk=self.object.pk)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
 
 class BOMDetailView(LoginRequiredMixin, DetailView):
     model = BillOfMaterials
     template_name = 'production/bom_detail.html'
     context_object_name = 'bom'
 
-class BOMUpdateView(LoginRequiredMixin, UpdateView):
-    model = BillOfMaterials
-    form_class = BOMForm
-    template_name = 'production/bom_form.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.request.POST:
-            context['formset'] = BOMLineFormSet(self.request.POST, instance=self.object)
-        else:
-            context['formset'] = BOMLineFormSet(instance=self.object)
-        return context
-    
-    def form_valid(self, form):
-        context = self.get_context_data()
-        formset = context['formset']
-        
-        if formset.is_valid():
-            self.object = form.save(commit=False)
-            self.object.updated_by = self.request.user
-            self.object.save()
-            
-            formset.instance = self.object
-            formset.save()
-            
-            messages.success(self.request, 'BOM updated successfully!')
-            return redirect('production:bom_detail', pk=self.object.pk)
-        
-        return self.form_invalid(form)
 
 class BOMDeleteView(LoginRequiredMixin, DeleteView):
     model = BillOfMaterials

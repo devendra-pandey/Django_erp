@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'notifications',
     'analytics',
     'reports',
+    'security',
 ]
 
 # Redis configuration for notifications

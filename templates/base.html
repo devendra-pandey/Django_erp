@@ -163,6 +163,46 @@
                         <a class="nav-link" href="{% url 'reports:dashboard' %}">
                             <i class="fas fa-chart-bar me-2"></i> Reports
                         </a>
+                        <li class="nav-item">
+                </li>
+                
+                <!-- OR as a dropdown -->
+                <li class="nav-item dropdown">
+
+                    <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Security</h6>
+                    <a class="nav-link dropdown-toggle" href="#" id="securityDropdown" role="button" 
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-shield-alt me-2"></i> Security
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="securityDropdown">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'security_dashboard' %}">
+                                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'gatepass_list' %}">
+                                <i class="fas fa-door-open me-2"></i> Gate Passes
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'gatepass_create' %}">
+                                <i class="fas fa-plus-circle me-2"></i> New Gate Pass
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'visitor_log' %}">
+                                <i class="fas fa-users me-2"></i> Visitor Log
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'visitor_checkin' %}">
+                                <i class="fas fa-user-plus me-2"></i> Visitor Check-in
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 </nav>
             </div>
 

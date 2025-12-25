@@ -1,0 +1,942 @@
+{% extends 'base.html' %}
+
+{% block title %}Production Order - {{ production_order.order_number }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0">
+                        <i class="fas fa-industry text-primary"></i> Production Order Details
+                    </h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'production:dashboard'|default:'#' %}">Production</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'production:production_order_list' %}">Production Orders</a></li>
+                            <li class="breadcrumb-item active">{{ production_order.order_number }}</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="btn-group">
+                    <a href="{% url 'production:production_order_update' production_order.pk %}" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    {% if production_order.status == 'draft' %}
+                    <a href="{% url 'production:production_order_release' production_order.pk %}" class="btn btn-success">
+                        <i class="fas fa-play-circle"></i> Release Order
+                    </a>
+                    {% elif production_order.status == 'released' %}
+                    <a href="{% url 'production:production_order_start' production_order.pk %}" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Start Production
+                    </a>
+                    {% elif production_order.status == 'in_progress' %}
+                    <a href="{% url 'production:production_order_complete' production_order.pk %}" class="btn btn-success">
+                        <i class="fas fa-check-circle"></i> Complete Order
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'production:production_order_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Banner -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h3 class="mb-0">{{ production_order.order_number }}</h3>
+                            <p class="text-muted mb-0">
+                                Product: <strong>{{ production_order.product.name }}</strong>
+                                • Created: {{ production_order.created_at|date:"d/m/Y H:i" }}
+                            </p>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <!-- Progress Circle -->
+                            <div class="progress-circle" data-progress="{{ production_order.progress|default:0 }}">
+                                <svg width="80" height="80" viewBox="0 0 36 36" class="circular-chart">
+                                    <path class="circle-bg" d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                    <path class="circle" stroke-dasharray="{{ production_order.progress|default:0 }}, 100" d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                    <text x="18" y="20.35" class="percentage">{{ production_order.progress|default:0 }}%</text>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <h2>
+                                {% if production_order.status == 'draft' %}
+                                    <span class="badge badge-secondary p-3">DRAFT</span>
+                                {% elif production_order.status == 'planned' %}
+                                    <span class="badge badge-info p-3">PLANNED</span>
+                                {% elif production_order.status == 'released' %}
+                                    <span class="badge badge-primary p-3">RELEASED</span>
+                                {% elif production_order.status == 'in_progress' %}
+                                    <span class="badge badge-warning p-3">IN PROGRESS</span>
+                                {% elif production_order.status == 'partially_completed' %}
+                                    <span class="badge badge-warning p-3">PARTIAL</span>
+                                {% elif production_order.status == 'completed' %}
+                                    <span class="badge badge-success p-3">COMPLETED</span>
+                                {% elif production_order.status == 'cancelled' %}
+                                    <span class="badge badge-danger p-3">CANCELLED</span>
+                                {% elif production_order.status == 'on_hold' %}
+                                    <span class="badge badge-dark p-3">ON HOLD</span>
+                                {% endif %}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column - Order Information -->
+        <div class="col-lg-8">
+            <!-- Order Details Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-info-circle"></i> Order Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th width="40%">Product:</th>
+                                    <td>
+                                        {{ production_order.product.name }}
+                                        <br><small class="text-muted">{{ production_order.product.SKU }}</small>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>BOM:</th>
+                                    <td>
+                                        {{ production_order.bom.code }}
+                                        <br><small class="text-muted">v{{ production_order.bom.version }}</small>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Quantity:</th>
+                                    <td>
+                                        {{ production_order.quantity }} {{ production_order.uom.symbol }}
+                                        <br>
+                                        <small class="text-muted">
+                                            Completed: {{ production_order.completed_quantity|default:"0" }}
+                                            {% if production_order.rejected_quantity > 0 %}
+                                                <br>Rejected: {{ production_order.rejected_quantity }}
+                                            {% endif %}
+                                        </small>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Priority:</th>
+                                    <td>
+                                        {% with priority=production_order.priority %}
+                                            {% if priority <= 3 %}
+                                                <span class="badge badge-danger">High ({{ priority }})</span>
+                                            {% elif priority <= 6 %}
+                                                <span class="badge badge-warning">Medium ({{ priority }})</span>
+                                            {% else %}
+                                                <span class="badge badge-success">Low ({{ priority }})</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th width="40%">Work Center:</th>
+                                    <td>{{ production_order.work_center.name|default:"-" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Supervisor:</th>
+                                    <td>
+                                        {% if production_order.supervisor %}
+                                            {{ production_order.supervisor.user.get_full_name }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Planned Duration:</th>
+                                    <td>
+                                        {{ production_order.planned_start|date:"d/m/Y H:i" }}
+                                        <br>to {{ production_order.planned_end|date:"d/m/Y H:i" }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Actual Duration:</th>
+                                    <td>
+                                        {% if production_order.actual_start %}
+                                            {{ production_order.actual_start|date:"d/m/Y H:i" }}
+                                            <br>to 
+                                            {% if production_order.actual_end %}
+                                                {{ production_order.actual_end|date:"d/m/Y H:i" }}
+                                            {% else %}
+                                                <span class="text-warning">In Progress</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="text-muted">Not started</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Cost Summary -->
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-muted">Material Cost</h6>
+                                    <h3 class="card-text text-primary">${{ production_order.material_cost|floatformat:2 }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-muted">Production Cost</h6>
+                                    <h3 class="card-text text-warning">${{ production_order.production_cost|floatformat:2 }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title">Total Cost</h6>
+                                    <h3 class="card-text">${{ production_order.total_cost|floatformat:2 }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes -->
+                    {% if production_order.notes %}
+                    <div class="mt-3">
+                        <h6 class="font-weight-bold">Notes</h6>
+                        <div class="card">
+                            <div class="card-body">
+                                {{ production_order.notes|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Production Operations -->
+            {% if production_order.operations.exists %}
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-tasks"></i> Production Operations ({{ production_order.operations.count }})
+                    </h6>
+                    <a href="{% url 'production:add_operation' production_order.pk %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus"></i> Add Operation
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Operation</th>
+                                    <th>Work Center</th>
+                                    <th>Operator</th>
+                                    <th>Planned</th>
+                                    <th>Actual</th>
+                                    <th>Quantity</th>
+                                    <th>Efficiency</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for operation in production_order.operations.all %}
+                                <tr>
+                                    <td>{{ operation.sequence }}</td>
+                                    <td>
+                                        <strong>{{ operation.operation.name }}</strong>
+                                        <br><small>{{ operation.operation.code }}</small>
+                                    </td>
+                                    <td>{{ operation.operation.work_center.name }}</td>
+                                    <td>
+                                        {% if operation.operator %}
+                                            {{ operation.operator.user.get_full_name }}
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>
+                                            {{ operation.planned_start|date:"H:i" }} - {{ operation.planned_end|date:"H:i" }}
+                                            <br>{{ operation.planned_start|date:"d/m" }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        {% if operation.actual_start %}
+                                            <small>
+                                                {{ operation.actual_start|date:"H:i" }}
+                                                {% if operation.actual_end %}
+                                                    - {{ operation.actual_end|date:"H:i" }}
+                                                {% endif %}
+                                            </small>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        {{ operation.quantity_processed|default:"0" }}
+                                        <br>
+                                        <small class="text-muted">
+                                            G:{{ operation.quantity_good|default:"0" }} 
+                                            R:{{ operation.quantity_rejected|default:"0" }}
+                                        </small>
+                                    </td>
+                                    <td class="text-center">
+                                        {% if operation.efficiency > 90 %}
+                                            <span class="badge badge-success">{{ operation.efficiency|floatformat:1 }}%</span>
+                                        {% elif operation.efficiency > 70 %}
+                                            <span class="badge badge-warning">{{ operation.efficiency|floatformat:1 }}%</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">{{ operation.efficiency|floatformat:1 }}%</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if operation.status == 'pending' %}
+                                            <span class="badge badge-secondary">Pending</span>
+                                        {% elif operation.status == 'in_progress' %}
+                                            <span class="badge badge-warning">In Progress</span>
+                                        {% elif operation.status == 'completed' %}
+                                            <span class="badge badge-success">Completed</span>
+                                        {% elif operation.status == 'cancelled' %}
+                                            <span class="badge badge-danger">Cancelled</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            {% if operation.status == 'pending' %}
+                                            <button class="btn btn-success" onclick="startOperation({{ operation.id }})">
+                                                <i class="fas fa-play"></i>
+                                            </button>
+                                            {% elif operation.status == 'in_progress' %}
+                                            <button class="btn btn-primary" onclick="completeOperation({{ operation.id }})">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                            {% endif %}
+                                            <button class="btn btn-info" onclick="showOperationDetails({{ operation.id }})">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Material Consumption -->
+            {% if production_order.material_consumptions.exists %}
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-boxes"></i> Material Consumption
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Material</th>
+                                    <th>SKU</th>
+                                    <th>Required</th>
+                                    <th>Issued</th>
+                                    <th>Used</th>
+                                    <th>Returned</th>
+                                    <th>Waste %</th>
+                                    <th>Issued From</th>
+                                    <th>Issued Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for consumption in production_order.material_consumptions.all %}
+                                <tr>
+                                    <td>{{ consumption.bom_line.component.name }}</td>
+                                    <td>{{ consumption.bom_line.component.SKU }}</td>
+                                    <td class="text-right">{{ consumption.bom_line.required_quantity_with_scrap|floatformat:3 }}</td>
+                                    <td class="text-right">{{ consumption.quantity_issued|floatformat:3 }}</td>
+                                    <td class="text-right">{{ consumption.quantity_used|floatformat:3 }}</td>
+                                    <td class="text-right">{{ consumption.quantity_returned|floatformat:3 }}</td>
+                                    <td class="text-center">
+                                        {% if consumption.waste_percentage > 10 %}
+                                            <span class="badge badge-danger">{{ consumption.waste_percentage|floatformat:1 }}%</span>
+                                        {% elif consumption.waste_percentage > 5 %}
+                                            <span class="badge badge-warning">{{ consumption.waste_percentage|floatformat:1 }}%</span>
+                                        {% else %}
+                                            <span class="badge badge-success">{{ consumption.waste_percentage|floatformat:1 }}%</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ consumption.issued_from.name }}</td>
+                                    <td>{{ consumption.issued_date|date:"d/m/Y H:i" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Column - Actions & Timeline -->
+        <div class="col-lg-4">
+            <!-- Actions Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-cogs"></i> Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        {% if production_order.status == 'draft' %}
+                        <a href="{% url 'production:production_order_release' production_order.pk %}" 
+                           class="btn btn-success btn-lg">
+                            <i class="fas fa-paper-plane"></i> Release Order
+                        </a>
+                        <a href="{% url 'production:issue_materials' production_order.pk %}" 
+                           class="btn btn-info btn-lg">
+                            <i class="fas fa-box-open"></i> Issue Materials
+                        </a>
+                        {% elif production_order.status == 'released' %}
+                        <a href="{% url 'production:production_order_start' production_order.pk %}" 
+                           class="btn btn-primary btn-lg">
+                            <i class="fas fa-play"></i> Start Production
+                        </a>
+                        <a href="{% url 'production:add_operation' production_order.pk %}" 
+                           class="btn btn-warning btn-lg">
+                            <i class="fas fa-tasks"></i> Add Operation
+                        </a>
+                        {% elif production_order.status == 'in_progress' %}
+                        <a href="{% url 'production:production_order_complete' production_order.pk %}" 
+                           class="btn btn-success btn-lg">
+                            <i class="fas fa-check-circle"></i> Complete Order
+                        </a>
+                        <a href="{% url 'production:add_operation' production_order.pk %}" 
+                           class="btn btn-warning btn-lg">
+                            <i class="fas fa-tasks"></i> Add Operation
+                        </a>
+                        <a href="{% url 'production:record_production' production_order.pk %}" 
+                           class="btn btn-info btn-lg">
+                            <i class="fas fa-clipboard-check"></i> Record Production
+                        </a>
+                        {% endif %}
+                        
+                        {% if production_order.status != 'completed' and production_order.status != 'cancelled' %}
+                        <a href="#" class="btn btn-outline-danger" onclick="confirmCancelOrder()">
+                            <i class="fas fa-times"></i> Cancel Order
+                        </a>
+                        {% endif %}
+                        
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fas fa-print"></i> Print Order
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary">
+                            <i class="fas fa-chart-line"></i> Production Report
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Production Statistics -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-chart-bar"></i> Production Statistics
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6 mb-3">
+                            <div class="display-4 text-primary font-weight-bold">
+                                {{ production_order.progress|default:0 }}%
+                            </div>
+                            <div class="text-muted">Completion</div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="display-4 text-success font-weight-bold">
+                                {{ production_order.completed_quantity|default:0 }}
+                            </div>
+                            <div class="text-muted">Good Units</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="h4 text-danger font-weight-bold">
+                                {{ production_order.rejected_quantity|default:0 }}
+                            </div>
+                            <div class="text-muted">Rejected Units</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="h4 text-warning font-weight-bold">
+                                {% if production_order.actual_start %}
+                                    {{ duration_hours|default:0|floatformat:1 }}h
+                                {% else %}
+                                    0h
+                                {% endif %}
+                            </div>
+                            <div class="text-muted">Duration</div>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="small">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Yield Rate:</span>
+                            <span class="font-weight-bold">
+                                {% if production_order.quantity > 0 %}
+                                    {{ production_order.completed_quantity|default:0|div:production_order.quantity|mul:100|floatformat:1 }}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Rejection Rate:</span>
+                            <span class="font-weight-bold">
+                                {% if production_order.quantity > 0 %}
+                                    {{ production_order.rejected_quantity|default:0|div:production_order.quantity|mul:100|floatformat:1 }}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Cost per Unit:</span>
+                            <span class="font-weight-bold">
+                                {% if production_order.completed_quantity > 0 %}
+                                    ${{ production_order.total_cost|div:production_order.completed_quantity|floatformat:2 }}
+                                {% else %}
+                                    $0.00
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Card -->
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-history"></i> Timeline
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-primary"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Order Created</h6>
+                                <small class="text-muted">{{ production_order.created_at|date:"d/m/Y H:i" }}</small>
+                                <p class="mb-0">By: {{ production_order.created_by.get_full_name|default:"System" }}</p>
+                            </div>
+                        </div>
+
+                        {% if production_order.updated_at %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Last Updated</h6>
+                                <small class="text-muted">{{ production_order.updated_at|date:"d/m/Y H:i" }}</small>
+                                {% if production_order.updated_by %}
+                                <p class="mb-0">By: {{ production_order.updated_by.get_full_name }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if production_order.actual_start %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-warning"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Production Started</h6>
+                                <small class="text-muted">{{ production_order.actual_start|date:"d/m/Y H:i" }}</small>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if production_order.actual_end %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Production Completed</h6>
+                                <small class="text-muted">{{ production_order.actual_end|date:"d/m/Y H:i" }}</small>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% for event in production_order.timeline_events.all|slice:":3" %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-info"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">{{ event.event_type|title }}</h6>
+                                <small class="text-muted">{{ event.created_at|date:"d/m/Y H:i" }}</small>
+                                <p class="mb-0">{{ event.description|truncatechars:50 }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    {% if production_order.timeline_events.count > 3 %}
+                    <div class="text-center mt-3">
+                        <button class="btn btn-sm btn-outline-primary" onclick="showAllEvents()">
+                            View All Events ({{ production_order.timeline_events.count }})
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Operation Details Modal -->
+<div class="modal fade" id="operationDetailsModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Operation Details</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="operationDetailsContent">
+                <!-- Details will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Order Modal -->
+<div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Cancel Production Order</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel this production order?</p>
+                <form id="cancelOrderForm" method="post" action="{% url 'production:production_order_cancel' production_order.pk %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="cancel_reason">Reason for Cancellation</label>
+                        <textarea class="form-control" id="cancel_reason" name="reason" rows="3" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" form="cancelOrderForm" class="btn btn-danger">Confirm Cancellation</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+.timeline-marker {
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.timeline-content {
+    padding-left: 10px;
+}
+
+/* Progress Circle Styles */
+.progress-circle {
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.circular-chart {
+    display: block;
+    margin: 10px auto;
+    max-width: 80%;
+    max-height: 250px;
+}
+
+.circle-bg {
+    fill: none;
+    stroke: #eee;
+    stroke-width: 3.8;
+}
+
+.circle {
+    fill: none;
+    stroke-width: 2.8;
+    stroke-linecap: round;
+    animation: progress 1s ease-out forwards;
+}
+
+@keyframes progress {
+    0% {
+        stroke-dasharray: 0 100;
+    }
+}
+
+.circle {
+    stroke: #4e73df;
+}
+
+.percentage {
+    fill: #666;
+    font-family: sans-serif;
+    font-size: 0.5em;
+    text-anchor: middle;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Calculate duration if production has started
+    {% if production_order.actual_start %}
+        const startTime = new Date('{{ production_order.actual_start|date:"c" }}');
+        const endTime = production_order.actual_end ? new Date('{{ production_order.actual_end|date:"c" }}') : new Date();
+        const durationMs = endTime - startTime;
+        const durationHours = durationMs / (1000 * 60 * 60);
+        
+        // Update duration display
+        const durationElement = document.querySelector('.duration-hours');
+        if (durationElement) {
+            durationElement.textContent = durationHours.toFixed(1) + 'h';
+        }
+    {% endif %}
+});
+
+function showOperationDetails(operationId) {
+    fetch(`/production/api/operation/${operationId}/details/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const content = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Operation Details</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Operation:</th>
+                                    <td>${data.operation.name}</td>
+                                </tr>
+                                <tr>
+                                    <th>Code:</th>
+                                    <td>${data.operation.code}</td>
+                                </tr>
+                                <tr>
+                                    <th>Work Center:</th>
+                                    <td>${data.operation.work_center}</td>
+                                </tr>
+                                <tr>
+                                    <th>Operator:</th>
+                                    <td>${data.operator || '-'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status:</th>
+                                    <td>${data.status}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Timing</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Planned Start:</th>
+                                    <td>${data.planned_start}</td>
+                                </tr>
+                                <tr>
+                                    <th>Planned End:</th>
+                                    <td>${data.planned_end}</td>
+                                </tr>
+                                <tr>
+                                    <th>Actual Start:</th>
+                                    <td>${data.actual_start || '-'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Actual End:</th>
+                                    <td>${data.actual_end || '-'}</td>
+                                </tr>
+                                <tr>
+                                    <th>Duration:</th>
+                                    <td>${data.duration || '-'}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h6>Production Data</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Processed:</th>
+                                    <td>${data.quantity_processed}</td>
+                                </tr>
+                                <tr>
+                                    <th>Good Units:</th>
+                                    <td>${data.quantity_good}</td>
+                                </tr>
+                                <tr>
+                                    <th>Rejected Units:</th>
+                                    <td>${data.quantity_rejected}</td>
+                                </tr>
+                                <tr>
+                                    <th>Yield Rate:</th>
+                                    <td>${data.yield_rate}%</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Performance</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>Setup Time:</th>
+                                    <td>${data.setup_time}h</td>
+                                </tr>
+                                <tr>
+                                    <th>Run Time:</th>
+                                    <td>${data.run_time}h</td>
+                                </tr>
+                                <tr>
+                                    <th>Efficiency:</th>
+                                    <td>${data.efficiency}%</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    ${data.notes ? `
+                    <div class="mt-3">
+                        <h6>Notes</h6>
+                        <p>${data.notes}</p>
+                    </div>
+                    ` : ''}
+                `;
+                
+                document.getElementById('operationDetailsContent').innerHTML = content;
+                $('#operationDetailsModal').modal('show');
+            } else {
+                alert('Error loading operation details');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error loading operation details');
+        });
+}
+
+function startOperation(operationId) {
+    if (confirm('Start this operation?')) {
+        fetch(`/production/api/operation/${operationId}/start/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Operation started successfully');
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error starting operation');
+        });
+    }
+}
+
+function completeOperation(operationId) {
+    if (confirm('Complete this operation?')) {
+        const quantityProcessed = prompt('Enter quantity processed:', '');
+        const quantityGood = prompt('Enter quantity of good units:', quantityProcessed);
+        const quantityRejected = prompt('Enter quantity of rejected units:', '0');
+        
+        if (quantityProcessed && quantityGood) {
+            fetch(`/production/api/operation/${operationId}/complete/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    quantity_processed: quantityProcessed,
+                    quantity_good: quantityGood,
+                    quantity_rejected: quantityRejected
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Operation completed successfully');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Error completing operation');
+            });
+        }
+    }
+}
+
+function confirmCancelOrder() {
+    $('#cancelOrderModal').modal('show');
+}
+
+function showAllEvents() {
+    // You would implement this to show all timeline events
+    alert('This would show all timeline events. Implement AJAX to load more events.');
+}
+</script>
+{% endblock %}

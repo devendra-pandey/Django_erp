@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+
+{% block title %}Purchase Order - {{ purchase_order.po_number }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0">
+                        <i class="fas fa-file-invoice-dollar text-primary"></i> Purchase Order Details
+                    </h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'procurement:dashboard' %}">Procurement</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'procurement:purchase_order_list' %}">Purchase Orders</a></li>
+                            <li class="breadcrumb-item active">{{ purchase_order.po_number }}</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="btn-group">
+                    {% if purchase_order.status == 'draft' %}
+                    <a href="{% url 'procurement:purchase_order_send' purchase_order.pk %}" 
+                       class="btn btn-success">
+                        <i class="fas fa-paper-plane"></i> Send PO
+                    </a>
+                    {% elif purchase_order.status in 'sent confirmed' %}
+                    <a href="{% url 'procurement:purchase_order_receive' purchase_order.pk %}" 
+                       class="btn btn-primary">
+                        <i class="fas fa-check-circle"></i> Mark Received
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'procurement:purchase_order_update' purchase_order.pk %}" class="btn btn-warning">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="{% url 'procurement:purchase_order_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Banner -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h3 class="mb-0">{{ purchase_order.po_number }}</h3>
+                            <p class="text-muted mb-0">
+                                Supplier: <strong>{{ purchase_order.supplier.name }}</strong>
+                                • Created: {{ purchase_order.created_at|date:"d/m/Y H:i" }}
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <h2>
+                                {% if purchase_order.status == 'draft' %}
+                                    <span class="badge badge-secondary p-3">DRAFT</span>
+                                {% elif purchase_order.status == 'sent' %}
+                                    <span class="badge badge-info p-3">SENT</span>
+                                {% elif purchase_order.status == 'confirmed' %}
+                                    <span class="badge badge-primary p-3">CONFIRMED</span>
+                                {% elif purchase_order.status == 'partial' %}
+                                    <span class="badge badge-warning p-3">PARTIAL</span>
+                                {% elif purchase_order.status == 'received' %}
+                                    <span class="badge badge-success p-3">RECEIVED</span>
+                                {% elif purchase_order.status == 'cancelled' %}
+                                    <span class="badge badge-danger p-3">CANCELLED</span>
+                                {% elif purchase_order.status == 'closed' %}
+                                    <span class="badge badge-dark p-3">CLOSED</span>
+                                {% endif %}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column - PO Information -->
+        <div class="col-lg-8">
+            <!-- Order Details Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-info-circle"></i> Order Information
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th width="40%">Supplier:</th>
+                                    <td>{{ purchase_order.supplier.name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Order Date:</th>
+                                    <td>{{ purchase_order.order_date|date:"d/m/Y" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Expected Delivery:</th>
+                                    <td class="{% if purchase_order.expected_delivery < today %}text-danger{% endif %}">
+                                        {{ purchase_order.expected_delivery|date:"d/m/Y" }}
+                                        {% if purchase_order.expected_delivery < today %}
+                                            <span class="badge badge-danger ml-2">Overdue</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Created By:</th>
+                                    <td>{{ purchase_order.created_by.get_full_name|default:"System" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th width="40%">Subtotal:</th>
+                                    <td class="text-right">${{ purchase_order.total_amount|floatformat:2 }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tax Amount:</th>
+                                    <td class="text-right">${{ purchase_order.tax_amount|floatformat:2 }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Grand Total:</th>
+                                    <td class="text-right font-weight-bold">${{ purchase_order.grand_total|floatformat:2 }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Delivery Address:</th>
+                                    <td>{{ purchase_order.delivery_address|truncatechars:50 }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Terms & Notes -->
+                    <div class="row mt-3">
+                        {% if purchase_order.terms_conditions %}
+                        <div class="col-md-6">
+                            <h6 class="font-weight-bold">Terms & Conditions</h6>
+                            <div class="card">
+                                <div class="card-body">
+                                    {{ purchase_order.terms_conditions|linebreaks }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if purchase_order.notes %}
+                        <div class="col-md-6">
+                            <h6 class="font-weight-bold">Notes</h6>
+                            <div class="card">
+                                <div class="card-body">
+                                    {{ purchase_order.notes|linebreaks }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Items Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-boxes"></i> Order Items ({{ purchase_order.items.count }} items)
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product</th>
+                                    <th>SKU</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Tax Rate</th>
+                                    <th>Warehouse</th>
+                                    <th>Received</th>
+                                    <th>Subtotal</th>
+                                    <th>Tax</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in purchase_order.items.all %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ item.product.name }}</td>
+                                    <td>{{ item.product.SKU }}</td>
+                                    <td class="text-right">{{ item.quantity }}</td>
+                                    <td class="text-right">${{ item.unit_price|floatformat:2 }}</td>
+                                    <td class="text-right">{{ item.tax_rate }}%</td>
+                                    <td>{{ item.warehouse.name }}</td>
+                                    <td class="text-right">
+                                        <span class="{% if item.received_quantity < item.quantity %}text-warning{% else %}text-success{% endif %}">
+                                            {{ item.received_quantity }}
+                                        </span>
+                                        {% if item.received_quantity < item.quantity %}
+                                            <br><small class="text-danger">
+                                                Pending: {{ item.quantity|add:item.received_quantity|floatformat:3 }}
+                                            </small>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-right">${{ item.subtotal|floatformat:2 }}</td>
+                                    <td class="text-right">${{ item.tax_amount|floatformat:2 }}</td>
+                                    <td class="text-right font-weight-bold">${{ item.total|floatformat:2 }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="font-weight-bold">
+                                <tr>
+                                    <td colspan="8" class="text-right">Totals:</td>
+                                    <td class="text-right">${{ purchase_order.total_amount|floatformat:2 }}</td>
+                                    <td class="text-right">${{ purchase_order.tax_amount|floatformat:2 }}</td>
+                                    <td class="text-right">${{ purchase_order.grand_total|floatformat:2 }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Actions & Timeline -->
+        <div class="col-lg-4">
+            <!-- Actions Card -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-cogs"></i> Actions
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        {% if purchase_order.status == 'draft' %}
+                        <a href="{% url 'procurement:purchase_order_send' purchase_order.pk %}" 
+                           class="btn btn-success btn-lg">
+                            <i class="fas fa-paper-plane"></i> Send to Supplier
+                        </a>
+                        {% elif purchase_order.status in 'sent confirmed' %}
+                        <a href="{% url 'procurement:purchase_order_receive' purchase_order.pk %}" 
+                           class="btn btn-primary btn-lg">
+                            <i class="fas fa-check-circle"></i> Mark as Received
+                        </a>
+                        <a href="{% url 'procurement:goods_receipt_create' %}" 
+                           class="btn btn-info btn-lg">
+                            <i class="fas fa-clipboard-check"></i> Create Goods Receipt
+                        </a>
+                        {% endif %}
+                        
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fas fa-print"></i> Print PO
+                        </a>
+                        <a href="#" class="btn btn-outline-secondary">
+                            <i class="fas fa-envelope"></i> Email PO
+                        </a>
+                        <a href="#" class="btn btn-outline-danger">
+                            <i class="fas fa-times"></i> Cancel PO
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Receipt History -->
+            {% if purchase_order.goodsreceipt_set.exists %}
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-clipboard-list"></i> Receipt History
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for receipt in purchase_order.goodsreceipt_set.all %}
+                        <a href="{% url 'procurement:goods_receipt_detail' receipt.pk %}" 
+                           class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ receipt.gr_number }}</h6>
+                                <small>{{ receipt.receipt_date|date:"d/m/Y" }}</small>
+                            </div>
+                            <p class="mb-1">Received by: {{ receipt.received_by.get_full_name }}</p>
+                            <small>Warehouse: {{ receipt.warehouse.name }}</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Timeline Card -->
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-history"></i> Timeline
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-primary"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Created</h6>
+                                <small class="text-muted">{{ purchase_order.created_at|date:"d/m/Y H:i" }}</small>
+                                <p class="mb-0">By: {{ purchase_order.created_by.get_full_name|default:"System" }}</p>
+                            </div>
+                        </div>
+
+                        {% if purchase_order.updated_at %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Last Updated</h6>
+                                <small class="text-muted">{{ purchase_order.updated_at|date:"d/m/Y H:i" }}</small>
+                                {% if purchase_order.updated_by %}
+                                <p class="mb-0">By: {{ purchase_order.updated_by.get_full_name }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if purchase_order.last_status_change %}
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-info"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-0">Status Changed</h6>
+                                <small class="text-muted">{{ purchase_order.last_status_change|date:"d/m/Y H:i" }}</small>
+                                <p class="mb-0">To: {{ purchase_order.get_status_display }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+.timeline-marker {
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.timeline-content {
+    padding-left: 10px;
+}
+</style>
+{% endblock %}

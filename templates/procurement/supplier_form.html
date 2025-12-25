@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if object %}
+        Edit Supplier - {{ object.name }}
+    {% else %}
+        Create New Supplier
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-{% if object %}edit{% else %}plus-circle{% endif %}"></i>
+                        {% if object %}
+                            Edit Supplier: {{ object.name }}
+                        {% else %}
+                            Create New Supplier
+                        {% endif %}
+                    </h4>
+                </div>
+                
+                <div class="card-body">
+                    <form method="post" id="supplier-form">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>Please correct the errors below:</strong>
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="row">
+                            <!-- Basic Information -->
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.code.id_for_label }}" class="form-label">
+                                        Supplier Code <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.code }}
+                                    <div class="form-text">Unique code for the supplier</div>
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.name.id_for_label }}" class="form-label">
+                                        Supplier Name <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.name }}
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.supplier_type.id_for_label }}" class="form-label">
+                                        Supplier Type <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.supplier_type }}
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.contact_person.id_for_label }}" class="form-label">
+                                        Contact Person <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.contact_person }}
+                                </div>
+                            </div>
+                            
+                            <!-- Contact Information -->
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                                        Email <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.email }}
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.phone.id_for_label }}" class="form-label">
+                                        Phone <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.phone }}
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.tax_id.id_for_label }}" class="form-label">
+                                        Tax ID
+                                    </label>
+                                    {{ form.tax_id }}
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.payment_terms.id_for_label }}" class="form-label">
+                                        Payment Terms
+                                    </label>
+                                    {{ form.payment_terms }}
+                                    <div class="form-text">e.g., Net 30, Net 45</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Financial Information -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.credit_limit.id_for_label }}" class="form-label">
+                                        Credit Limit ($)
+                                    </label>
+                                    {{ form.credit_limit }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="{{ form.current_balance.id_for_label }}" class="form-label">
+                                        Current Balance ($)
+                                    </label>
+                                    {{ form.current_balance }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Address -->
+                        <div class="form-group mb-3">
+                            <label for="{{ form.address.id_for_label }}" class="form-label">
+                                Address <span class="text-danger">*</span>
+                            </label>
+                            {{ form.address }}
+                        </div>
+                        
+                        <!-- Status -->
+                        <div class="form-group mb-4">
+                            <div class="form-check">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                    Active Supplier
+                                </label>
+                                <div class="form-text">Only active suppliers can be used in purchase orders</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="form-group">
+                            <div class="btn-group" role="group">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    {% if object %}
+                                        Update Supplier
+                                    {% else %}
+                                        Create Supplier
+                                    {% endif %}
+                                </button>
+                                <a href="{% url 'procurement:supplier_list' %}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                                {% if object %}
+                                <a href="{% url 'procurement:supplier_detail' object.pk %}" class="btn btn-info">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-control {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+}
+
+.form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+select.form-control {
+    height: calc(2.25rem + 2px);
+}
+
+textarea.form-control {
+    min-height: 100px;
+}
+
+.form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+    margin-top: 0.2em;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Apply Bootstrap classes to form fields
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+        if (input.id && input.id.includes('id_')) {
+            input.classList.add('form-control');
+        }
+    });
+    
+    // Style checkboxes
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.classList.remove('form-control');
+        checkbox.classList.add('form-check-input');
+    });
+    
+    // Style checkbox labels
+    const checkboxLabels = document.querySelectorAll('label[for*="id_"]');
+    checkboxLabels.forEach(label => {
+        const input = document.getElementById(label.getAttribute('for'));
+        if (input && input.type === 'checkbox') {
+            label.classList.add('form-check-label');
+        }
+    });
+});
+</script>
+{% endblock %}

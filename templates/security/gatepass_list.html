@@ -1,0 +1,269 @@
+{% extends 'base.html' %}
+
+{% block title %}Gate Passes{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-door-open text-primary"></i> Gate Passes
+                </h1>
+                <div>
+                    <a href="{% url 'security_dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="{% url 'gatepass_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> New Gate Pass
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-filter"></i> Filter Gate Passes
+            </h6>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">Pass Type</label>
+                    <select name="type" class="form-control">
+                        <option value="">All Types</option>
+                        {% for value, label in pass_types %}
+                        <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-control">
+                        <option value="">All Status</option>
+                        {% for value, label in status_choices %}
+                        <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">From Date</label>
+                    <input type="date" name="start_date" class="form-control" 
+                           value="{{ request.GET.start_date }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">To Date</label>
+                    <input type="date" name="end_date" class="form-control" 
+                           value="{{ request.GET.end_date }}">
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Filter
+                    </button>
+                    <a href="{% url 'gatepass_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Gate Passes Table -->
+    <div class="card shadow">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Gate Pass List ({{ gate_passes.paginator.count }} total)
+            </h6>
+            <div class="dropdown">
+                <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" 
+                        data-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#"><i class="fas fa-file-excel"></i> Excel</a>
+                    <a class="dropdown-item" href="#"><i class="fas fa-file-pdf"></i> PDF</a>
+                    <a class="dropdown-item" href="#"><i class="fas fa-print"></i> Print</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Pass No</th>
+                            <th>Type</th>
+                            <th>Person/Vehicle</th>
+                            <th>Purpose</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pass in gate_passes %}
+                        <tr>
+                            <td>
+                                <strong>{{ pass.pass_number }}</strong><br>
+                                <small class="text-muted">{{ pass.department.name|default:"-" }}</small>
+                            </td>
+                            <td>
+                                <span class="badge badge-info">{{ pass.get_pass_type_display }}</span>
+                            </td>
+                            <td>
+                                {% if pass.person_name %}
+                                    <div><strong>{{ pass.person_name }}</strong></div>
+                                    <small>{{ pass.company_name|default:"" }}</small>
+                                {% endif %}
+                                {% if pass.vehicle_number %}
+                                    <div><i class="fas fa-truck"></i> {{ pass.vehicle_number }}</div>
+                                    <small>{{ pass.driver_name|default:"" }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="text-truncate" style="max-width: 200px;" 
+                                     title="{{ pass.purpose }}">
+                                    {{ pass.purpose }}
+                                </div>
+                            </td>
+                            <td>
+                                {% if pass.status == 'pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                {% elif pass.status == 'approved' %}
+                                    <span class="badge badge-info">Approved</span>
+                                {% elif pass.status == 'in_progress' %}
+                                    <span class="badge badge-primary">In Progress</span>
+                                {% elif pass.status == 'completed' %}
+                                    <span class="badge badge-success">Completed</span>
+                                {% elif pass.status == 'cancelled' %}
+                                    <span class="badge badge-danger">Cancelled</span>
+                                {% endif %}
+                                <br>
+                                <small>
+                                    {% if pass.actual_in_date %}
+                                        In: {{ pass.actual_in_date|date:"H:i" }}
+                                    {% endif %}
+                                    {% if pass.actual_out_date %}
+                                        <br>Out: {{ pass.actual_out_date|date:"H:i" }}
+                                    {% endif %}
+                                </small>
+                            </td>
+                            <td>
+                                {{ pass.created_at|date:"d/m/Y" }}<br>
+                                <small>{{ pass.created_at|date:"H:i" }}</small>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{% url 'gatepass_detail' pass.pk %}" 
+                                       class="btn btn-info" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'gatepass_print' pass.pk %}" 
+                                       class="btn btn-secondary" title="Print" target="_blank">
+                                        <i class="fas fa-print"></i>
+                                    </a>
+                                    {% if pass.status == 'pending' %}
+                                    <a href="{% url 'gatepass_checkin' pass.pk %}" 
+                                       class="btn btn-success" title="Check-in">
+                                        <i class="fas fa-sign-in-alt"></i>
+                                    </a>
+                                    {% elif pass.status == 'in_progress' %}
+                                    <a href="{% url 'gatepass_checkout' pass.pk %}" 
+                                       class="btn btn-warning" title="Check-out">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4">
+                                <i class="fas fa-door-closed fa-3x text-gray-300 mb-3"></i>
+                                <h5 class="text-gray-500">No gate passes found</h5>
+                                <a href="{% url 'gatepass_create' %}" class="btn btn-primary mt-2">
+                                    <i class="fas fa-plus-circle"></i> Create First Gate Pass
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if gate_passes.paginator.num_pages > 1 %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if gate_passes.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            First
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ gate_passes.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            Previous
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in gate_passes.paginator.page_range %}
+                        {% if gate_passes.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > gate_passes.number|add:'-3' and num < gate_passes.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                                {{ num }}
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if gate_passes.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ gate_passes.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            Next
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ gate_passes.paginator.num_pages }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            Last
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Add context data to view
+    const passTypes = [
+        {% for value, label in gate_passes.0.get_pass_type_display %}
+        ['{{ value }}', '{{ label }}'],
+        {% endfor %}
+    ];
+    
+    const statusChoices = [
+        {% for value, label in gate_passes.0.get_status_display %}
+        ['{{ value }}', '{{ label }}'],
+        {% endfor %}
+    ];
+});
+</script>
+{% endblock %}
