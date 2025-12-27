@@ -1,0 +1,438 @@
+{% extends 'base.html' %}
+
+{% block title %}Payroll - {{ payroll.payroll_number }}{% endblock %}
+{% block page_title %}Payroll Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">{{ payroll.payroll_number }}</h5>
+                <div>
+                    <span class="badge bg-{% if payroll.status == 'paid' %}success{% elif payroll.status == 'approved' %}info{% elif payroll.status == 'calculated' %}warning{% elif payroll.status == 'draft' %}secondary{% else %}danger{% endif %} fs-6">
+                        {{ payroll.get_status_display }}
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Basic Information -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6>Employee Information</h6>
+                        <dl class="row">
+                            <dt class="col-sm-4">Employee:</dt>
+                            <dd class="col-sm-8">{{ payroll.employee.user.get_full_name }}</dd>
+                            
+                            <dt class="col-sm-4">Employee ID:</dt>
+                            <dd class="col-sm-8">{{ payroll.employee.employee_id }}</dd>
+                            
+                            <dt class="col-sm-4">Department:</dt>
+                            <dd class="col-sm-8">{{ payroll.employee.department.name|default:"-" }}</dd>
+                            
+                            <dt class="col-sm-4">Designation:</dt>
+                            <dd class="col-sm-8">{{ payroll.employee.designation|default:"-" }}</dd>
+                        </dl>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6>Payroll Information</h6>
+                        <dl class="row">
+                            <dt class="col-sm-4">Period:</dt>
+                            <dd class="col-sm-8">{{ payroll.payroll_period.name }}</dd>
+                            
+                            <dt class="col-sm-4">Period Dates:</dt>
+                            <dd class="col-sm-8">
+                                {{ payroll.payroll_period.start_date|date:"M d, Y" }} - 
+                                {{ payroll.payroll_period.end_date|date:"M d, Y" }}
+                            </dd>
+                            
+                            <dt class="col-sm-4">Payment Date:</dt>
+                            <dd class="col-sm-8">
+                                {% if payroll.payment_date %}
+                                    {{ payroll.payment_date|date:"M d, Y" }}
+                                {% else %}
+                                    {{ payroll.payroll_period.payment_date|date:"M d, Y" }}
+                                {% endif %}
+                            </dd>
+                            
+                            <dt class="col-sm-4">Payment Method:</dt>
+                            <dd class="col-sm-8">{{ payroll.get_payment_method_display }}</dd>
+                        </dl>
+                    </div>
+                </div>
+                
+                <!-- Attendance Summary -->
+                <h6>Attendance Summary</h6>
+                <div class="row mb-4">
+                    <div class="col-md-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h6 class="card-title text-success">{{ payroll.present_days }}</h6>
+                                <small class="text-muted">Present Days</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h6 class="card-title text-danger">{{ payroll.absent_days }}</h6>
+                                <small class="text-muted">Absent Days</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h6 class="card-title text-warning">{{ payroll.leave_days }}</h6>
+                                <small class="text-muted">Leave Days</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h6 class="card-title text-info">{{ payroll.holiday_days }}</h6>
+                                <small class="text-muted">Holidays</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ payroll.total_working_days }}</h6>
+                                <small class="text-muted">Total Days</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Salary Breakdown -->
+                <h6>Salary Breakdown</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="card-title mb-0">Earnings</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Basic Salary:</span>
+                                    <strong>${{ payroll.basic_salary }}</strong>
+                                </div>
+                                
+                                {% if payroll.house_rent_allowance %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>House Rent Allowance:</span>
+                                    <strong>${{ payroll.house_rent_allowance }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                {% if payroll.conveyance_allowance %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Conveyance Allowance:</span>
+                                    <strong>${{ payroll.conveyance_allowance }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                {% if payroll.medical_allowance %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Medical Allowance:</span>
+                                    <strong>${{ payroll.medical_allowance }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                {% if payroll.special_allowance %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Special Allowance:</span>
+                                    <strong>${{ payroll.special_allowance }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                {% if payroll.overtime_amount %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Overtime:</span>
+                                    <strong>${{ payroll.overtime_amount }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                {% if payroll.bonus %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Bonus:</span>
+                                    <strong>${{ payroll.bonus }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                {% if payroll.other_earnings %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Other Earnings:</span>
+                                    <strong>${{ payroll.other_earnings }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <span>Total Earnings:</span>
+                                    <strong>${{ payroll.total_earnings }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-danger text-white">
+                                <h6 class="card-title mb-0">Deductions</h6>
+                            </div>
+                            <div class="card-body">
+                                {% if payroll.provident_fund %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Provident Fund:</span>
+                                    <strong>${{ payroll.provident_fund }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                {% if payroll.professional_tax %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Professional Tax:</span>
+                                    <strong>${{ payroll.professional_tax }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                {% if payroll.income_tax %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Income Tax:</span>
+                                    <strong>${{ payroll.income_tax }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                {% if payroll.loan_deduction %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Loan Deduction:</span>
+                                    <strong>${{ payroll.loan_deduction }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                {% if payroll.advance_deduction %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Advance Deduction:</span>
+                                    <strong>${{ payroll.advance_deduction }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                {% if payroll.other_deductions %}
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Other Deductions:</span>
+                                    <strong>${{ payroll.other_deductions }}</strong>
+                                </div>
+                                {% endif %}
+                                
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <span>Total Deductions:</span>
+                                    <strong>${{ payroll.total_deductions }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Final Summary -->
+                <div class="row mt-4">
+                    <div class="col-md-6 offset-md-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">Net Salary Payable</h6>
+                                <h2 class="text-success">${{ payroll.net_salary }}</h2>
+                                <small class="text-muted">
+                                    Gross: ${{ payroll.gross_salary }} | 
+                                    Deductions: ${{ payroll.total_deductions }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Detailed Items -->
+                {% if items %}
+                <div class="mt-4">
+                    <h6>Detailed Component Breakdown</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                <tr>
+                                    <td>{{ item.component.name }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if item.component.component_type == 'earning' %}success{% else %}danger{% endif %}">
+                                            {{ item.component.get_component_type_display }}
+                                        </span>
+                                    </td>
+                                    <td>${{ item.amount }}</td>
+                                    <td>{{ item.calculation_note|default:"-" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if payroll.notes %}
+                <div class="mt-4">
+                    <h6>Notes</h6>
+                    <p class="text-muted">{{ payroll.notes }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Action Card -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    {% if payroll.status == 'draft' or payroll.status == 'calculated' %}
+                    <form method="post" action="{% url 'payroll:approve_payroll' payroll.pk %}" 
+                          onsubmit="return confirm('Approve this payroll?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check-circle"></i> Approve Payroll
+                        </button>
+                    </form>
+                    {% endif %}
+                    
+                    {% if payroll.status == 'approved' %}
+                    <form method="post" action="{% url 'payroll:process_payment' payroll.pk %}" 
+                          onsubmit="return confirm('Mark this payroll as paid?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-money-bill-wave"></i> Mark as Paid
+                        </button>
+                    </form>
+                    {% endif %}
+                    
+                    <a href="{% url 'payroll:generate_payslip' payroll.pk %}" class="btn btn-info">
+                        <i class="fas fa-file-pdf"></i> Generate Payslip
+                    </a>
+                    
+                    <a href="{% url 'payroll:payroll_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Status Timeline -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Status Timeline</h6>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    <div class="timeline-item {% if payroll.created_at %}active{% endif %}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Created</h6>
+                            <small>{{ payroll.created_at|date:"M d, Y H:i" }}</small>
+                            <br>
+                            <small>By: {{ payroll.created_by.get_full_name|default:"System" }}</small>
+                        </div>
+                    </div>
+                    
+                    {% if payroll.approved_date %}
+                    <div class="timeline-item active">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Approved</h6>
+                            <small>{{ payroll.approved_date|date:"M d, Y H:i" }}</small>
+                            <br>
+                            <small>By: {{ payroll.approved_by.get_full_name|default:"System" }}</small>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if payroll.processed_date %}
+                    <div class="timeline-item active">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>Paid</h6>
+                            <small>{{ payroll.processed_date|date:"M d, Y H:i" }}</small>
+                            <br>
+                            <small>By: {{ payroll.processed_by.get_full_name|default:"System" }}</small>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment Information -->
+        {% if payroll.status == 'paid' %}
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Payment Information</h6>
+            </div>
+            <div class="card-body">
+                <dl>
+                    <dt>Payment Date:</dt>
+                    <dd>{{ payroll.payment_date|date:"M d, Y" }}</dd>
+                    
+                    <dt>Payment Method:</dt>
+                    <dd>{{ payroll.get_payment_method_display }}</dd>
+                    
+                    {% if payroll.payment_reference %}
+                    <dt>Reference:</dt>
+                    <dd>{{ payroll.payment_reference }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+.timeline:before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+.timeline-marker {
+    position: absolute;
+    left: -30px;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #6c757d;
+}
+.timeline-item.active .timeline-marker {
+    background: #0d6efd;
+}
+</style>
+{% endblock %}

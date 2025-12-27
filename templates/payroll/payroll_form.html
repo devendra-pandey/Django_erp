@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Payroll{% endblock %}
+{% block page_title %}Create New Payroll{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Payroll Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" id="payrollForm">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.employee.id_for_label }}" class="form-label">Employee *</label>
+                            {{ form.employee }}
+                            {% if form.employee.errors %}
+                            <div class="text-danger">{{ form.employee.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Select an employee to automatically load their salary structure
+                            </small>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.payroll_period.id_for_label }}" class="form-label">Payroll Period *</label>
+                            {{ form.payroll_period }}
+                            {% if form.payroll_period.errors %}
+                            <div class="text-danger">{{ form.payroll_period.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Employee Details (Loaded via AJAX) -->
+                    <div id="employeeDetails" class="mb-4" style="display: none;">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="card-title mb-0">Employee Details</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <dl>
+                                            <dt>Basic Salary:</dt>
+                                            <dd id="basicSalary">-</dd>
+                                            
+                                            <dt>Total CTC:</dt>
+                                            <dd id="totalCTC">-</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>Salary Components</h6>
+                                        <div id="salaryComponents"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Attendance Section -->
+                    <div class="mb-4">
+                        <h5>Attendance</h5>
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Total Working Days</label>
+                                <input type="number" class="form-control" value="22" readonly>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Present Days</label>
+                                <input type="number" class="form-control" id="presentDays" value="0" min="0" max="31">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Absent Days</label>
+                                <input type="number" class="form-control" id="absentDays" value="0" min="0" max="31">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label class="form-label">Leave Days</label>
+                                <input type="number" class="form-control" id="leaveDays" value="0" min="0" max="31">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Manual Overrides (Optional) -->
+                    <div class="mb-4">
+                        <h5>Manual Adjustments (Optional)</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Bonus</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" name="bonus" step="0.01" value="0">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Other Earnings</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" name="other_earnings" step="0.01" value="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notes -->
+                    <div class="mb-4">
+                        <label for="{{ form.notes.id_for_label }}" class="form-label">Notes</label>
+                        {{ form.notes }}
+                        {% if form.notes.errors %}
+                        <div class="text-danger">{{ form.notes.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'payroll:payroll_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="createPayrollBtn">
+                            <i class="fas fa-calculator"></i> Calculate & Create Payroll
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Preview Card -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Salary Preview</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Basic Salary:</span>
+                    <strong id="previewBasic">$0.00</strong>
+                </div>
+                
+                <div id="previewEarnings" class="mb-3"></div>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Total Earnings:</span>
+                    <strong id="previewTotalEarnings">$0.00</strong>
+                </div>
+                
+                <hr>
+                
+                <div id="previewDeductions" class="mb-3"></div>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Total Deductions:</span>
+                    <strong id="previewTotalDeductions">$0.00</strong>
+                </div>
+                
+                <hr>
+                
+                <div class="d-flex justify-content-between">
+                    <span>Net Salary:</span>
+                    <strong id="previewNetSalary" class="text-success">$0.00</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function() {
+    // Load employee salary structure on selection
+    $('#id_employee').change(function() {
+        const employeeId = $(this).val();
+        if (employeeId) {
+            loadEmployeeSalaryStructure(employeeId);
+        } else {
+            $('#employeeDetails').hide();
+        }
+    });
+    
+    function loadEmployeeSalaryStructure(employeeId) {
+        $.ajax({
+            url: '{% url "payroll:get_employee_salary_structure" employee_id=0 %}'.replace('0', employeeId),
+            method: 'GET',
+            success: function(data) {
+                if (data.success) {
+                    $('#basicSalary').text('$' + data.basic_salary);
+                    $('#totalCTC').text('$' + data.total_ctc);
+                    
+                    // Display components
+                    let earningsHtml = '<h6>Earnings:</h6><ul class="list-unstyled small">';
+                    let deductionsHtml = '<h6>Deductions:</h6><ul class="list-unstyled small">';
+                    
+                    data.components.forEach(component => {
+                        const item = `<li>${component.name}: ${component.amount ? '$' + component.amount : component.percentage + '%'}</li>`;
+                        if (component.type === 'earning') {
+                            earningsHtml += item;
+                        } else {
+                            deductionsHtml += item;
+                        }
+                    });
+                    
+                    earningsHtml += '</ul>';
+                    deductionsHtml += '</ul>';
+                    
+                    $('#salaryComponents').html(earningsHtml + deductionsHtml);
+                    $('#employeeDetails').show();
+                    
+                    // Update preview
+                    updateSalaryPreview(data);
+                }
+            }
+        });
+    }
+    
+    function updateSalaryPreview(data) {
+        let basicSalary = parseFloat(data.basic_salary) || 0;
+        let totalEarnings = basicSalary;
+        let totalDeductions = 0;
+        
+        // Calculate from components
+        data.components.forEach(component => {
+            let amount = 0;
+            if (component.calculation_type === 'fixed') {
+                amount = parseFloat(component.amount) || 0;
+            } else if (component.calculation_type === 'percentage') {
+                amount = basicSalary * (parseFloat(component.percentage) || 0) / 100;
+            }
+            
+            if (component.type === 'earning') {
+                totalEarnings += amount;
+            } else {
+                totalDeductions += amount;
+            }
+        });
+        
+        // Update preview
+        $('#previewBasic').text('$' + basicSalary.toFixed(2));
+        $('#previewTotalEarnings').text('$' + totalEarnings.toFixed(2));
+        $('#previewTotalDeductions').text('$' + totalDeductions.toFixed(2));
+        $('#previewNetSalary').text('$' + (totalEarnings - totalDeductions).toFixed(2));
+    }
+    
+    // Calculate attendance impact
+    $('#presentDays, #absentDays, #leaveDays').on('input', function() {
+        calculateAttendanceImpact();
+    });
+    
+    function calculateAttendanceImpact() {
+        const presentDays = parseInt($('#presentDays').val()) || 0;
+        const absentDays = parseInt($('#absentDays').val()) || 0;
+        const leaveDays = parseInt($('#leaveDays').val()) || 0;
+        const totalDays = 22; // Assuming 22 working days
+        
+        // Update basic salary based on attendance
+        const basicSalary = parseFloat($('#basicSalary').text().replace('$', '')) || 0;
+        const dailyRate = basicSalary / totalDays;
+        const payableDays = presentDays + (leaveDays * 0.5); // Half pay for leaves
+        
+        $('#previewBasic').text('$' + (dailyRate * payableDays).toFixed(2));
+    }
+});
+</script>
+{% endblock %}

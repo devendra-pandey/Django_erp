@@ -21,6 +21,7 @@ urlpatterns = [
     path('analytics/', include('analytics.urls')),
     path('notifications/', include('notifications.urls')),
     path('gatepass/', include('security.urls')),
+    path('payroll/', include('payroll.urls')),
 ]
 
 if settings.DEBUG:

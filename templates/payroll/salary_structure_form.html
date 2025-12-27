@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Edit{% else %}Create{% endif %} Salary Structure{% endblock %}
+{% block page_title %}{% if object %}Edit Salary Structure{% else %}Create New Salary Structure{% endif %}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Salary Structure Details</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" id="salaryStructureForm">
+            {% csrf_token %}
+            
+            <!-- Basic Information -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.employee.id_for_label }}" class="form-label">Employee *</label>
+                    {{ form.employee }}
+                    {% if form.employee.errors %}
+                    <div class="text-danger">{{ form.employee.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="{{ form.effective_from.id_for_label }}" class="form-label">Effective From *</label>
+                    {{ form.effective_from }}
+                    {% if form.effective_from.errors %}
+                    <div class="text-danger">{{ form.effective_from.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-3 mb-3">
+                    <label for="{{ form.effective_to.id_for_label }}" class="form-label">Effective To</label>
+                    {{ form.effective_to }}
+                    {% if form.effective_to.errors %}
+                    <div class="text-danger">{{ form.effective_to.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.basic_salary.id_for_label }}" class="form-label">Basic Salary *</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        {{ form.basic_salary }}
+                    </div>
+                    {% if form.basic_salary.errors %}
+                    <div class="text-danger">{{ form.basic_salary.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.total_ctc.id_for_label }}" class="form-label">Total CTC (Cost to Company)</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        {{ form.total_ctc }}
+                    </div>
+                    {% if form.total_ctc.errors %}
+                    <div class="text-danger">{{ form.total_ctc.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="form-check form-switch">
+                        {{ form.is_active }}
+                        <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                            Is Active?
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Salary Components -->
+            <h5 class="mb-3">Salary Components</h5>
+            {{ formset.management_form }}
+            <div id="component-formset">
+                {% for form in formset %}
+                <div class="row mb-3 component-form">
+                    <div class="col-md-3">
+                        {{ form.component.label_tag }}
+                        {{ form.component }}
+                        {% if form.component.errors %}
+                        <div class="text-danger">{{ form.component.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-2">
+                        {{ form.amount.label_tag }}
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            {{ form.amount }}
+                        </div>
+                        {% if form.amount.errors %}
+                        <div class="text-danger">{{ form.amount.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-2">
+                        {{ form.percentage.label_tag }}
+                        <div class="input-group">
+                            {{ form.percentage }}
+                            <span class="input-group-text">%</span>
+                        </div>
+                        {% if form.percentage.errors %}
+                        <div class="text-danger">{{ form.percentage.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-4">
+                        {{ form.formula.label_tag }}
+                        {{ form.formula }}
+                        {% if form.formula.errors %}
+                        <div class="text-danger">{{ form.formula.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-1 d-flex align-items-end">
+                        {% if form.instance.pk %}
+                            {{ form.DELETE.label_tag }}
+                            {{ form.DELETE }}
+                        {% else %}
+                            <button type="button" class="btn btn-danger btn-sm remove-form">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        {% endif %}
+                        {{ form.id }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <button type="button" id="add-form" class="btn btn-secondary btn-sm mb-4">
+                <i class="fas fa-plus"></i> Add Component
+            </button>
+            
+            <!-- Notes -->
+            <div class="mb-4">
+                <label for="{{ form.notes.id_for_label }}" class="form-label">Notes</label>
+                {{ form.notes }}
+                {% if form.notes.errors %}
+                <div class="text-danger">{{ form.notes.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'payroll:salary_structure_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> {% if object %}Update{% else %}Create{% endif %} Structure
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Template for new form -->
+<div id="empty-form" style="display: none;">
+    <div class="row mb-3 component-form">
+        <div class="col-md-3">
+            {{ formset.empty_form.component.label_tag }}
+            {{ formset.empty_form.component }}
+        </div>
+        <div class="col-md-2">
+            {{ formset.empty_form.amount.label_tag }}
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                {{ formset.empty_form.amount }}
+            </div>
+        </div>
+        <div class="col-md-2">
+            {{ formset.empty_form.percentage.label_tag }}
+            <div class="input-group">
+                {{ formset.empty_form.percentage }}
+                <span class="input-group-text">%</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            {{ formset.empty_form.formula.label_tag }}
+            {{ formset.empty_form.formula }}
+        </div>
+        <div class="col-md-1 d-flex align-items-end">
+            <button type="button" class="btn btn-danger btn-sm remove-form">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function() {
+    // Add new form
+    $('#add-form').click(function() {
+        const totalForms = $('#id_form-TOTAL_FORMS');
+        const currentForms = parseInt(totalForms.val());
+        const newForm = $('#empty-form').html().replace(/__prefix__/g, currentForms);
+        
+        $('#component-formset').append(newForm);
+        totalForms.val(currentForms + 1);
+    });
+    
+    // Remove form
+    $(document).on('click', '.remove-form', function() {
+        $(this).closest('.component-form').remove();
+        updateFormIndexes();
+    });
+    
+    function updateFormIndexes() {
+        const forms = $('.component-form');
+        const totalForms = $('#id_form-TOTAL_FORMS');
+        
+        forms.each(function(index) {
+            $(this).find('input, select').each(function() {
+                const name = $(this).attr('name');
+                if (name) {
+                    $(this).attr('name', name.replace(/form-\d+-/, `form-${index}-`));
+                }
+                const id = $(this).attr('id');
+                if (id) {
+                    $(this).attr('id', id.replace(/id_form-\d+-/, `id_form-${index}-`));
+                }
+            });
+        });
+        
+        totalForms.val(forms.length);
+    }
+    
+    // Update total CTC based on components
+    $('#id_basic_salary').change(updateTotalCTC);
+    
+    function updateTotalCTC() {
+        const basicSalary = parseFloat($('#id_basic_salary').val()) || 0;
+        let totalCTC = basicSalary;
+        
+        $('.component-form').each(function() {
+            const amount = parseFloat($(this).find('input[id$="-amount"]').val()) || 0;
+            const percentage = parseFloat($(this).find('input[id$="-percentage"]').val()) || 0;
+            
+            if (amount > 0) {
+                totalCTC += amount;
+            } else if (percentage > 0) {
+                totalCTC += (basicSalary * percentage / 100);
+            }
+        });
+        
+        $('#id_total_ctc').val(totalCTC.toFixed(2));
+    }
+});
+</script>
+{% endblock %}

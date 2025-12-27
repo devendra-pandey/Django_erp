@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Salary Structures{% endblock %}
+{% block page_title %}Salary Structures{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Manage Salary Structures</h5>
+        <a href="{% url 'payroll:salary_structure_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Structure
+        </a>
+    </div>
+    <div class="card-body">
+        <!-- Filters -->
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <select class="form-select" onchange="location = this.value;">
+                    <option value="?">All Departments</option>
+                    {% for dept in departments %}
+                    <option value="?department={{ dept.id }}" 
+                        {% if request.GET.department == dept.id|stringformat:'i' %}selected{% endif %}>
+                        {{ dept.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" onchange="location = this.value;">
+                    <option value="?">All Status</option>
+                    <option value="?active=true" {% if request.GET.active == 'true' %}selected{% endif %}>
+                        Active
+                    </option>
+                    <option value="?active=false" {% if request.GET.active == 'false' %}selected{% endif %}>
+                        Inactive
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <form method="get" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" 
+                           placeholder="Search employee..." value="{{ request.GET.search }}">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a href="{% url 'payroll:salary_structure_list' %}" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-redo"></i>
+                    </a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Structures Table -->
+        <div class="table-responsive">
+            <table class="table table-hover datatable">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Employee ID</th>
+                        <th>Department</th>
+                        <th>Basic Salary</th>
+                        <th>Total CTC</th>
+                        <th>Effective From</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for structure in structures %}
+                    <tr>
+                        <td>
+                            <strong>{{ structure.employee.user.get_full_name }}</strong>
+                        </td>
+                        <td>{{ structure.employee.employee_id }}</td>
+                        <td>{{ structure.employee.department.name|default:"-" }}</td>
+                        <td>${{ structure.basic_salary }}</td>
+                        <td>${{ structure.total_ctc }}</td>
+                        <td>{{ structure.effective_from|date:"M d, Y" }}</td>
+                        <td>
+                            {% if structure.is_active %}
+                                <span class="badge bg-success">Active</span>
+                            {% else %}
+                                <span class="badge bg-warning">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td class="table-actions">
+                            <a href="{% url 'payroll:salary_structure_detail' structure.pk %}" 
+                               class="btn btn-sm btn-outline-info" title="View">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{% url 'payroll:salary_structure_update' structure.pk %}" 
+                               class="btn btn-sm btn-outline-primary" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">No salary structures found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

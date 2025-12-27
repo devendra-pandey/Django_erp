@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Payroll Run{% endblock %}
+{% block page_title %}Create Batch Payroll Run{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Batch Payroll Configuration</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" id="payrollRunForm">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.run_type.id_for_label }}" class="form-label">Run Type *</label>
+                            {{ form.run_type }}
+                            {% if form.run_type.errors %}
+                            <div class="text-danger">{{ form.run_type.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Select how you want to process payroll
+                            </small>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.payroll_period.id_for_label }}" class="form-label">Payroll Period *</label>
+                            {{ form.payroll_period }}
+                            {% if form.payroll_period.errors %}
+                            <div class="text-danger">{{ form.payroll_period.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Department Selection (shown only when run_type is department) -->
+                    <div class="row mb-4" id="departmentSection" style="display: none;">
+                        <div class="col-md-12">
+                            <label for="{{ form.department.id_for_label }}" class="form-label">Select Department *</label>
+                            {{ form.department }}
+                            {% if form.department.errors %}
+                            <div class="text-danger">{{ form.department.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Preview Section -->
+                    <div class="mb-4" id="previewSection" style="display: none;">
+                        <h5>Run Preview</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <dl>
+                                            <dt>Run Type:</dt>
+                                            <dd id="previewRunType">-</dd>
+                                            
+                                            <dt>Department:</dt>
+                                            <dd id="previewDepartment">-</dd>
+                                            
+                                            <dt>Period:</dt>
+                                            <dd id="previewPeriod">-</dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <dl>
+                                            <dt>Total Employees:</dt>
+                                            <dd id="previewEmployeeCount">-</dd>
+                                            
+                                            <dt>Estimated Total:</dt>
+                                            <dd id="previewEstimatedTotal">-</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notes -->
+                    <div class="mb-4">
+                        <label for="{{ form.notes.id_for_label }}" class="form-label">Notes</label>
+                        {{ form.notes }}
+                        {% if form.notes.errors %}
+                        <div class="text-danger">{{ form.notes.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> This will process payroll for all selected employees. 
+                        The process may take several minutes depending on the number of employees.
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'payroll:payroll_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="runPayrollBtn">
+                            <i class="fas fa-play-circle"></i> Start Payroll Run
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Instructions -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Instructions</h6>
+            </div>
+            <div class="card-body">
+                <h6>Run Types:</h6>
+                <ul class="list-unstyled small">
+                    <li><strong>By Department:</strong> Process payroll for all employees in a specific department</li>
+                    <li><strong>All Employees:</strong> Process payroll for all active employees</li>
+                    <li><strong>By Company:</strong> Process payroll for entire company (if multi-company)</li>
+                    <li><strong>Custom Selection:</strong> Manually select employees (coming soon)</li>
+                </ul>
+                
+                <h6 class="mt-3">Prerequisites:</h6>
+                <ul class="list-unstyled small">
+                    <li><i class="fas fa-check text-success"></i> Employee must have active salary structure</li>
+                    <li><i class="fas fa-check text-success"></i> Attendance must be recorded for the period</li>
+                    <li><i class="fas fa-check text-success"></i> Period must not be processed already</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function() {
+    // Show/hide department selection based on run type
+    $('#id_run_type').change(function() {
+        const runType = $(this).val();
+        
+        if (runType === 'department') {
+            $('#departmentSection').show();
+        } else {
+            $('#departmentSection').hide();
+        }
+        
+        // Update preview
+        updatePreview();
+    });
+    
+    // Update preview when period or department changes
+    $('#id_payroll_period, #id_department').change(function() {
+        updatePreview();
+    });
+    
+    function updatePreview() {
+        const runType = $('#id_run_type').val();
+        const periodText = $('#id_payroll_period option:selected').text();
+        const departmentText = $('#id_department option:selected').text();
+        
+        if (runType && periodText !== '---------') {
+            $('#previewRunType').text($('#id_run_type option:selected').text());
+            $('#previewPeriod').text(periodText);
+            
+            if (runType === 'department' && departmentText !== '---------') {
+                $('#previewDepartment').text(departmentText);
+            } else {
+                $('#previewDepartment').text('All Departments');
+            }
+            
+            // Fetch employee count and estimated total via AJAX
+            fetchRunPreview();
+            
+            $('#previewSection').show();
+        } else {
+            $('#previewSection').hide();
+        }
+    }
+    
+    function fetchRunPreview() {
+        const runType = $('#id_run_type').val();
+        const periodId = $('#id_payroll_period').val();
+        const departmentId = $('#id_department').val();
+        
+        if (runType && periodId) {
+            $.ajax({
+                url: '/api/payroll-run/preview/',
+                method: 'GET',
+                data: {
+                    run_type: runType,
+                    period_id: periodId,
+                    department_id: departmentId
+                },
+                success: function(data) {
+                    $('#previewEmployeeCount').text(data.employee_count);
+                    $('#previewEstimatedTotal').text('$' + data.estimated_total);
+                }
+            });
+        }
+    }
+});
+</script>
+{% endblock %}

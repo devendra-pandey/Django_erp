@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}Payrolls{% endblock %}
+{% block page_title %}Payroll Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Payroll Records</h5>
+        <div>
+            <a href="{% url 'payroll:payroll_run_create' %}" class="btn btn-success">
+                <i class="fas fa-play-circle"></i> Batch Run
+            </a>
+            <a href="{% url 'payroll:payroll_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Payroll
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- Filters -->
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <select class="form-select" onchange="location = this.value;">
+                    <option value="?">All Status</option>
+                    {% for status_value, status_label in status_choices %}
+                    <option value="?status={{ status_value }}" 
+                        {% if request.GET.status == status_value %}selected{% endif %}>
+                        {{ status_label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-3">
+                <select class="form-select" id="periodFilter">
+                    <option value="">All Periods</option>
+                    {% for period in periods %}
+                    <option value="{{ period.id }}" 
+                        {% if request.GET.period == period.id|stringformat:'i' %}selected{% endif %}>
+                        {{ period.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-3">
+                <select class="form-select" id="departmentFilter">
+                    <option value="">All Departments</option>
+                    {% for dept in departments %}
+                    <option value="{{ dept.id }}" 
+                        {% if request.GET.department == dept.id|stringformat:'i' %}selected{% endif %}>
+                        {{ dept.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-3">
+                <form method="get" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" 
+                           placeholder="Search..." value="{{ request.GET.search }}">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a href="{% url 'payroll:payroll_list' %}" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-redo"></i>
+                    </a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Payrolls Table -->
+        <div class="table-responsive">
+            <table class="table table-hover datatable">
+                <thead>
+                    <tr>
+                        <th>Payroll #</th>
+                        <th>Employee</th>
+                        <th>Period</th>
+                        <th>Basic Salary</th>
+                        <th>Total Earnings</th>
+                        <th>Total Deductions</th>
+                        <th>Net Salary</th>
+                        <th>Status</th>
+                        <th>Payment Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payroll in payrolls %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'payroll:payroll_detail' payroll.pk %}" class="text-decoration-none">
+                                <strong>{{ payroll.payroll_number }}</strong>
+                            </a>
+                        </td>
+                        <td>{{ payroll.employee.user.get_full_name }}</td>
+                        <td>{{ payroll.payroll_period.name }}</td>
+                        <td>${{ payroll.basic_salary }}</td>
+                        <td>${{ payroll.total_earnings }}</td>
+                        <td>${{ payroll.total_deductions }}</td>
+                        <td><strong>${{ payroll.net_salary }}</strong></td>
+                        <td>
+                            <span class="badge bg-{% if payroll.status == 'paid' %}success{% elif payroll.status == 'approved' %}info{% elif payroll.status == 'calculated' %}warning{% elif payroll.status == 'draft' %}secondary{% else %}danger{% endif %}">
+                                {{ payroll.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if payroll.payment_date %}
+                                {{ payroll.payment_date|date:"M d, Y" }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td class="table-actions">
+                            <a href="{% url 'payroll:payroll_detail' payroll.pk %}" 
+                               class="btn btn-sm btn-outline-info" title="View">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            {% if payroll.status == 'draft' or payroll.status == 'calculated' %}
+                            <a href="#" class="btn btn-sm btn-outline-primary" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            {% endif %}
+                            {% if payroll.status == 'approved' %}
+                            <form method="post" action="{% url 'payroll:process_payment' payroll.pk %}" 
+                                  class="d-inline" onsubmit="return confirm('Mark this payroll as paid?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-success" title="Mark as Paid">
+                                    <i class="fas fa-check-circle"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center">No payrolls found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function() {
+    // Period filter
+    $('#periodFilter').change(function() {
+        const period = $(this).val();
+        if (period) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('period', period);
+            window.location.href = url.toString();
+        }
+    });
+    
+    // Department filter
+    $('#departmentFilter').change(function() {
+        const department = $(this).val();
+        if (department) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('department', department);
+            window.location.href = url.toString();
+        }
+    });
+});
+</script>
+{% endblock %}

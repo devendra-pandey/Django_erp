@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+
+{% block title %}Payroll Periods{% endblock %}
+{% block page_title %}Payroll Periods{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Manage Payroll Periods</h5>
+        <a href="{% url 'payroll:period_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Period
+        </a>
+    </div>
+    <div class="card-body">
+        <!-- Filters -->
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <select class="form-select" onchange="location = this.value;">
+                    <option value="?">All Status</option>
+                    <option value="?processed=true" {% if request.GET.processed == 'true' %}selected{% endif %}>
+                        Processed
+                    </option>
+                    <option value="?processed=false" {% if request.GET.processed == 'false' %}selected{% endif %}>
+                        Not Processed
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select class="form-select" id="yearFilter">
+                    <option value="">All Years</option>
+                    {% for year in years %}
+                    <option value="{{ year }}" {% if request.GET.year == year|stringformat:'i' %}selected{% endif %}>
+                        {{ year }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-6 text-end">
+                <a href="{% url 'payroll:period_list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-redo"></i> Reset Filters
+                </a>
+            </div>
+        </div>
+
+        <!-- Periods Table -->
+        <div class="table-responsive">
+            <table class="table table-hover datatable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Payment Date</th>
+                        <th>Status</th>
+                        <th>Payroll Count</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for period in periods %}
+                    <tr>
+                        <td><strong>{{ period.name }}</strong></td>
+                        <td>{{ period.get_period_type_display }}</td>
+                        <td>{{ period.start_date|date:"M d, Y" }}</td>
+                        <td>{{ period.end_date|date:"M d, Y" }}</td>
+                        <td>{{ period.payment_date|date:"M d, Y" }}</td>
+                        <td>
+                            {% if period.is_processed %}
+                                <span class="badge bg-success">Processed</span>
+                            {% elif period.is_locked %}
+                                <span class="badge bg-warning">Locked</span>
+                            {% else %}
+                                <span class="badge bg-info">Open</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ period.payroll_set.count }}
+                        </td>
+                        <td class="table-actions">
+                            <button type="button" class="btn btn-sm btn-outline-info" 
+                                    onclick="showPeriodDetails({{ period.pk }})" title="View">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            {% if not period.is_processed %}
+                            <a href="{% url 'payroll:payroll_run_create' %}?period={{ period.pk }}" 
+                               class="btn btn-sm btn-outline-success" title="Run Payroll">
+                                <i class="fas fa-play"></i>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">No payroll periods found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Period Details Modal -->
+<div class="modal fade" id="periodDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Period Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="periodDetailsContent">
+                <!-- Details will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function() {
+    // Year filter
+    $('#yearFilter').change(function() {
+        const year = $(this).val();
+        if (year) {
+            window.location.href = '?year=' + year;
+        } else {
+            window.location.href = '?';
+        }
+    });
+});
+
+function showPeriodDetails(periodId) {
+    $.ajax({
+        url: '/api/period/' + periodId + '/',
+        method: 'GET',
+        success: function(data) {
+            $('#periodDetailsContent').html(`
+                <dl class="row">
+                    <dt class="col-sm-3">Name:</dt>
+                    <dd class="col-sm-9">${data.name}</dd>
+                    
+                    <dt class="col-sm-3">Period Type:</dt>
+                    <dd class="col-sm-9">${data.period_type_display}</dd>
+                    
+                    <dt class="col-sm-3">Start Date:</dt>
+                    <dd class="col-sm-9">${data.start_date}</dd>
+                    
+                    <dt class="col-sm-3">End Date:</dt>
+                    <dd class="col-sm-9">${data.end_date}</dd>
+                    
+                    <dt class="col-sm-3">Payment Date:</dt>
+                    <dd class="col-sm-9">${data.payment_date}</dd>
+                    
+                    <dt class="col-sm-3">Status:</dt>
+                    <dd class="col-sm-9">
+                        <span class="badge bg-${data.is_processed ? 'success' : data.is_locked ? 'warning' : 'info'}">
+                            ${data.is_processed ? 'Processed' : data.is_locked ? 'Locked' : 'Open'}
+                        </span>
+                    </dd>
+                    
+                    <dt class="col-sm-3">Total Payrolls:</dt>
+                    <dd class="col-sm-9">${data.payroll_count}</dd>
+                    
+                    <dt class="col-sm-3">Processed By:</dt>
+                    <dd class="col-sm-9">${data.processed_by || '-'}</dd>
+                    
+                    <dt class="col-sm-3">Processed Date:</dt>
+                    <dd class="col-sm-9">${data.processed_date || '-'}</dd>
+                    
+                    ${data.notes ? `
+                    <dt class="col-sm-3">Notes:</dt>
+                    <dd class="col-sm-9">${data.notes}</dd>
+                    ` : ''}
+                </dl>
+                
+                <h6 class="mt-3">Payroll Summary</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Count</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="badge bg-primary">Draft</span></td>
+                                <td>${data.draft_count}</td>
+                                <td>$${data.draft_amount}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-warning">Calculated</span></td>
+                                <td>${data.calculated_count}</td>
+                                <td>$${data.calculated_amount}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-info">Approved</span></td>
+                                <td>${data.approved_count}</td>
+                                <td>$${data.approved_amount}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="badge bg-success">Paid</span></td>
+                                <td>${data.paid_count}</td>
+                                <td>$${data.paid_amount}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `);
+            $('#periodDetailsModal').modal('show');
+        }
+    });
+}
+</script>
+{% endblock %}

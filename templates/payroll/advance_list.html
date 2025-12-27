@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+
+{% block title %}Salary Advances{% endblock %}
+{% block page_title %}Salary Advance Requests{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Manage Salary Advances</h5>
+        <a href="{% url 'payroll:advance_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Advance
+        </a>
+    </div>
+    <div class="card-body">
+        <!-- Filters -->
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <select class="form-select" onchange="location = this.value;">
+                    <option value="?">All Status</option>
+                    {% for status in advance_statuses %}
+                    <option value="?status={{ status.0 }}" 
+                        {% if request.GET.status == status.0 %}selected{% endif %}>
+                        {{ status.1 }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-9">
+                <form method="get" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" 
+                           placeholder="Search employee or advance number..." value="{{ request.GET.search }}">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a href="{% url 'payroll:advance_list' %}" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-redo"></i>
+                    </a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Advances Table -->
+        <div class="table-responsive">
+            <table class="table table-hover datatable">
+                <thead>
+                    <tr>
+                        <th>Advance #</th>
+                        <th>Employee</th>
+                        <th>Advance Amount</th>
+                        <th>Monthly Deduction</th>
+                        <th>Remaining Amount</th>
+                        <th>Requested Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for advance in advances %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'payroll:advance_detail' advance.pk %}" class="text-decoration-none">
+                                <strong>{{ advance.advance_number }}</strong>
+                            </a>
+                        </td>
+                        <td>{{ advance.employee.user.get_full_name }}</td>
+                        <td>${{ advance.advance_amount }}</td>
+                        <td>${{ advance.monthly_deduction }}</td>
+                        <td>
+                            {% if advance.remaining_amount %}
+                                <span class="text-danger">${{ advance.remaining_amount }}</span>
+                            {% else %}
+                                <span class="text-success">$0.00</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ advance.requested_date|date:"M d, Y" }}</td>
+                        <td>
+                            <span class="badge bg-{% if advance.status == 'disbursed' %}success{% elif advance.status == 'approved' %}info{% elif advance.status == 'pending' %}warning{% elif advance.status == 'repaid' %}secondary{% else %}danger{% endif %}">
+                                {{ advance.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="table-actions">
+                            <a href="{% url 'payroll:advance_detail' advance.pk %}" 
+                               class="btn btn-sm btn-outline-info" title="View">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            {% if advance.status == 'pending' %}
+                            <button type="button" class="btn btn-sm btn-outline-success" 
+                                    onclick="approveAdvance({{ advance.pk }})" title="Approve">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger" 
+                                    onclick="rejectAdvance({{ advance.pk }})" title="Reject">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">No advances found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Approve/Reject Modal -->
+<div class="modal fade" id="actionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="actionModalTitle">Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="actionForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="advanceId">
+                    <input type="hidden" id="actionType">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" id="actionNotes" rows="3" required></textarea>
+                    </div>
+                    
+                    <div id="approveFields" style="display: none;">
+                        <div class="mb-3">
+                            <label class="form-label">Approval Date</label>
+                            <input type="date" class="form-control" id="approvalDate" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Monthly Deduction Amount</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="deductionAmount" step="0.01" min="0">
+                            </div>
+                            <small class="form-text text-muted">Leave empty to calculate automatically</small>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" id="actionButton">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let currentAdvanceId = null;
+let currentAction = null;
+
+function approveAdvance(advanceId) {
+    currentAdvanceId = advanceId;
+    currentAction = 'approve';
+    
+    $('#actionModalTitle').text('Approve Salary Advance');
+    $('#actionType').val('approve');
+    $('#approveFields').show();
+    
+    // Set today's date as default
+    const today = new Date().toISOString().split('T')[0];
+    $('#approvalDate').val(today);
+    
+    $('#actionModal').modal('show');
+}
+
+function rejectAdvance(advanceId) {
+    currentAdvanceId = advanceId;
+    currentAction = 'reject';
+    
+    $('#actionModalTitle').text('Reject Salary Advance');
+    $('#actionType').val('reject');
+    $('#approveFields').hide();
+    
+    $('#actionModal').modal('show');
+}
+
+// Handle action form submission
+$('#actionForm').submit(function(e) {
+    e.preventDefault();
+    
+    const actionData = {
+        action: currentAction,
+        notes: $('#actionNotes').val()
+    };
+    
+    if (currentAction === 'approve') {
+        actionData.approval_date = $('#approvalDate').val();
+        actionData.deduction_amount = $('#deductionAmount').val();
+    }
+    
+    $.ajax({
+        url: '/api/advance/' + currentAdvanceId + '/action/',
+        method: 'POST',
+        data: JSON.stringify(actionData),
+        contentType: 'application/json',
+        headers: {
+            'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(data) {
+            if (data.success) {
+                alert('Action completed successfully!');
+                $('#actionModal').modal('hide');
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

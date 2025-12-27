@@ -48,12 +48,13 @@ INSTALLED_APPS = [
     'production',
     'procurement',
     'quality',
-    'hr',
+    'hr',   
     'channels',
     'notifications',
     'analytics',
     'reports',
     'security',
+    'payroll',
 ]
 
 # Redis configuration for notifications

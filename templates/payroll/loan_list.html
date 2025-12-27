@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}Loans{% endblock %}
+{% block page_title %}Employee Loans{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="card-title mb-0">Manage Loans</h5>
+        <a href="{% url 'payroll:loan_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Loan
+        </a>
+    </div>
+    <div class="card-body">
+        <!-- Filters -->
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <select class="form-select" onchange="location = this.value;">
+                    <option value="?">All Types</option>
+                    {% for loan_type in loan_types %}
+                    <option value="?loan_type={{ loan_type.0 }}" 
+                        {% if request.GET.loan_type == loan_type.0 %}selected{% endif %}>
+                        {{ loan_type.1 }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-3">
+                <select class="form-select" onchange="location = this.value;">
+                    <option value="?">All Status</option>
+                    {% for status in loan_statuses %}
+                    <option value="?status={{ status.0 }}" 
+                        {% if request.GET.status == status.0 %}selected{% endif %}>
+                        {{ status.1 }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="col-md-6">
+                <form method="get" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" 
+                           placeholder="Search employee or loan number..." value="{{ request.GET.search }}">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a href="{% url 'payroll:loan_list' %}" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-redo"></i>
+                    </a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Loans Table -->
+        <div class="table-responsive">
+            <table class="table table-hover datatable">
+                <thead>
+                    <tr>
+                        <th>Loan #</th>
+                        <th>Employee</th>
+                        <th>Loan Type</th>
+                        <th>Loan Amount</th>
+                        <th>Interest Rate</th>
+                        <th>EMI</th>
+                        <th>Balance</th>
+                        <th>Status</th>
+                        <th>Start Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in loans %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'payroll:loan_detail' loan.pk %}" class="text-decoration-none">
+                                <strong>{{ loan.loan_number }}</strong>
+                            </a>
+                        </td>
+                        <td>{{ loan.employee.user.get_full_name }}</td>
+                        <td>{{ loan.get_loan_type_display }}</td>
+                        <td>${{ loan.loan_amount }}</td>
+                        <td>{{ loan.interest_rate }}%</td>
+                        <td>${{ loan.emi_amount }}</td>
+                        <td>${{ loan.principal_balance }}</td>
+                        <td>
+                            <span class="badge bg-{% if loan.status == 'active' %}success{% elif loan.status == 'disbursed' %}info{% elif loan.status == 'pending' %}warning{% else %}secondary{% endif %}">
+                                {{ loan.get_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ loan.start_date|date:"M d, Y" }}</td>
+                        <td class="table-actions">
+                            <a href="{% url 'payroll:loan_detail' loan.pk %}" 
+                               class="btn btn-sm btn-outline-info" title="View">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            {% if loan.status == 'active' %}
+                            <button type="button" class="btn btn-sm btn-outline-success" 
+                                    onclick="recordPayment({{ loan.pk }})" title="Record Payment">
+                                <i class="fas fa-money-bill"></i>
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="10" class="text-center">No loans found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Record Payment Modal -->
+<div class="modal fade" id="recordPaymentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Record Loan Payment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="paymentForm">
+                    {% csrf_token %}
+                    <input type="hidden" id="loanId">
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Payment Amount</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="paymentAmount" step="0.01" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Payment Date</label>
+                        <input type="date" class="form-control" id="paymentDate">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select" id="paymentMethod">
+                            <option value="cash">Cash</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="cheque">Cheque</option>
+                            <option value="payroll">Payroll Deduction</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" id="paymentNotes" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <p><strong>Loan Details:</strong></p>
+                        <p>EMI Amount: <span id="emiAmount"></span></p>
+                        <p>Remaining Balance: <span id="remainingBalance"></span></p>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Record Payment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function recordPayment(loanId) {
+    // Fetch loan details via AJAX
+    $.ajax({
+        url: '/api/loan/' + loanId + '/',
+        method: 'GET',
+        success: function(data) {
+            $('#loanId').val(loanId);
+            $('#emiAmount').text('$' + data.emi_amount);
+            $('#remainingBalance').text('$' + data.principal_balance);
+            
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            $('#paymentDate').val(today);
+            
+            $('#recordPaymentModal').modal('show');
+        }
+    });
+}
+
+// Handle payment form submission
+$('#paymentForm').submit(function(e) {
+    e.preventDefault();
+    
+    const loanId = $('#loanId').val();
+    const paymentData = {
+        amount: $('#paymentAmount').val(),
+        date: $('#paymentDate').val(),
+        method: $('#paymentMethod').val(),
+        notes: $('#paymentNotes').val()
+    };
+    
+    $.ajax({
+        url: '/api/loan/' + loanId + '/payment/',
+        method: 'POST',
+        data: JSON.stringify(paymentData),
+        contentType: 'application/json',
+        headers: {
+            'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(data) {
+            if (data.success) {
+                alert('Payment recorded successfully!');
+                $('#recordPaymentModal').modal('hide');
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

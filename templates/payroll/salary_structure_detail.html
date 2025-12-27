@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block title %}Salary Structure - {{ structure.employee.user.get_full_name }}{% endblock %}
+{% block page_title %}Salary Structure Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Structure Overview</h5>
+                <a href="{% url 'payroll:salary_structure_update' structure.pk %}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-edit"></i> Edit Structure
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Employee Information</h6>
+                        <dl class="row">
+                            <dt class="col-sm-4">Employee:</dt>
+                            <dd class="col-sm-8">{{ structure.employee.user.get_full_name }}</dd>
+                            
+                            <dt class="col-sm-4">Employee ID:</dt>
+                            <dd class="col-sm-8">{{ structure.employee.employee_id }}</dd>
+                            
+                            <dt class="col-sm-4">Department:</dt>
+                            <dd class="col-sm-8">{{ structure.employee.department.name|default:"-" }}</dd>
+                            
+                            <dt class="col-sm-4">Designation:</dt>
+                            <dd class="col-sm-8">{{ structure.employee.designation|default:"-" }}</dd>
+                        </dl>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6>Structure Information</h6>
+                        <dl class="row">
+                            <dt class="col-sm-4">Basic Salary:</dt>
+                            <dd class="col-sm-8">${{ structure.basic_salary }}</dd>
+                            
+                            <dt class="col-sm-4">Total CTC:</dt>
+                            <dd class="col-sm-8">${{ structure.total_ctc }}</dd>
+                            
+                            <dt class="col-sm-4">Effective From:</dt>
+                            <dd class="col-sm-8">{{ structure.effective_from|date:"M d, Y" }}</dd>
+                            
+                            <dt class="col-sm-4">Effective To:</dt>
+                            <dd class="col-sm-8">{{ structure.effective_to|date:"M d, Y"|default:"-" }}</dd>
+                            
+                            <dt class="col-sm-4">Status:</dt>
+                            <dd class="col-sm-8">
+                                {% if structure.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Inactive</span>
+                                {% endif %}
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <!-- Salary Components -->
+                <h6 class="mb-3">Salary Components</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-success">Earnings</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Component</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for component in structure.components.all %}
+                                    {% if component.component.component_type == 'earning' %}
+                                    <tr>
+                                        <td>{{ component.component.name }}</td>
+                                        <td>{{ component.component.get_calculation_type_display }}</td>
+                                        <td>
+                                            {% if component.amount %}
+                                                ${{ component.amount }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if component.percentage %}
+                                                {{ component.percentage }}%
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">No earnings components</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6 class="text-danger">Deductions</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Component</th>
+                                        <th>Type</th>
+                                        <th>Amount</th>
+                                        <th>Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for component in structure.components.all %}
+                                    {% if component.component.component_type == 'deduction' %}
+                                    <tr>
+                                        <td>{{ component.component.name }}</td>
+                                        <td>{{ component.component.get_calculation_type_display }}</td>
+                                        <td>
+                                            {% if component.amount %}
+                                                ${{ component.amount }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if component.percentage %}
+                                                {{ component.percentage }}%
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">No deduction components</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if structure.notes %}
+                <hr>
+                <h6>Notes</h6>
+                <p class="text-muted">{{ structure.notes }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Summary Card -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Salary Summary</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Basic Salary:</span>
+                    <strong>${{ structure.basic_salary }}</strong>
+                </div>
+                
+                {% for component in structure.components.all %}
+                {% if component.component.component_type == 'earning' %}
+                <div class="d-flex justify-content-between mb-2 text-success">
+                    <span>{{ component.component.name }}:</span>
+                    <strong>
+                        {% if component.amount %}
+                            ${{ component.amount }}
+                        {% elif component.percentage %}
+                            {{ component.percentage }}%
+                        {% else %}
+                            -
+                        {% endif %}
+                    </strong>
+                </div>
+                {% endif %}
+                {% endfor %}
+                
+                {% for component in structure.components.all %}
+                {% if component.component.component_type == 'deduction' %}
+                <div class="d-flex justify-content-between mb-2 text-danger">
+                    <span>{{ component.component.name }}:</span>
+                    <strong>
+                        {% if component.amount %}
+                            ${{ component.amount }}
+                        {% elif component.percentage %}
+                            {{ component.percentage }}%
+                        {% else %}
+                            -
+                        {% endif %}
+                    </strong>
+                </div>
+                {% endif %}
+                {% endfor %}
+                
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <span>Total CTC:</span>
+                    <strong>${{ structure.total_ctc }}</strong>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Card -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="card-title mb-0">Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'payroll:payroll_create' %}?employee={{ structure.employee.pk }}" 
+                       class="btn btn-success">
+                        <i class="fas fa-file-invoice-dollar"></i> Create Payroll
+                    </a>
+                    <a href="{% url 'payroll:salary_structure_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

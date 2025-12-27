@@ -102,109 +102,333 @@
             <!-- Sidebar -->
             <div class="col-md-2 p-0 sidebar">
                 <nav class="nav flex-column mt-3">
+                    <!-- Dashboard -->
                     <a class="nav-link {% if request.path == '/dashboard/' %}active{% endif %}" 
-                       href="{% url 'dashboard' %}">
+                    href="{% url 'dashboard' %}">
                         <i class="fas fa-tachometer-alt me-2"></i> Dashboard
                     </a>
                     
+                    <!-- Inventory Section -->
                     <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Inventory</h6>
-                    <a class="nav-link" href="{% url 'inventory:product_list' %}">
-                        <i class="fas fa-boxes me-2"></i> Products
-                    </a>
-                    <a class="nav-link" href="{% url 'inventory:stock_list' %}">
-                        <i class="fas fa-warehouse me-2"></i> Stock
-                    </a>
+                    <div class="nav-item dropend">
+                        <a class="nav-link dropdown-toggle" href="#" id="inventoryDropdown" role="button" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-boxes me-2"></i> Inventory
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="inventoryDropdown">
+                            <li><h6 class="dropdown-header">Inventory Management</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'inventory:product_list' %}">
+                                    <i class="fas fa-box me-2"></i> Products
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'inventory:stock_list' %}">
+                                    <i class="fas fa-warehouse me-2"></i> Stock
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     
+                    <!-- Production Section -->
                     <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Production</h6>
-                        <a class="nav-link" href="{% url 'production:dashboard' %}">
-                            <i class="fas fa-cogs me-2"></i> Production Dashboard
+                    <div class="nav-item dropend">
+                        <a class="nav-link dropdown-toggle" href="#" id="productionDropdown" role="button" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-cogs me-2"></i> Production
                         </a>
-                        <a class="nav-link" href="{% url 'production:order_list' %}">
-                            <i class="fas fa-clipboard-list me-2"></i> Production Orders
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="productionDropdown">
+                            <li><h6 class="dropdown-header">Production Management</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'production:dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'production:order_list' %}">
+                                    <i class="fas fa-clipboard-list me-2"></i> Production Orders
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'production:bom_list' %}">
+                                    <i class="fas fa-list-alt me-2"></i> BOM Management
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Procurement Section -->
+                    <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Procurement</h6>
+                    <div class="nav-item dropend">
+                        <a class="nav-link dropdown-toggle" href="#" id="procurementDropdown" role="button" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-shopping-cart me-2"></i> Procurement
                         </a>
-                        <a class="nav-link" href="{% url 'production:bom_list' %}">
-                            <i class="fas fa-list-alt me-2"></i> BOM Management
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="procurementDropdown">
+                            <li><h6 class="dropdown-header">Procurement Management</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'procurement:dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'procurement:purchase_order_list' %}">
+                                    <i class="fas fa-file-invoice me-2"></i> Purchase Orders
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'procurement:supplier_list' %}">
+                                    <i class="fas fa-truck me-2"></i> Suppliers
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Quality Section -->
+                    <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Quality</h6>
+                    <div class="nav-item dropend">
+                        <a class="nav-link dropdown-toggle" href="#" id="qualityDropdown" role="button" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-check-circle me-2"></i> Quality
                         </a>
-
-                        <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Procurement</h6>
-                        <a class="nav-link" href="{% url 'procurement:dashboard' %}">
-                            <i class="fas fa-shopping-cart me-2"></i> Procurement Dashboard
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="qualityDropdown">
+                            <li><h6 class="dropdown-header">Quality Management</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'quality:dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'quality:qc_list' %}">
+                                    <i class="fas fa-clipboard-check me-2"></i> Quality Checks
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- HR Section -->
+                    <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">HR Management</h6>
+                    <div class="nav-item dropend">
+                        <a class="nav-link dropdown-toggle" href="#" id="hrDropdown" role="button" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-users me-2"></i> Human Resources
                         </a>
-                        <a class="nav-link" href="{% url 'procurement:purchase_order_list' %}">
-                            <i class="fas fa-file-invoice me-2"></i> Purchase Orders
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="hrDropdown">
+                            <li><h6 class="dropdown-header">HR Management</h6></li>
+                            <li>
+                                <a class="dropdown-item {% if request.resolver_match.namespace == 'hr' and request.resolver_match.url_name == 'dashboard' %}active{% endif %}" 
+                                href="{% url 'hr:dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-2"></i> HR Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if 'employee' in request.resolver_match.url_name and request.resolver_match.namespace == 'hr' %}active{% endif %}" 
+                                href="{% url 'hr:employee_list' %}">
+                                    <i class="fas fa-user-tie me-2"></i> Employees
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if 'attendance' in request.resolver_match.url_name and request.resolver_match.namespace == 'hr' %}active{% endif %}" 
+                                href="{% url 'hr:attendance_list' %}">
+                                    <i class="fas fa-calendar-check me-2"></i> Attendance
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if 'leave' in request.resolver_match.url_name and request.resolver_match.namespace == 'hr' %}active{% endif %}" 
+                                href="{% url 'hr:leave_list' %}">
+                                    <i class="fas fa-calendar-alt me-2"></i> Leave Management
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Payroll Section -->
+                    <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Payroll Management</h6>
+                    <div class="nav-item dropend">
+                        <a class="nav-link dropdown-toggle" href="#" id="payrollDropdown" role="button" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-money-bill-wave me-2"></i> Payroll
                         </a>
-                        <a class="nav-link" href="{% url 'procurement:supplier_list' %}">
-                            <i class="fas fa-truck me-2"></i> Suppliers
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="payrollDropdown">
+                            <li><h6 class="dropdown-header">Payroll Dashboard</h6></li>
+                            <li>
+                                <a class="dropdown-item {% if request.resolver_match.namespace == 'payroll' and request.resolver_match.url_name == 'dashboard' %}active{% endif %}" 
+                                href="{% url 'payroll:dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                                </a>
+                            </li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Configuration</h6></li>
+                            <li>
+                                <a class="dropdown-item {% if 'component' in request.resolver_match.url_name and request.resolver_match.namespace == 'payroll' %}active{% endif %}" 
+                                href="{% url 'payroll:component_list' %}">
+                                    <i class="fas fa-cog me-2"></i> Payroll Components
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if 'structure' in request.resolver_match.url_name and request.resolver_match.namespace == 'payroll' %}active{% endif %}" 
+                                href="{% url 'payroll:salary_structure_list' %}">
+                                    <i class="fas fa-layer-group me-2"></i> Salary Structures
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if 'period' in request.resolver_match.url_name and request.resolver_match.namespace == 'payroll' %}active{% endif %}" 
+                                href="{% url 'payroll:period_list' %}">
+                                    <i class="fas fa-calendar-alt me-2"></i> Payroll Periods
+                                </a>
+                            </li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Payroll Processing</h6></li>
+                            <li>
+                                <a class="dropdown-item {% if 'payroll' in request.resolver_match.url_name and 'run' not in request.resolver_match.url_name and 'period' not in request.resolver_match.url_name and request.resolver_match.namespace == 'payroll' %}active{% endif %}" 
+                                href="{% url 'payroll:payroll_list' %}">
+                                    <i class="fas fa-file-invoice-dollar me-2"></i> Payrolls
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if 'run' in request.resolver_match.url_name and request.resolver_match.namespace == 'payroll' %}active{% endif %}" 
+                                href="{% url 'payroll:payroll_run_create' %}">
+                                    <i class="fas fa-batch me-2"></i> Batch Processing
+                                </a>
+                            </li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Advances & Loans</h6></li>
+                            <li>
+                                <a class="dropdown-item {% if 'loan' in request.resolver_match.url_name and request.resolver_match.namespace == 'payroll' %}active{% endif %}" 
+                                href="{% url 'payroll:loan_list' %}">
+                                    <i class="fas fa-hand-holding-usd me-2"></i> Employee Loans
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if 'advance' in request.resolver_match.url_name and request.resolver_match.namespace == 'payroll' %}active{% endif %}" 
+                                href="{% url 'payroll:advance_list' %}">
+                                    <i class="fas fa-money-bill-alt me-2"></i> Salary Advances
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Analytics & Reports -->
+                    <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Analytics & Reports</h6>
+                    <div class="nav-item dropend">
+                        <a class="nav-link dropdown-toggle" href="#" id="analyticsDropdown" role="button" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-chart-line me-2"></i> Analytics & Reports
                         </a>
-
-                        <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Quality</h6>
-                        <a class="nav-link" href="{% url 'quality:dashboard' %}">
-                            <i class="fas fa-check-circle me-2"></i> Quality Dashboard
-                        </a>
-                        <a class="nav-link" href="{% url 'quality:qc_list' %}">
-                            <i class="fas fa-clipboard-check me-2"></i> Quality Checks
-                        </a>
-
-                        <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">HR</h6>
-                        <a class="nav-link" href="{% url 'hr:dashboard' %}">
-                            <i class="fas fa-users me-2"></i> HR Dashboard
-                        </a>
-                        <a class="nav-link" href="{% url 'hr:employee_list' %}">
-                            <i class="fas fa-user-tie me-2"></i> Employees
-                        </a>
-                        <a class="nav-link" href="{% url 'hr:attendance_list' %}">
-                            <i class="fas fa-calendar-check me-2"></i> Attendance
-                        </a>
-
-                        <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Analytics</h6>
-                        <a class="nav-link" href="{% url 'analytics:dashboard' %}">
-                            <i class="fas fa-chart-line me-2"></i> Analytics Dashboard
-                        </a>
-                        <a class="nav-link" href="{% url 'reports:dashboard' %}">
-                            <i class="fas fa-chart-bar me-2"></i> Reports
-                        </a>
-                        <li class="nav-item">
-                </li>
-                
-                <!-- OR as a dropdown -->
-                <li class="nav-item dropdown">
-
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="analyticsDropdown">
+                            <li><h6 class="dropdown-header">Analytics</h6></li>
+                            <li>
+                                <a class="dropdown-item {% if request.resolver_match.namespace == 'analytics' and request.resolver_match.url_name == 'dashboard' %}active{% endif %}" 
+                                href="#">
+                                    <i class="fas fa-chart-line me-2"></i> Analytics Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if request.resolver_match.namespace == 'reports' and request.resolver_match.url_name == 'dashboard' %}active{% endif %}" 
+                                href="#">
+                                    <i class="fas fa-chart-bar me-2"></i> Reports Dashboard
+                                </a>
+                            </li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">HR Reports</h6></li>
+                            <li>
+                                <a class="dropdown-item {% if 'report' in request.resolver_match.url_name and request.resolver_match.namespace == 'hr' %}active{% endif %}" 
+                                href="{% url 'hr:attendance_report' %}">
+                                    <i class="fas fa-calendar-check me-2"></i> Attendance Report
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if 'report' in request.resolver_match.url_name and request.resolver_match.namespace == 'hr' %}active{% endif %}" 
+                                href="{% url 'hr:leave_balance_report' %}">
+                                    <i class="fas fa-calendar-alt me-2"></i> Leave Balance Report
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Security Section -->
                     <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Security</h6>
-                    <a class="nav-link dropdown-toggle" href="#" id="securityDropdown" role="button" 
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-shield-alt me-2"></i> Security
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="securityDropdown">
-                        <li>
-                            <a class="dropdown-item" href="{% url 'security_dashboard' %}">
-                                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{% url 'gatepass_list' %}">
-                                <i class="fas fa-door-open me-2"></i> Gate Passes
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{% url 'gatepass_create' %}">
-                                <i class="fas fa-plus-circle me-2"></i> New Gate Pass
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item" href="{% url 'visitor_log' %}">
-                                <i class="fas fa-users me-2"></i> Visitor Log
-                            </a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="{% url 'visitor_checkin' %}">
-                                <i class="fas fa-user-plus me-2"></i> Visitor Check-in
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                    <div class="nav-item dropend">
+                        <a class="nav-link dropdown-toggle" href="#" id="securityDropdown" role="button" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-shield-alt me-2"></i> Security
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="securityDropdown">
+                            <li><h6 class="dropdown-header">Security Dashboard</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'security_dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                                </a>
+                            </li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Gate Pass Management</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'gatepass_list' %}">
+                                    <i class="fas fa-door-open me-2"></i> Gate Passes
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'gatepass_create' %}">
+                                    <i class="fas fa-plus-circle me-2"></i> New Gate Pass
+                                </a>
+                            </li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">Visitor Management</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'visitor_log' %}">
+                                    <i class="fas fa-users me-2"></i> Visitor Log
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'visitor_checkin' %}">
+                                    <i class="fas fa-user-plus me-2"></i> Visitor Check-in
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Settings Section -->
+                    <h6 class="text-uppercase text-white-50 mt-4 px-3 mb-2">Settings</h6>
+                    <div class="nav-item dropend">
+                        <a class="nav-link dropdown-toggle" href="#" id="settingsDropdown" role="button" 
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-cog me-2"></i> Settings
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="settingsDropdown">
+                            <li><h6 class="dropdown-header">User Settings</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user-cog me-2"></i> Profile
+                                </a>
+                            </li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li><h6 class="dropdown-header">System Settings</h6></li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-sliders-h me-2"></i> System Configuration
+                                </a>
+                            </li>
+                            
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </nav>
-            </div>
+            </div><!-- Sidebar -->
+           
+              
+            
 
             <!-- Main Content -->
             <div class="col-md-10 p-0">
