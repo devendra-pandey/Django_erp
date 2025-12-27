@@ -127,64 +127,131 @@
                             <div class="card-body">
                                 {{ formset.management_form }}
                                 <div id="items-formset">
-                                    {% for item_form in formset %}
-                                    <div class="item-form card mb-2">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label>Product</label>
-                                                        {{ item_form.product }}
+                                    {% if object %}
+                                        <!-- Update mode: Show all existing items -->
+                                        {% for item_form in formset %}
+                                            {% if not forloop.last or forloop.last and formset|length == 1 %}
+                                            <div class="item-form card mb-2">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label>Product</label>
+                                                                {{ item_form.product }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>Quantity</label>
+                                                                {{ item_form.quantity }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>Unit Price</label>
+                                                                {{ item_form.unit_price }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>Tax Rate (%)</label>
+                                                                {{ item_form.tax_rate }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>Warehouse</label>
+                                                                {{ item_form.warehouse }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1 d-flex align-items-end">
+                                                            {% if item_form.DELETE %}
+                                                            <div class="form-group">
+                                                                <label class="text-danger">Delete</label>
+                                                                {{ item_form.DELETE }}
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label>Quantity</label>
-                                                        {{ item_form.quantity }}
+                                                    {{ item_form.id }}
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group mb-0">
+                                                                <small class="text-muted">
+                                                                    <span class="subtotal">Subtotal: $0.00</span> | 
+                                                                    <span class="tax">Tax: $0.00</span> | 
+                                                                    <span class="total">Total: $0.00</span>
+                                                                </small>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label>Unit Price</label>
-                                                        {{ item_form.unit_price }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label>Tax Rate (%)</label>
-                                                        {{ item_form.tax_rate }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label>Warehouse</label>
-                                                        {{ item_form.warehouse }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-1 d-flex align-items-end">
-                                                    {% if item_form.DELETE %}
-                                                    <div class="form-group">
-                                                        <label class="text-danger">Delete</label>
-                                                        {{ item_form.DELETE }}
-                                                    </div>
-                                                    {% endif %}
                                                 </div>
                                             </div>
-                                            {{ item_form.id }}
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="form-group mb-0">
-                                                        <small class="text-muted">
-                                                            <span class="subtotal">Subtotal: $0.00</span> | 
-                                                            <span class="tax">Tax: $0.00</span> | 
-                                                            <span class="total">Total: $0.00</span>
-                                                        </small>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <!-- Create mode: Show only one empty row -->
+                                        {% for item_form in formset %}
+                                            {% if forloop.first %}
+                                            <div class="item-form card mb-2">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label>Product <span class="text-danger">*</span></label>
+                                                                {{ item_form.product }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>Quantity <span class="text-danger">*</span></label>
+                                                                {{ item_form.quantity }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>Unit Price <span class="text-danger">*</span></label>
+                                                                {{ item_form.unit_price }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>Tax Rate (%)</label>
+                                                                {{ item_form.tax_rate }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <label>Warehouse</label>
+                                                                {{ item_form.warehouse }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1 d-flex align-items-end">
+                                                            {% if not forloop.first and item_form.DELETE %}
+                                                            <div class="form-group">
+                                                                <label class="text-danger">Delete</label>
+                                                                {{ item_form.DELETE }}
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    {{ item_form.id }}
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group mb-0">
+                                                                <small class="text-muted">
+                                                                    <span class="subtotal">Subtotal: $0.00</span> | 
+                                                                    <span class="tax">Tax: $0.00</span> | 
+                                                                    <span class="total">Total: $0.00</span>
+                                                                </small>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                                 
                                 <!-- Totals -->
@@ -259,6 +326,15 @@ textarea.form-control {
 .item-form {
     border-left: 4px solid #007bff;
 }
+
+.delete-checkbox {
+    margin-top: 28px;
+}
+
+.delete-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
 </style>
 
 <script>
@@ -267,6 +343,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputs = document.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
         input.classList.add('form-control');
+    });
+    
+    // Style the delete checkbox
+    document.querySelectorAll('input[name$="-DELETE"]').forEach(checkbox => {
+        const label = checkbox.closest('.form-group').querySelector('label');
+        if (label) {
+            label.style.display = 'block';
+            label.style.marginBottom = '5px';
+        }
+        checkbox.style.width = '20px';
+        checkbox.style.height = '20px';
+        checkbox.style.marginTop = '10px';
     });
     
     // Calculate item totals
@@ -308,29 +396,32 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('total-grand').textContent = `$${totalGrand.toFixed(2)}`;
     }
     
-    // Add item form
-    document.getElementById('add-item').addEventListener('click', function() {
-        const totalForms = document.getElementById('id_items-TOTAL_FORMS');
-        const formNum = parseInt(totalForms.value);
-        const formset = document.getElementById('items-formset');
-        
-        // Clone first form
+    // Get empty form template
+    function getEmptyFormTemplate(formNum) {
         const firstForm = document.querySelector('.item-form');
+        if (!firstForm) return null;
+        
         const newForm = firstForm.cloneNode(true);
         
         // Update IDs and names
         newForm.querySelectorAll('input, select').forEach(input => {
-            const name = input.name.replace(/-\d+-/, `-${formNum}-`);
-            const id = input.id.replace(/-\d+-/, `-${formNum}-`);
-            input.name = name;
-            input.id = id;
-            input.value = '';
+            const nameMatch = input.name.match(/-\d+-/);
+            if (nameMatch) {
+                const name = input.name.replace(/-\d+-/, `-${formNum}-`);
+                const id = input.id.replace(/-\d+-/, `-${formNum}-`);
+                input.name = name;
+                input.id = id;
+                input.value = '';
+            }
         });
         
         newForm.querySelectorAll('label').forEach(label => {
             const forAttr = label.getAttribute('for');
             if (forAttr) {
-                label.setAttribute('for', forAttr.replace(/-\d+-/, `-${formNum}-`));
+                const forMatch = forAttr.match(/-\d+-/);
+                if (forMatch) {
+                    label.setAttribute('for', forAttr.replace(/-\d+-/, `-${formNum}-`));
+                }
             }
         });
         
@@ -338,23 +429,69 @@ document.addEventListener('DOMContentLoaded', function() {
         newForm.querySelectorAll('input[type="text"], input[type="number"], select').forEach(input => {
             if (!input.name.includes('DELETE') && !input.name.includes('id')) {
                 input.value = '';
+                if (input.name.includes('tax_rate')) {
+                    input.value = '0'; // Default tax rate
+                }
             }
         });
         
-        // Add to formset
-        formset.appendChild(newForm);
-        totalForms.value = formNum + 1;
+        // Remove ID field if it exists (for new items)
+        const idInput = newForm.querySelector('input[name$="-id"]');
+        if (idInput) {
+            idInput.remove();
+        }
         
-        // Recalculate totals
-        calculateAllTotals();
+        return newForm;
+    }
+    
+    // Add item form
+    document.getElementById('add-item').addEventListener('click', function() {
+        const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+        const formNum = parseInt(totalForms.value);
+        const formset = document.getElementById('items-formset');
+        
+        const newForm = getEmptyFormTemplate(formNum);
+        if (newForm) {
+            // Add delete checkbox for new rows (except first)
+            if (formNum > 0) {
+                const deleteDiv = document.createElement('div');
+                deleteDiv.className = 'col-md-1 d-flex align-items-end delete-checkbox';
+                deleteDiv.innerHTML = `
+                    <div class="form-group">
+                        <label class="text-danger">Delete</label>
+                        <input type="checkbox" name="items-${formNum}-DELETE" id="id_items-${formNum}-DELETE" class="form-control">
+                    </div>
+                `;
+                
+                // Find the row and replace last column with delete checkbox
+                const row = newForm.querySelector('.row');
+                const cols = row.querySelectorAll('.col-md-1');
+                if (cols.length > 0) {
+                    row.replaceChild(deleteDiv, cols[cols.length - 1]);
+                }
+            }
+            
+            formset.appendChild(newForm);
+            totalForms.value = formNum + 1;
+            
+            // Reapply Bootstrap classes
+            newForm.querySelectorAll('input, select').forEach(input => {
+                input.classList.add('form-control');
+            });
+            
+            // Recalculate totals
+            calculateAllTotals();
+        }
     });
     
     // Auto-calculate on input
     document.addEventListener('input', function(e) {
         if (e.target.matches('[id$="-quantity"], [id$="-unit_price"], [id$="-tax_rate"]')) {
             const form = e.target.closest('.item-form');
-            calculateItemTotal(form);
-            calculateAllTotals();
+            if (form) {
+                calculateItemTotal(form);
+                calculateAllTotals();
+            }
         }
     });
     
@@ -372,6 +509,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (orderDate && !orderDate.value) orderDate.value = today;
     if (expectedDelivery && !expectedDelivery.value) expectedDelivery.value = weekLaterStr;
+    
+    // Handle form validation - ensure at least one item
+    document.getElementById('po-form').addEventListener('submit', function(e) {
+        let hasValidItem = false;
+        document.querySelectorAll('.item-form').forEach(form => {
+            const quantity = form.querySelector('[id$="-quantity"]').value;
+            const unitPrice = form.querySelector('[id$="-unit_price"]').value;
+            const product = form.querySelector('[id$="-product"]').value;
+            
+            if (quantity && unitPrice && product) {
+                hasValidItem = true;
+            }
+        });
+        
+        if (!hasValidItem) {
+            e.preventDefault();
+            alert('Please add at least one item with product, quantity, and unit price.');
+        }
+    });
 });
 </script>
 {% endblock %}

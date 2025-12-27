@@ -115,7 +115,7 @@
                                 <small class="text-muted">{{ pass.department.name|default:"-" }}</small>
                             </td>
                             <td>
-                                <span class="badge badge-info">{{ pass.get_pass_type_display }}</span>
+                                <span class="text-muted">{{ pass.get_pass_type_display }}</span>
                             </td>
                             <td>
                                 {% if pass.person_name %}
@@ -135,15 +135,15 @@
                             </td>
                             <td>
                                 {% if pass.status == 'pending' %}
-                                    <span class="badge badge-warning">Pending</span>
+                                    <span class="badge bg-warning">Pending</span>
                                 {% elif pass.status == 'approved' %}
-                                    <span class="badge badge-info">Approved</span>
+                                    <span class="badge bg-info">Approved</span>
                                 {% elif pass.status == 'in_progress' %}
-                                    <span class="badge badge-primary">In Progress</span>
+                                    <span class="badge bg-primary">In Progress</span>
                                 {% elif pass.status == 'completed' %}
-                                    <span class="badge badge-success">Completed</span>
+                                    <span class="badge bg-success">Completed</span>
                                 {% elif pass.status == 'cancelled' %}
-                                    <span class="badge badge-danger">Cancelled</span>
+                                    <span class="badge bg-danger">Cancelled</span>
                                 {% endif %}
                                 <br>
                                 <small>
@@ -250,20 +250,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-$(document).ready(function() {
-    // Add context data to view
-    const passTypes = [
-        {% for value, label in gate_passes.0.get_pass_type_display %}
-        ['{{ value }}', '{{ label }}'],
-        {% endfor %}
-    ];
-    
-    const statusChoices = [
-        {% for value, label in gate_passes.0.get_status_display %}
-        ['{{ value }}', '{{ label }}'],
-        {% endfor %}
-    ];
-});
-</script>
+
 {% endblock %}

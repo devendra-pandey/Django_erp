@@ -71,23 +71,48 @@ class PurchaseOrderListView(LoginRequiredMixin, ListView):
     model = PurchaseOrder
     template_name = 'procurement/purchase_order_list.html'
     context_object_name = 'purchase_orders'
-    paginate_by = 25
+    paginate_by = 20
     
     def get_queryset(self):
         queryset = PurchaseOrder.objects.select_related('supplier').all()
+        
+        # Apply filters
         status = self.request.GET.get('status')
         if status:
             queryset = queryset.filter(status=status)
+        
         supplier_id = self.request.GET.get('supplier')
         if supplier_id:
             queryset = queryset.filter(supplier_id=supplier_id)
+        
         search = self.request.GET.get('search')
         if search:
             queryset = queryset.filter(
                 Q(po_number__icontains=search) |
                 Q(supplier__name__icontains=search)
             )
+        
         return queryset.order_by('-order_date')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get all suppliers for the filter dropdown
+        from django.apps import apps
+        Supplier = apps.get_model('procurement', 'Supplier')
+        
+        # Add filter choices to context
+        context['status_choices'] = PurchaseOrder.ORDER_STATUS  # Changed from 'status' to 'status_choices'
+        context['all_suppliers'] = Supplier.objects.all()  # Changed from 'supplier' to 'all_suppliers'
+        
+        # Preserve current filter values for the template
+        context['current_status'] = self.request.GET.get('status', '')
+        context['current_supplier'] = self.request.GET.get('supplier', '')
+        context['current_search'] = self.request.GET.get('search', '')
+        
+        return context
+    
+
 
 class PurchaseOrderCreateView(LoginRequiredMixin, CreateView):
     model = PurchaseOrder

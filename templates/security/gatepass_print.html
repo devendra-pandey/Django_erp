@@ -97,71 +97,71 @@
         <div>123 Tech Street, Silicon Valley, CA 94000</div>
         <div>Phone: +1-555-123-4567 | Email: info@techcorp.com</div>
         <div class="pass-title">GATE PASS</div>
-        <div class="pass-number">PASS NO: {{ gate_pass.pass_number }}</div>
+        <div class="pass-number">PASS NO: {{ object.pass_number }}</div>
     </div>
     
     <table class="details-table">
         <tr>
             <th width="25%">Pass Type:</th>
-            <td width="25%">{{ gate_pass.get_pass_type_display }}</td>
+            <td width="25%">{{ object.get_pass_type_display }}</td>
             <th width="25%">Status:</th>
-            <td width="25%">{{ gate_pass.get_status_display }}</td>
+            <td width="25%">{{ object.get_status_display }}</td>
         </tr>
         <tr>
             <th>Date Created:</th>
-            <td>{{ gate_pass.created_at|date:"d/m/Y H:i" }}</td>
+            <td>{{ object.created_at|date:"d/m/Y H:i" }}</td>
             <th>Department:</th>
-            <td>{{ gate_pass.department.name|default:"-" }}</td>
+            <td>{{ object.department.name|default:"-" }}</td>
         </tr>
-        {% if gate_pass.person_name %}
+        {% if object.person_name %}
         <tr>
             <th>Person Name:</th>
-            <td>{{ gate_pass.person_name }}</td>
+            <td>{{ object.person_name }}</td>
             <th>Company:</th>
-            <td>{{ gate_pass.company_name|default:"-" }}</td>
+            <td>{{ object.company_name|default:"-" }}</td>
         </tr>
         {% endif %}
-        {% if gate_pass.vehicle_number %}
+        {% if object.vehicle_number %}
         <tr>
             <th>Vehicle Number:</th>
-            <td>{{ gate_pass.vehicle_number }}</td>
+            <td>{{ object.vehicle_number }}</td>
             <th>Driver Name:</th>
-            <td>{{ gate_pass.driver_name|default:"-" }}</td>
+            <td>{{ object.driver_name|default:"-" }}</td>
         </tr>
         {% endif %}
         <tr>
             <th>Purpose:</th>
-            <td colspan="3">{{ gate_pass.purpose }}</td>
+            <td colspan="3">{{ object.purpose }}</td>
         </tr>
         <tr>
             <th>From:</th>
-            <td>{{ gate_pass.from_location|default:"-" }}</td>
+            <td>{{ object.from_location|default:"-" }}</td>
             <th>To:</th>
-            <td>{{ gate_pass.to_location|default:"-" }}</td>
+            <td>{{ object.to_location|default:"-" }}</td>
         </tr>
         <tr>
             <th>Expected In:</th>
-            <td>{{ gate_pass.expected_in_date|date:"d/m/Y H:i"|default:"-" }}</td>
+            <td>{{ object.expected_in_date|date:"d/m/Y H:i"|default:"-" }}</td>
             <th>Expected Out:</th>
-            <td>{{ gate_pass.expected_out_date|date:"d/m/Y H:i"|default:"-" }}</td>
+            <td>{{ object.expected_out_date|date:"d/m/Y H:i"|default:"-" }}</td>
         </tr>
-        {% if gate_pass.actual_in_date %}
+        {% if object.actual_in_date %}
         <tr>
             <th>Actual In:</th>
-            <td>{{ gate_pass.actual_in_date|date:"d/m/Y H:i" }}</td>
+            <td>{{ object.actual_in_date|date:"d/m/Y H:i" }}</td>
             <th>Actual Out:</th>
-            <td>{{ gate_pass.actual_out_date|date:"d/m/Y H:i"|default:"-" }}</td>
+            <td>{{ object.actual_out_date|date:"d/m/Y H:i"|default:"-" }}</td>
         </tr>
         {% endif %}
         <tr>
             <th>Requested By:</th>
-            <td>{{ gate_pass.requesting_employee.user.get_full_name }}</td>
+            <td>{{ object.requesting_employee.user.get_full_name }}</td>
             <th>Approved By:</th>
-            <td>{{ gate_pass.approved_by.user.get_full_name|default:"-" }}</td>
+            <td>{{ object.approved_by.user.get_full_name|default:"-" }}</td>
         </tr>
     </table>
     
-    {% if gate_pass.items.exists %}
+    {% if object.items.exists %}
     <h4>Items Details:</h4>
     <table class="items-table">
         <thead>
@@ -175,7 +175,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in gate_pass.items.all %}
+            {% for item in object.items.all %}
             <tr>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ item.item_description }}</td>
@@ -192,10 +192,10 @@
     </table>
     {% endif %}
     
-    {% if gate_pass.security_remarks %}
+    {% if object.security_remarks %}
     <div style="margin-top: 20px;">
         <strong>Security Remarks:</strong>
-        <p>{{ gate_pass.security_remarks }}</p>
+        <p>{{ object.security_remarks }}</p>
     </div>
     {% endif %}
     
@@ -203,31 +203,31 @@
         <div class="signature-box">
             <div style="border-bottom: 1px solid #000; height: 50px;"></div>
             <div>Requested By</div>
-            <div>{{ gate_pass.requesting_employee.user.get_full_name }}</div>
-            <div>{{ gate_pass.created_at|date:"d/m/Y" }}</div>
+            <div>{{ object.requesting_employee.user.get_full_name }}</div>
+            <div>{{ object.created_at|date:"d/m/Y" }}</div>
         </div>
         
         <div class="signature-box">
             <div style="border-bottom: 1px solid #000; height: 50px;"></div>
             <div>Approved By</div>
-            {% if gate_pass.approved_by %}
-            <div>{{ gate_pass.approved_by.user.get_full_name }}</div>
-            <div>{{ gate_pass.approved_date|date:"d/m/Y"|default:"" }}</div>
+            {% if object.approved_by %}
+            <div>{{ object.approved_by.user.get_full_name }}</div>
+            <div>{{ object.approved_date|date:"d/m/Y"|default:"" }}</div>
             {% endif %}
         </div>
         
         <div class="signature-box">
             <div style="border-bottom: 1px solid #000; height: 50px;"></div>
             <div>Security Officer</div>
-            {% if gate_pass.security_in_charge %}
-            <div>{{ gate_pass.security_in_charge.get_full_name }}</div>
+            {% if object.security_in_charge %}
+            <div>{{ object.security_in_charge.get_full_name }}</div>
             {% endif %}
         </div>
     </div>
     
     <div class="footer">
         <p>** This is an official document. Please keep it safe. **</p>
-        <p>Issued by: {{ gate_pass.created_by.get_full_name|default:"System" }}</p>
+        <p>Issued by: {{ object.created_by.get_full_name|default:"System" }}</p>
     </div>
 </body>
 </html>

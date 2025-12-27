@@ -40,8 +40,19 @@ class GatePassListView(LoginRequiredMixin, ListView):
                 created_at__date__range=[start_date, end_date]
             )
         
+        queryset = queryset.order_by('-created_at')
         # Order by creation date (newest first)
-        return queryset.order_by('-created_at')
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Add filter choices to context
+        context['pass_types'] = GatePass.GATE_PASS_TYPES
+        context['status_choices'] = GatePass.STATUS_CHOICES
+        
+        return context
+
 
 class GatePassCreateView(LoginRequiredMixin, CreateView):
     model = GatePass
